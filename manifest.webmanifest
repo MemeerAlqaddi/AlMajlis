@@ -1,7 +1,7 @@
 {
-  "name": "AL MAJLIS — The Islamic Game Night",
-  "short_name": "AL MAJLIS",
-  "description": "A 500-card, source-aware Islamic game night app for teens and adults.",
+  "name": "The Majlis",
+  "short_name": "The Majlis",
+  "description": "A 560-card, source-aware Islamic game night app for teens and adults.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

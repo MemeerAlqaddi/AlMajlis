@@ -1,5 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="108" fill="#07090a"/>
-  <text x="256" y="292" text-anchor="middle" direction="rtl" unicode-bidi="bidi-override" fill="#f4f5f5" font-family="DejaVu Sans, Arial, sans-serif" font-size="91" font-weight="600">المجلس</text>
-  <circle cx="256" cy="344" r="7" fill="#559ca4"/>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#11191b"/>
+      <stop offset="1" stop-color="#050708"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0" stop-color="#559ca4" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#6baab1"/>
+      <stop offset="1" stop-color="#559ca4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#6b7b7f" stroke-opacity="0.11" stroke-width="1"/>
+  <text x="256" y="286" text-anchor="middle" direction="rtl" unicode-bidi="bidi-override" fill="#f4f5f5" font-family="Amiri, Noto Naskh Arabic, serif" font-size="76" font-weight="400">المجلس</text>
+  <g transform="translate(256 330)" fill="none" stroke="url(#accent)" stroke-width="1.5">
+    <path d="M-62 0H-10M10 0H62"/>
+    <path d="M0-5L5 0 0 5-5 0Z" fill="#6baab1" stroke="none"/>
+  </g>
 </svg>
