@@ -1,0 +1,16 @@
+{
+  "name": "AL MAJLIS — The Islamic Game Night",
+  "short_name": "AL MAJLIS",
+  "description": "A 500-card, source-aware Islamic game night app for teens and adults.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07090a",
+  "theme_color": "#07090a",
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ]
+}
