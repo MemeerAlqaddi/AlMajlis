@@ -422,560 +422,560 @@ const cards = [
   },
   {
     "type": "arabish",
-    "prompt": "SHOE BED DUCK MINI",
+    "prompt": "SHOOBE DUCK-MEANY",
     "answer": "شو بدك مني؟ — What do you want from me?",
     "source": "Levantine Arabic",
     "id": "DECODE-001"
   },
   {
     "type": "arabish",
-    "prompt": "WALL LAH MAH BAH REF",
+    "prompt": "WAH-LAHM ABBER-EFF",
     "answer": "والله ما بعرف — I swear, I don’t know",
     "source": "Levantine Arabic",
     "id": "DECODE-002"
   },
   {
     "type": "arabish",
-    "prompt": "YALL AH N ROOH",
+    "prompt": "YALL EN-ROOH",
     "answer": "يلا نروح — Come on, let’s go",
     "source": "Common colloquial Arabic",
     "id": "DECODE-003"
   },
   {
     "type": "arabish",
-    "prompt": "MA FEE MUSH KEY LAH",
+    "prompt": "MAF E-MOOSH KAYLA",
     "answer": "ما في مشكلة — There’s no problem",
     "source": "Common colloquial Arabic",
     "id": "DECODE-004"
   },
   {
     "type": "arabish",
-    "prompt": "IN TAH WAYNE",
+    "prompt": "IN-TAWAIN",
     "answer": "إنت وين؟ — Where are you?",
     "source": "Levantine Arabic",
     "id": "DECODE-005"
   },
   {
     "type": "arabish",
-    "prompt": "KHA LASS BAH AH",
+    "prompt": "KHA-LASB UH-AH",
     "answer": "خلص بقى — Enough already",
     "source": "Levantine Arabic",
     "id": "DECODE-006"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE SIGH YER MA ACK",
+    "prompt": "SHOOSAI YIR-MAAK",
     "answer": "شو صاير معك؟ — What’s going on with you?",
     "source": "Levantine Arabic",
     "id": "DECODE-007"
   },
   {
     "type": "arabish",
-    "prompt": "LUCK ON JUDD",
+    "prompt": "LAK-AN JUD",
     "answer": "لك عنجد؟ — Seriously?",
     "source": "Levantine Arabic",
     "id": "DECODE-008"
   },
   {
     "type": "arabish",
-    "prompt": "MAH LUCK HAYK",
+    "prompt": "MA-LAK HAIK",
     "answer": "مالك هيك؟ — Why are you like this?",
     "source": "Levantine Arabic",
     "id": "DECODE-009"
   },
   {
     "type": "arabish",
-    "prompt": "AH LOW SHOE FEE",
+    "prompt": "A-LOSHOO FEE",
     "answer": "ألو، شو في؟ — Hello, what’s wrong?",
     "source": "Levantine Arabic",
     "id": "DECODE-010"
   },
   {
     "type": "arabish",
-    "prompt": "BID DEE AH COLE",
+    "prompt": "BID-DEE A-CULL",
     "answer": "بدي آكل — I want to eat",
     "source": "Levantine Arabic",
     "id": "DECODE-011"
   },
   {
     "type": "arabish",
-    "prompt": "LAYSH MAH HA KEET",
+    "prompt": "LAYSHMA HAH-KEET",
     "answer": "ليش ما حكيت؟ — Why didn’t you say anything?",
     "source": "Levantine Arabic",
     "id": "DECODE-012"
   },
   {
     "type": "arabish",
-    "prompt": "WALL LAH IN NUCK MAJ NOON",
+    "prompt": "WAH-LAH INNACK MAJ-NOON",
     "answer": "والله إنك مجنون — I swear, you’re crazy (said to a man)",
     "source": "Common colloquial Arabic",
     "id": "DECODE-013"
   },
   {
     "type": "arabish",
-    "prompt": "SHWAY SHWAY AH LAKE",
+    "prompt": "SHWAI-SHWAI YA-LAKE",
     "answer": "شوي شوي عليك — Easy there; take it slow",
     "source": "Common colloquial Arabic",
     "id": "DECODE-014"
   },
   {
     "type": "arabish",
-    "prompt": "YAH NEE SHOE AH MULL",
+    "prompt": "YA-NEESHO AH-MULL",
     "answer": "يعني شو أعمل؟ — So, what am I supposed to do?",
     "source": "Levantine Arabic",
     "id": "DECODE-015"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE IS MUCK",
+    "prompt": "SHOO-IS MAK",
     "answer": "شو اسمك؟ — What’s your name?",
     "source": "Levantine Arabic",
     "id": "DECODE-016"
   },
   {
     "type": "arabish",
-    "prompt": "WAY NUCK MIN ZAH MAN",
+    "prompt": "WAINAK MINZ A-MAN",
     "answer": "وينك من زمان؟ — Where have you been?",
     "source": "Levantine Arabic",
     "id": "DECODE-017"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE AM TAH MULL",
+    "prompt": "SHOO-AM TA-MULL",
     "answer": "شو عم تعمل؟ — What are you doing? (said to a man)",
     "source": "Levantine Arabic",
     "id": "DECODE-018"
   },
   {
     "type": "arabish",
-    "prompt": "MAH F HE MET AH LAKE",
+    "prompt": "MAF-HEM TA-LAKE",
     "answer": "ما فهمت عليك — I didn’t understand you",
     "source": "Levantine Arabic",
     "id": "DECODE-019"
   },
   {
     "type": "arabish",
-    "prompt": "HACK KEY SHWAY SHWAY",
+    "prompt": "EHK-EE SHWAI-SHWAI",
     "answer": "احكي شوي شوي — Speak slowly",
     "source": "Levantine Arabic",
     "id": "DECODE-020"
   },
   {
     "type": "arabish",
-    "prompt": "ON JUDD BIT HACK KEY",
+    "prompt": "AN-JUDD BIT-HAK-EE",
     "answer": "عنجد بتحكي؟ — Are you serious?",
     "source": "Levantine Arabic",
     "id": "DECODE-021"
   },
   {
     "type": "arabish",
-    "prompt": "KHA LEE NAH N BAL LISH",
+    "prompt": "KHAL-LEE NAN-BALLISH",
     "answer": "خلينا نبلّش — Let’s start",
     "source": "Levantine Arabic",
     "id": "DECODE-022"
   },
   {
     "type": "arabish",
-    "prompt": "STAN NAH SHWAY",
+    "prompt": "ISTAN-NASH WAI",
     "answer": "استنى شوي — Wait a moment",
     "source": "Levantine Arabic",
     "id": "DECODE-023"
   },
   {
     "type": "arabish",
-    "prompt": "MAH ILL EE KHA LUCK",
+    "prompt": "MA-ILLY KHALL-ACK",
     "answer": "ما إلي خلق — I’m not in the mood",
     "source": "Levantine Arabic",
     "id": "DECODE-024"
   },
   {
     "type": "arabish",
-    "prompt": "WALL AH YAY HEM MACK",
+    "prompt": "WALA-YA HEMMACK",
     "answer": "ولا يهمك — Don’t worry about it",
     "source": "Levantine Arabic",
     "id": "DECODE-025"
   },
   {
     "type": "arabish",
-    "prompt": "YAH TEEK IL AH FEE YEH",
+    "prompt": "YAA-TEAK AL-AF EE-YA",
     "answer": "يعطيك العافية — May Allah grant you wellness",
     "source": "Common Arabic expression",
     "id": "DECODE-026"
   },
   {
     "type": "arabish",
-    "prompt": "ALL AH YAH FEECK",
+    "prompt": "ALLA-YA FEECK",
     "answer": "الله يعافيك — May Allah grant you wellness too",
     "source": "Common reply",
     "id": "DECODE-027"
   },
   {
     "type": "arabish",
-    "prompt": "TOOK RUM EYE NUCK",
+    "prompt": "TICK-RAM AINACK",
     "answer": "تكرم عينك — Consider it done",
     "source": "Levantine Arabic",
     "id": "DECODE-028"
   },
   {
     "type": "arabish",
-    "prompt": "AH LAH RAH SEE",
+    "prompt": "ALA-RAH SEE",
     "answer": "على راسي — With pleasure / out of respect",
     "source": "Common colloquial Arabic",
     "id": "DECODE-029"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE RYE UCK",
+    "prompt": "SHOO-RAA YACK",
     "answer": "شو رأيك؟ — What do you think?",
     "source": "Levantine Arabic",
     "id": "DECODE-030"
   },
   {
     "type": "arabish",
-    "prompt": "HASS SUB IL MOW KIF",
+    "prompt": "HAS-SABIL MOW-KIFF",
     "answer": "حسب الموقف — It depends on the situation",
     "source": "Common Arabic",
     "id": "DECODE-031"
   },
   {
     "type": "arabish",
-    "prompt": "MAH FEE DAH EE",
+    "prompt": "MAF-EE DAH-EE",
     "answer": "ما في داعي — There’s no need",
     "source": "Common colloquial Arabic",
     "id": "DECODE-032"
   },
   {
     "type": "arabish",
-    "prompt": "SAR KHAIR",
+    "prompt": "SAAR-KHAIR",
     "answer": "صار خير — It’s all right now",
     "source": "Levantine Arabic",
     "id": "DECODE-033"
   },
   {
     "type": "arabish",
-    "prompt": "BUH SEA TAH",
+    "prompt": "BE-SEAT-AH",
     "answer": "بسيطة — It’s no big deal",
     "source": "Common colloquial Arabic",
     "id": "DECODE-034"
   },
   {
     "type": "arabish",
-    "prompt": "MISH MUSH KEY LAH",
+    "prompt": "MISHMOOSH KAYLA",
     "answer": "مش مشكلة — Not a problem",
     "source": "Common colloquial Arabic",
     "id": "DECODE-035"
   },
   {
     "type": "arabish",
-    "prompt": "WAYNE BID NAH N ROOH",
+    "prompt": "WAIN-BID NAN-ROOH",
     "answer": "وين بدنا نروح؟ — Where should we go?",
     "source": "Levantine Arabic",
     "id": "DECODE-036"
   },
   {
     "type": "arabish",
-    "prompt": "MEEN JAI MAH NAH",
+    "prompt": "MEAN-JAI MA-ANA",
     "answer": "مين جاي معنا؟ — Who’s coming with us?",
     "source": "Levantine Arabic",
     "id": "DECODE-037"
   },
   {
     "type": "arabish",
-    "prompt": "CUD DASH IS SAH AH",
+    "prompt": "ADDAY-SHISS AA-AH",
     "answer": "قديش الساعة؟ — What time is it?",
     "source": "Levantine Arabic",
     "id": "DECODE-038"
   },
   {
     "type": "arabish",
-    "prompt": "TA AKH HAR NAH KTEER",
+    "prompt": "TA-AKHAR NAK-TEER",
     "answer": "تأخرنا كتير — We’re very late",
     "source": "Levantine Arabic",
     "id": "DECODE-039"
   },
   {
     "type": "arabish",
-    "prompt": "DUCK LEE LUM MAH TOH SAL",
+    "prompt": "DUCK-LEE LAMM A-TOE-SAL",
     "answer": "دقلي لما توصل — Call me when you arrive",
     "source": "Levantine Arabic",
     "id": "DECODE-040"
   },
   {
     "type": "arabish",
-    "prompt": "LAH TIN SA IL MIF TAH",
+    "prompt": "LATAN-SAL MIF-TAH",
     "answer": "لا تنسى المفتاح — Don’t forget the key",
     "source": "Common colloquial Arabic",
     "id": "DECODE-041"
   },
   {
     "type": "arabish",
-    "prompt": "BAH ATH TILL LUCK REE SAH LEH",
+    "prompt": "BA-AT-TELL ACKR ESS-ALEH",
     "answer": "بعثتلك رسالة — I sent you a message",
     "source": "Levantine Arabic",
     "id": "DECODE-042"
   },
   {
     "type": "arabish",
-    "prompt": "SHIF T SHOE SAR",
+    "prompt": "SHIF-TISH OOSAR",
     "answer": "شفت شو صار؟ — Did you see what happened?",
     "source": "Levantine Arabic",
     "id": "DECODE-043"
   },
   {
     "type": "arabish",
-    "prompt": "MAH B SAD DICK",
+    "prompt": "MAB-SAD DICK",
     "answer": "ما بصدق — I can’t believe it",
     "source": "Levantine Arabic",
     "id": "DECODE-044"
   },
   {
     "type": "arabish",
-    "prompt": "KINT BAM ZAH",
+    "prompt": "KINT-BAM ZAH",
     "answer": "كنت بمزح — I was joking",
     "source": "Levantine Arabic",
     "id": "DECODE-045"
   },
   {
     "type": "arabish",
-    "prompt": "LAH TAH KHUD HA SHAKH SEE",
+    "prompt": "LAT-AKHOD HASH ACK-SEE",
     "answer": "لا تاخدها شخصي — Don’t take it personally",
     "source": "Common colloquial Arabic",
     "id": "DECODE-046"
   },
   {
     "type": "arabish",
-    "prompt": "IL MOW DOO TA WEEL",
+    "prompt": "AL-MOW DOOT-AWEEL",
     "answer": "الموضوع طويل — It’s a long story",
     "source": "Common Arabic",
     "id": "DECODE-047"
   },
   {
     "type": "arabish",
-    "prompt": "MIN IL AH KHIR",
+    "prompt": "MIN-AL AKH-HER",
     "answer": "من الآخر — Here’s the bottom line",
     "source": "Common colloquial Arabic",
     "id": "DECODE-048"
   },
   {
     "type": "arabish",
-    "prompt": "BAY NEE OOH BAY NUCK",
+    "prompt": "BAY-NEE W-BAY-NACK",
     "answer": "بيني وبينك — Between you and me",
     "source": "Common Arabic",
     "id": "DECODE-049"
   },
   {
     "type": "arabish",
-    "prompt": "IS MA NEE LIL AH KHIR",
+    "prompt": "ISMAA-NEE LIL-AKHER",
     "answer": "اسمعني للآخر — Hear me out",
     "source": "Levantine Arabic",
     "id": "DECODE-050"
   },
   {
     "type": "arabish",
-    "prompt": "AH TEE NEE FUR SAH",
+    "prompt": "AAT-TEEN EE-FORSA",
     "answer": "أعطيني فرصة — Give me a chance",
     "source": "Common colloquial Arabic",
     "id": "DECODE-051"
   },
   {
     "type": "arabish",
-    "prompt": "KHA LAS IT TA FAQ NAH",
+    "prompt": "KHA-LAS ITTA-FAKNA",
     "answer": "خلص اتفقنا — All right, it’s a deal",
     "source": "Levantine Arabic",
     "id": "DECODE-052"
   },
   {
     "type": "arabish",
-    "prompt": "KULL SHEE TAM MAM",
+    "prompt": "KULL-SHEET AM-MAM",
     "answer": "كل شي تمام — Everything is fine",
     "source": "Common colloquial Arabic",
     "id": "DECODE-053"
   },
   {
     "type": "arabish",
-    "prompt": "IL HAMD LIL LAH AS SAH LAH MEH",
+    "prompt": "AL-HAMDIL LAH-AS SALA-MEH",
     "answer": "الحمد لله عالسلامة — Welcome back safely",
     "source": "Common Arabic expression",
     "id": "DECODE-054"
   },
   {
     "type": "arabish",
-    "prompt": "NAW WAR TOO NAH",
+    "prompt": "NAW-WART OONA",
     "answer": "نورتونا — You brightened our gathering",
     "source": "Common Arabic welcome",
     "id": "DECODE-055"
   },
   {
     "type": "arabish",
-    "prompt": "IL BAYT BAY TUCK",
+    "prompt": "AL-BAIT BAY-TACK",
     "answer": "البيت بيتك — Make yourself at home",
     "source": "Common Arabic expression",
     "id": "DECODE-056"
   },
   {
     "type": "arabish",
-    "prompt": "SAH HA OOH HAH NAH",
+    "prompt": "SAH-HAWH ANA",
     "answer": "صحة وهنا — Enjoy your meal",
     "source": "Common Arabic expression",
     "id": "DECODE-057"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE BED DACK TISH RUB",
+    "prompt": "SHOO-BID DAK-TISH-RUB",
     "answer": "شو بدك تشرب؟ — What would you like to drink?",
     "source": "Levantine Arabic",
     "id": "DECODE-058"
   },
   {
     "type": "arabish",
-    "prompt": "IL AH WEH JAH H ZEH",
+    "prompt": "AL-AH WAH-JAHZ EH",
     "answer": "القهوة جاهزة — The coffee is ready",
     "source": "Common Arabic",
     "id": "DECODE-059"
   },
   {
     "type": "arabish",
-    "prompt": "BED DACK SHEE",
+    "prompt": "BID-DACK SHEE",
     "answer": "بدك شي؟ — Do you need anything?",
     "source": "Levantine Arabic",
     "id": "DECODE-060"
   },
   {
     "type": "arabish",
-    "prompt": "MAH BID DEE SHEE",
+    "prompt": "MABID-DEE SHEE",
     "answer": "ما بدي شي — I don’t want anything",
     "source": "Levantine Arabic",
     "id": "DECODE-061"
   },
   {
     "type": "arabish",
-    "prompt": "MEEN BED DOH YIB DAH",
+    "prompt": "MEAN-BID DOYIB-DA",
     "answer": "مين بده يبدأ؟ — Who wants to start?",
     "source": "Levantine Arabic",
     "id": "DECODE-062"
   },
   {
     "type": "arabish",
-    "prompt": "DOW REE WALL AH DOW RUCK",
+    "prompt": "DOW-REE WALA DOR-ACK",
     "answer": "دوري ولا دورك؟ — My turn or yours?",
     "source": "Common colloquial Arabic",
     "id": "DECODE-063"
   },
   {
     "type": "arabish",
-    "prompt": "IN TIB HIL WAK IT",
+    "prompt": "INTAB EH-ALWAKT",
     "answer": "انتبه عالوقت — Watch the time",
     "source": "Levantine Arabic",
     "id": "DECODE-064"
   },
   {
     "type": "arabish",
-    "prompt": "AR RUB IL WAK IT YIKH LAS",
+    "prompt": "ARRAB AL-WAKT YIKHLAS",
     "answer": "قرّب الوقت يخلص — Time is almost up",
     "source": "Levantine Arabic",
     "id": "DECODE-065"
   },
   {
     "type": "arabish",
-    "prompt": "MEEN REE BIH",
+    "prompt": "MEAN-RIB EH",
     "answer": "مين ربح؟ — Who won?",
     "source": "Levantine Arabic",
     "id": "DECODE-066"
   },
   {
     "type": "arabish",
-    "prompt": "TA AH DULL NAH",
+    "prompt": "TA-AH DALNA",
     "answer": "تعادلنا — We tied",
     "source": "Common colloquial Arabic",
     "id": "DECODE-067"
   },
   {
     "type": "arabish",
-    "prompt": "LAH T GHA YIR IL MOW DOO",
+    "prompt": "LAT-GHAI YIR-AL MOWDOO",
     "answer": "لا تغيّر الموضوع — Don’t change the subject",
     "source": "Common Arabic",
     "id": "DECODE-068"
   },
   {
     "type": "arabish",
-    "prompt": "JAH WUB B SARA HAH",
+    "prompt": "JAW-WIB BIS-RAH HA",
     "answer": "جاوب بصراحة — Answer honestly",
     "source": "Common colloquial Arabic",
     "id": "DECODE-069"
   },
   {
     "type": "arabish",
-    "prompt": "IS SOO AL SA AB",
+    "prompt": "ASSO-AL SAAB",
     "answer": "السؤال صعب — The question is difficult",
     "source": "Common Arabic",
     "id": "DECODE-070"
   },
   {
     "type": "arabish",
-    "prompt": "IN DEE FICK RAH AH SAN",
+    "prompt": "ANDEE FIK-RAH AHSAN",
     "answer": "عندي فكرة أحسن — I have a better idea",
     "source": "Common colloquial Arabic",
     "id": "DECODE-071"
   },
   {
     "type": "arabish",
-    "prompt": "KHA LEE NAH N SAW WIT",
+    "prompt": "KHAL-LEE NAN-SAW WIT",
     "answer": "خلينا نصوّت — Let’s vote",
     "source": "Levantine Arabic",
     "id": "DECODE-072"
   },
   {
     "type": "arabish",
-    "prompt": "MISH MUK TAH NAY",
+    "prompt": "MISHMUK TANEA",
     "answer": "مش مقتنع — I’m not convinced (said by a man)",
     "source": "Common colloquial Arabic",
     "id": "DECODE-073"
   },
   {
     "type": "arabish",
-    "prompt": "MA ACK HUCK",
+    "prompt": "MA-AK HAK",
     "answer": "معك حق — You’re right",
     "source": "Common Arabic",
     "id": "DECODE-074"
   },
   {
     "type": "arabish",
-    "prompt": "YIM KIN MA ACK HUCK",
+    "prompt": "YIM-KIN MA-AK HAK",
     "answer": "يمكن معك حق — Maybe you’re right",
     "source": "Common colloquial Arabic",
     "id": "DECODE-075"
   },
   {
     "type": "arabish",
-    "prompt": "AH NAH GHAL TAN",
+    "prompt": "ANA GHAL-TAN",
     "answer": "أنا غلطان — I was wrong (said by a man)",
     "source": "Common colloquial Arabic",
     "id": "DECODE-076"
   },
   {
     "type": "arabish",
-    "prompt": "SOO TAH FAH HUM",
+    "prompt": "SOO-ET AFA-HUM",
     "answer": "سوء تفاهم — A misunderstanding",
     "source": "Common Arabic",
     "id": "DECODE-077"
   },
   {
     "type": "arabish",
-    "prompt": "WAD DIH LEE AK TAR",
+    "prompt": "WAD-DAH LEEAK-TAR",
     "answer": "وضّحلي أكتر — Explain it to me more clearly",
     "source": "Levantine Arabic",
     "id": "DECODE-078"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE AS DUCK",
+    "prompt": "SHOO-AS DACK",
     "answer": "شو قصدك؟ — What do you mean?",
     "source": "Levantine Arabic",
     "id": "DECODE-079"
   },
   {
     "type": "arabish",
-    "prompt": "MAH KAHN AS DEE",
+    "prompt": "MA-KAN AS-DEE",
     "answer": "ما كان قصدي — I didn’t mean it",
     "source": "Common colloquial Arabic",
     "id": "DECODE-080"
@@ -2498,13 +2498,13 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱهۡدِنَا …",
-    "promptTransliteration": "Ihdinā…",
-    "promptTranslation": "Guide us…",
+    "prompt": "إِيَّاكَ نَعۡبُدُ وَإِيَّاكَ نَسۡتَعِينُ ۝ ٱهۡدِنَا …",
+    "promptTransliteration": "Iyyāka naʿbudu wa iyyāka nastaʿīn. Ihdinā…",
+    "promptTranslation": "You alone we worship, and You alone we ask for help. Guide us…",
     "answer": "ٱلصِّرَٰطَ ٱلۡمُسۡتَقِيمَ",
     "answerTransliteration": "aṣ-ṣirāṭ al-mustaqīm",
     "answerTranslation": "to the straight path.",
-    "source": "Qur’an 1:6",
+    "source": "Qur’an 1:5–6",
     "id": "AYAH-002"
   },
   {
@@ -2520,12 +2520,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ …",
-    "promptTransliteration": "Istaʿīnū biṣ-ṣabri waṣ-ṣalāh…",
-    "promptTranslation": "Seek help through patience and prayer…",
-    "answer": "إِنَّ ٱللَّهَ مَعَ ٱلصَّـٰبِرِينَ",
-    "answerTransliteration": "inna Allāha maʿaṣ-ṣābirīn",
-    "answerTranslation": "Surely Allah is with the patient.",
+    "prompt": "يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱسۡتَعِينُواْ …",
+    "promptTransliteration": "Yā ayyuhalladhīna āmanū istaʿīnū…",
+    "promptTranslation": "O believers, seek help…",
+    "answer": "بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ إِنَّ ٱللَّهَ مَعَ ٱلصَّـٰبِرِينَ",
+    "answerTransliteration": "biṣ-ṣabri waṣ-ṣalāh; inna Allāha maʿaṣ-ṣābirīn",
+    "answerTranslation": "through patience and prayer. Surely Allah is with the patient.",
     "source": "Qur’an 2:153",
     "id": "AYAH-004"
   },
@@ -2586,12 +2586,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "لَا يُكَلِّفُ ٱللَّهُ نَفۡسًا …",
-    "promptTransliteration": "Lā yukallifu Allāhu nafsan…",
-    "promptTranslation": "Allah does not burden a soul…",
-    "answer": "إِلَّا وُسۡعَهَا",
-    "answerTransliteration": "illā wusʿahā",
-    "answerTranslation": "beyond its capacity.",
+    "prompt": "لَا يُكَلِّفُ ٱللَّهُ نَفۡسًا إِلَّا وُسۡعَهَاۚ لَهَا مَا …",
+    "promptTransliteration": "Lā yukallifu Allāhu nafsan illā wusʿahā; lahā mā…",
+    "promptTranslation": "Allah does not burden a soul beyond its capacity. It will have whatever…",
+    "answer": "كَسَبَتۡ وَعَلَيۡهَا مَا ٱكۡتَسَبَتۡ",
+    "answerTransliteration": "kasabat wa ʿalayhā maktasabat",
+    "answerTranslation": "good it has earned, and bear whatever evil it has committed.",
     "source": "Qur’an 2:286",
     "id": "AYAH-010"
   },
@@ -2663,9 +2663,9 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "حَسۡبُنَا ٱللَّهُ …",
-    "promptTransliteration": "Ḥasbunā Allāhu…",
-    "promptTranslation": "Allah is sufficient for us…",
+    "prompt": "فَزَادَهُمۡ إِيمَٰنٗا وَقَالُواْ حَسۡبُنَا ٱللَّهُ …",
+    "promptTransliteration": "Fazādahum īmānan wa qālū ḥasbunā Allāhu…",
+    "promptTranslation": "This increased them in faith, and they said, ‘Allah is sufficient for us…’",
     "answer": "وَنِعۡمَ ٱلۡوَكِيلُ",
     "answerTransliteration": "wa niʿmal-wakīl",
     "answerTranslation": "and He is the finest Guardian.",
@@ -2696,23 +2696,23 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱعۡدِلُواْ …",
-    "promptTransliteration": "Iʿdilū…",
-    "promptTranslation": "Be just…",
-    "answer": "هُوَ أَقۡرَبُ لِلتَّقۡوَىٰ",
-    "answerTransliteration": "huwa aqrabu lit-taqwā",
-    "answerTranslation": "for that is closer to mindfulness of Allah.",
+    "prompt": "ٱعۡدِلُواْ هُوَ …",
+    "promptTransliteration": "Iʿdilū; huwa…",
+    "promptTranslation": "Be just; that is…",
+    "answer": "أَقۡرَبُ لِلتَّقۡوَىٰ",
+    "answerTransliteration": "aqrabu lit-taqwā",
+    "answerTranslation": "closer to mindfulness of Allah.",
     "source": "Qur’an 5:8",
     "id": "AYAH-020"
   },
   {
     "type": "ayah",
-    "prompt": "مَن جَآءَ بِٱلۡحَسَنَةِ …",
-    "promptTransliteration": "Man jā’a bil-ḥasanati…",
-    "promptTranslation": "Whoever comes with a good deed…",
-    "answer": "فَلَهُۥ عَشۡرُ أَمۡثَالِهَا",
-    "answerTransliteration": "falahu ʿashru amthālihā",
-    "answerTranslation": "will have ten times its like.",
+    "prompt": "مَن جَآءَ بِٱلۡحَسَنَةِ فَلَهُۥ عَشۡرُ …",
+    "promptTransliteration": "Man jā’a bil-ḥasanati falahu ʿashru…",
+    "promptTranslation": "Whoever comes with a good deed will have ten…",
+    "answer": "أَمۡثَالِهَاۖ وَمَن جَآءَ بِٱلسَّيِّئَةِ فَلَا يُجۡزَىٰٓ إِلَّا مِثۡلَهَا",
+    "answerTransliteration": "amthālihā; wa man jā’a bis-sayyi’ati falā yujzā illā mithlahā",
+    "answerTranslation": "times its like; and whoever comes with an evil deed will be repaid only with its equivalent.",
     "source": "Qur’an 6:160",
     "id": "AYAH-021"
   },
@@ -2740,12 +2740,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "إِذَا ذُكِرَ ٱللَّهُ وَجِلَتۡ قُلُوبُهُمۡ …",
-    "promptTransliteration": "Idhā dhukira Allāhu wajilat qulūbuhum…",
-    "promptTranslation": "When Allah is mentioned, their hearts tremble…",
-    "answer": "وَإِذَا تُلِيَتۡ عَلَيۡهِمۡ ءَايَٰتُهُۥ زَادَتۡهُمۡ إِيمَٰنٗا",
-    "answerTransliteration": "wa idhā tuliyat ʿalayhim āyātuhu zādathum īmānan",
-    "answerTranslation": "and when His verses are recited, they increase in faith.",
+    "prompt": "إِنَّمَا ٱلۡمُؤۡمِنُونَ ٱلَّذِينَ إِذَا ذُكِرَ ٱللَّهُ وَجِلَتۡ قُلُوبُهُمۡ …",
+    "promptTransliteration": "Innamal-mu’minūna alladhīna idhā dhukira Allāhu wajilat qulūbuhum…",
+    "promptTranslation": "The believers are those whose hearts tremble when Allah is mentioned…",
+    "answer": "وَإِذَا تُلِيَتۡ عَلَيۡهِمۡ ءَايَٰتُهُۥ زَادَتۡهُمۡ إِيمَٰنٗا وَعَلَىٰ رَبِّهِمۡ يَتَوَكَّلُونَ",
+    "answerTransliteration": "wa idhā tuliyat ʿalayhim āyātuhu zādathum īmānan wa ʿalā rabbihim yatawakkalūn",
+    "answerTranslation": "and when His verses are recited to them, they increase in faith, and they trust in their Lord.",
     "source": "Qur’an 8:2",
     "id": "AYAH-024"
   },
@@ -2773,12 +2773,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱتَّقُواْ ٱللَّهَ …",
-    "promptTransliteration": "Ittaqū Allāha…",
-    "promptTranslation": "Be mindful of Allah…",
-    "answer": "وَكُونُواْ مَعَ ٱلصَّـٰدِقِينَ",
-    "answerTransliteration": "wa kūnū maʿaṣ-ṣādiqīn",
-    "answerTranslation": "and be with the truthful.",
+    "prompt": "يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱتَّقُواْ ٱللَّهَ وَكُونُواْ …",
+    "promptTransliteration": "Yā ayyuhalladhīna āmanū ittaqū Allāha wa kūnū…",
+    "promptTranslation": "O believers, be mindful of Allah and be…",
+    "answer": "مَعَ ٱلصَّـٰدِقِينَ",
+    "answerTransliteration": "maʿaṣ-ṣādiqīn",
+    "answerTranslation": "with the truthful.",
     "source": "Qur’an 9:119",
     "id": "AYAH-027"
   },
@@ -2916,31 +2916,31 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "وَٱذۡكُر رَّبَّكَ …",
-    "promptTransliteration": "Wadhkur rabbaka…",
-    "promptTranslation": "Remember your Lord…",
-    "answer": "إِذَا نَسِيتَ",
-    "answerTransliteration": "idhā nasīta",
-    "answerTranslation": "whenever you forget.",
+    "prompt": "إِلَّآ أَن يَشَآءَ ٱللَّهُۚ وَٱذۡكُر رَّبَّكَ …",
+    "promptTransliteration": "Illā an yashā’a Allāhu; wadhkur rabbaka…",
+    "promptTranslation": "Except by saying, ‘If Allah wills.’ And remember your Lord…",
+    "answer": "إِذَا نَسِيتَ وَقُلۡ عَسَىٰٓ أَن يَهۡدِيَنِ رَبِّي لِأَقۡرَبَ مِنۡ هَٰذَا رَشَدٗا",
+    "answerTransliteration": "idhā nasīta wa qul ʿasā an yahdiyani rabbī li-aqraba min hādhā rashadā",
+    "answerTranslation": "when you forget, and say, ‘Perhaps my Lord will guide me to what is nearer than this to right conduct.’",
     "source": "Qur’an 18:24",
     "id": "AYAH-040"
   },
   {
     "type": "ayah",
-    "prompt": "قَالَ رَبِّ …",
-    "promptTransliteration": "Qāla rabbi…",
-    "promptTranslation": "He said: My Lord…",
+    "prompt": "ٱذۡهَبۡ إِلَىٰ فِرۡعَوۡنَ إِنَّهُۥ طَغَىٰ ۝ قَالَ رَبِّ …",
+    "promptTransliteration": "Idhhab ilā Firʿawna innahu ṭaghā. Qāla rabbi…",
+    "promptTranslation": "Go to Pharaoh, for he has transgressed. He said, ‘My Lord…’",
     "answer": "ٱشۡرَحۡ لِي صَدۡرِي",
     "answerTransliteration": "ishraḥ lī ṣadrī",
     "answerTranslation": "open my heart for me.",
-    "source": "Qur’an 20:25",
+    "source": "Qur’an 20:24–25",
     "id": "AYAH-041"
   },
   {
     "type": "ayah",
-    "prompt": "وَقُل رَّبِّ …",
-    "promptTransliteration": "Wa qul rabbi…",
-    "promptTranslation": "And say: My Lord…",
+    "prompt": "وَلَا تَعۡجَلۡ بِٱلۡقُرۡءَانِ مِن قَبۡلِ أَن يُقۡضَىٰٓ إِلَيۡكَ وَحۡيُهُۥۖ وَقُل رَّبِّ …",
+    "promptTransliteration": "Wa lā taʿjal bil-Qur’āni min qabli an yuqḍā ilayka waḥyuhu; wa qul rabbi…",
+    "promptTranslation": "Do not rush to recite before the revelation is completed to you, and say, ‘My Lord…’",
     "answer": "زِدۡنِي عِلۡمٗا",
     "answerTransliteration": "zidnī ʿilman",
     "answerTranslation": "increase me in knowledge.",
@@ -2960,13 +2960,13 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "قَدۡ أَفۡلَحَ …",
-    "promptTransliteration": "Qad aflaḥa…",
-    "promptTranslation": "Successful indeed are…",
-    "answer": "ٱلۡمُؤۡمِنُونَ",
-    "answerTransliteration": "al-mu’minūn",
-    "answerTranslation": "the believers.",
-    "source": "Qur’an 23:1",
+    "prompt": "قَدۡ أَفۡلَحَ ٱلۡمُؤۡمِنُونَ ٱلَّذِينَ …",
+    "promptTransliteration": "Qad aflaḥal-mu’minūn alladhīna…",
+    "promptTranslation": "Successful indeed are the believers—those who…",
+    "answer": "هُمۡ فِي صَلَاتِهِمۡ خَٰشِعُونَ",
+    "answerTransliteration": "hum fī ṣalātihim khāshiʿūn",
+    "answerTranslation": "are humble in their prayer.",
+    "source": "Qur’an 23:1–2",
     "id": "AYAH-044"
   },
   {
@@ -2982,12 +2982,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱللَّهُ نُورُ …",
-    "promptTransliteration": "Allāhu nūru…",
-    "promptTranslation": "Allah is the Light of…",
-    "answer": "ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِ",
-    "answerTransliteration": "as-samāwāti wal-arḍ",
-    "answerTranslation": "the heavens and the earth.",
+    "prompt": "ٱللَّهُ نُورُ ٱلسَّمَٰوَٰتِ …",
+    "promptTransliteration": "Allāhu nūrus-samāwāti…",
+    "promptTranslation": "Allah is the Light of the heavens…",
+    "answer": "وَٱلۡأَرۡضِۚ مَثَلُ نُورِهِۦ كَمِشۡكَوٰةٖ فِيهَا مِصۡبَاحٌ",
+    "answerTransliteration": "wal-arḍ; mathalu nūrihi kamishkātin fīhā miṣbāḥ",
+    "answerTranslation": "and the earth. The example of His light is like a niche in which there is a lamp.",
     "source": "Qur’an 24:35",
     "id": "AYAH-046"
   },
@@ -3059,9 +3059,9 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱذۡكُرُواْ ٱللَّهَ …",
-    "promptTransliteration": "Udhkurū Allāha…",
-    "promptTranslation": "Remember Allah…",
+    "prompt": "يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱذۡكُرُواْ ٱللَّهَ …",
+    "promptTransliteration": "Yā ayyuhalladhīna āmanū udhkurū Allāha…",
+    "promptTranslation": "O believers, remember Allah…",
     "answer": "ذِكۡرٗا كَثِيرٗا",
     "answerTransliteration": "dhikran kathīran",
     "answerTranslation": "with frequent remembrance.",
@@ -3081,12 +3081,12 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "ٱدۡفَعۡ بِٱلَّتِي هِيَ أَحۡسَنُ …",
-    "promptTransliteration": "Idfaʿ billatī hiya aḥsanu…",
-    "promptTranslation": "Respond to evil with what is best…",
-    "answer": "فَإِذَا ٱلَّذِي بَيۡنَكَ وَبَيۡنَهُۥ عَدَٰوَةٞ كَأَنَّهُۥ وَلِيٌّ حَمِيمٞ",
-    "answerTransliteration": "fa-idhalladhī baynaka wa baynahu ʿadāwatun ka-annahu waliyyun ḥamīm",
-    "answerTranslation": "then an enemy may become like a close friend.",
+    "prompt": "ٱدۡفَعۡ بِٱلَّتِي هِيَ أَحۡسَنُ فَإِذَا …",
+    "promptTransliteration": "Idfaʿ billatī hiya aḥsanu fa-idhā…",
+    "promptTranslation": "Respond to evil with what is best, and then…",
+    "answer": "ٱلَّذِي بَيۡنَكَ وَبَيۡنَهُۥ عَدَٰوَةٞ كَأَنَّهُۥ وَلِيٌّ حَمِيمٞ",
+    "answerTransliteration": "alladhī baynaka wa baynahu ʿadāwatun ka-annahu waliyyun ḥamīm",
+    "answerTranslation": "an enemy may become like a close friend.",
     "source": "Qur’an 41:34",
     "id": "AYAH-055"
   },
@@ -3125,13 +3125,13 @@ const cards = [
   },
   {
     "type": "ayah",
-    "prompt": "وَمَن يَتَّقِ ٱللَّهَ …",
-    "promptTransliteration": "Wa man yattaqi Allāha…",
-    "promptTranslation": "Whoever is mindful of Allah…",
-    "answer": "يَجۡعَل لَّهُۥ مَخۡرَجٗا",
-    "answerTransliteration": "yajʿal lahu makhrajan",
-    "answerTranslation": "He will make a way out for them.",
-    "source": "Qur’an 65:2",
+    "prompt": "وَمَن يَتَّقِ ٱللَّهَ يَجۡعَل لَّهُۥ مَخۡرَجٗا وَيَرۡزُقۡهُ …",
+    "promptTransliteration": "Wa man yattaqi Allāha yajʿal lahu makhrajan wa yarzuqhu…",
+    "promptTranslation": "Whoever is mindful of Allah, He will make a way out for them and provide for them…",
+    "answer": "مِنۡ حَيۡثُ لَا يَحۡتَسِبُ",
+    "answerTransliteration": "min ḥaythu lā yaḥtasib",
+    "answerTranslation": "from sources they could never imagine.",
+    "source": "Qur’an 65:2–3",
     "id": "AYAH-059"
   },
   {
@@ -3427,140 +3427,140 @@ const cards = [
   },
   {
     "type": "arabish",
-    "prompt": "KEE FACK IL YOUM",
+    "prompt": "KEE-FACK AL-YOM",
     "answer": "كيفك اليوم؟ — How are you today? (said to a man)",
     "source": "Levantine Arabic",
     "id": "DECODE-081"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE BID NACK N SAW WEE",
+    "prompt": "SHOO-BID NAN-SAWWEE",
     "answer": "شو بدنا نسوي؟ — What are we going to do?",
     "source": "Levantine Arabic",
     "id": "DECODE-082"
   },
   {
     "type": "arabish",
-    "prompt": "MAH FEE AH HA LAH",
+    "prompt": "MAF-EE AH-LA",
     "answer": "ما في أحلى — Nothing could be nicer",
     "source": "Common colloquial Arabic",
     "id": "DECODE-083"
   },
   {
     "type": "arabish",
-    "prompt": "IN TEE MIN WAYNE",
+    "prompt": "IN-TEE MIN-WAIN",
     "answer": "إنتِ من وين؟ — Where are you from? (said to a woman)",
     "source": "Levantine Arabic",
     "id": "DECODE-084"
   },
   {
     "type": "arabish",
-    "prompt": "ALLAH YEH DEEK",
+    "prompt": "ALLAH-YAH DEEK",
     "answer": "الله يهديك — May Allah guide you",
     "source": "Common colloquial Arabic",
     "id": "DECODE-085"
   },
   {
     "type": "arabish",
-    "prompt": "YAH REIT NEE MA RO HIT",
+    "prompt": "YA-RAIT NEE-MA ROHET",
     "answer": "يا ريتني ما رحت — I wish I had not gone",
     "source": "Levantine Arabic",
     "id": "DECODE-086"
   },
   {
     "type": "arabish",
-    "prompt": "FEEN IL MAF TAH",
+    "prompt": "FEEN-AL MIF-TAH",
     "answer": "فين المفتاح؟ — Where is the key?",
     "source": "Egyptian Arabic",
     "id": "DECODE-087"
   },
   {
     "type": "arabish",
-    "prompt": "MISH FAY HIM HA GA",
+    "prompt": "MISH-FAHIM HAA-GA",
     "answer": "مش فاهم حاجة — I do not understand anything (said by a man)",
     "source": "Egyptian Arabic",
     "id": "DECODE-088"
   },
   {
     "type": "arabish",
-    "prompt": "KOL HA GA TAMAM",
+    "prompt": "KOLL-HAA GAT-A-MAM",
     "answer": "كل حاجة تمام — Everything is fine",
     "source": "Egyptian Arabic",
     "id": "DECODE-089"
   },
   {
     "type": "arabish",
-    "prompt": "BAH KER N SHOO FACK",
+    "prompt": "BUK-RAH N-SHOO-FACK",
     "answer": "بكرا نشوفك — We will see you tomorrow",
     "source": "Levantine Arabic",
     "id": "DECODE-090"
   },
   {
     "type": "arabish",
-    "prompt": "MAH A LAYK",
+    "prompt": "MAA-A LAYK",
     "answer": "ما عليك — Do not worry about it",
     "source": "Gulf / colloquial Arabic",
     "id": "DECODE-091"
   },
   {
     "type": "arabish",
-    "prompt": "MIN EYE YOON EE",
+    "prompt": "MIN-AI YOO-NEE",
     "answer": "من عيوني — With pleasure; literally, from my eyes",
     "source": "Common colloquial Arabic",
     "id": "DECODE-092"
   },
   {
     "type": "arabish",
-    "prompt": "HAD AH KAL LAM",
+    "prompt": "HAA-DA KAL-AM",
     "answer": "هذا كلام؟ — Does that make any sense?",
     "source": "Common colloquial Arabic",
     "id": "DECODE-093"
   },
   {
     "type": "arabish",
-    "prompt": "SAH DICK NEE",
+    "prompt": "SAD-DICK NEE",
     "answer": "صدقني — Believe me (said to a man)",
     "source": "Common colloquial Arabic",
     "id": "DECODE-094"
   },
   {
     "type": "arabish",
-    "prompt": "YAH LAH NIM SHEE",
+    "prompt": "YAL-LAN IM-SHEE",
     "answer": "يلا نمشي — Come on, let us go",
     "source": "Common colloquial Arabic",
     "id": "DECODE-095"
   },
   {
     "type": "arabish",
-    "prompt": "SHLOE NUCK IL YOUM",
+    "prompt": "SHLO-NACK AL-YOM",
     "answer": "شلونك اليوم؟ — How are you today? (said to a man)",
     "source": "Gulf / Iraqi Arabic",
     "id": "DECODE-096"
   },
   {
     "type": "arabish",
-    "prompt": "WAIN KUNT",
+    "prompt": "WAIN-KUNT",
     "answer": "وين كنت؟ — Where were you? (said to a man)",
     "source": "Levantine Arabic",
     "id": "DECODE-097"
   },
   {
     "type": "arabish",
-    "prompt": "SHOE HAL HA KEE",
+    "prompt": "SHOO-HAL HA-KEE",
     "answer": "شو هالحكي؟ — What is this talk?",
     "source": "Levantine Arabic",
     "id": "DECODE-098"
   },
   {
     "type": "arabish",
-    "prompt": "MOO MAS DOOG",
+    "prompt": "MOO-MUS DOOG",
     "answer": "مو مصدّق — I cannot believe it",
     "source": "Levantine / Gulf Arabic",
     "id": "DECODE-099"
   },
   {
     "type": "arabish",
-    "prompt": "AAN JUD KHA LASS",
+    "prompt": "AN-JUD KHA-LASS",
     "answer": "عنجد خلص؟ — Seriously, it is over?",
     "source": "Levantine Arabic",
     "id": "DECODE-100"

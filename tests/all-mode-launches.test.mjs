@@ -8,10 +8,10 @@ const appSource = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8')
 const modes = [
   ['all', 'teams'],
   ['say', 'teams'],
-  ['arabish', 'solo'],
-  ['ayah', 'solo'],
-  ['trivia', 'solo'],
-  ['identity', 'solo'],
+  ['arabish', 'casual'],
+  ['ayah', 'casual'],
+  ['trivia', 'casual'],
+  ['identity', 'casual'],
   ['conversation', null],
   ['mizan', null],
   ['reflection', null]

@@ -40,4 +40,31 @@ assert.equal(conversation.length, 135, 'Conversation Shuffle count');
 assert.ok(conversation.every(card => conversationTypes.has(card.type)), 'Conversation Shuffle includes conversation prompts only');
 assert.ok(!cards.some(card => /^(Syrian|Lebanese|Palestinian|Jordanian) Arabic$/.test(card.source)), 'dialect labels must not imply exclusivity');
 
-console.log('content: 605 object records, stable IDs, schemas, split decks, and labels passed');
+const ambiguousAyahPrompts = new Set([
+  'ٱهۡدِنَا …', 'ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ …', 'لَا يُكَلِّفُ ٱللَّهُ نَفۡسًا …',
+  'حَسۡبُنَا ٱللَّهُ …', 'ٱعۡدِلُواْ …', 'مَن جَآءَ بِٱلۡحَسَنَةِ …',
+  'إِذَا ذُكِرَ ٱللَّهُ وَجِلَتۡ قُلُوبُهُمۡ …', 'ٱتَّقُواْ ٱللَّهَ …', 'وَٱذۡكُر رَّبَّكَ …',
+  'قَالَ رَبِّ …', 'وَقُل رَّبِّ …', 'قَدۡ أَفۡلَحَ …', 'ٱللَّهُ نُورُ …',
+  'ٱذۡكُرُواْ ٱللَّهَ …', 'ٱدۡفَعۡ بِٱلَّتِي هِيَ أَحۡسَنُ …', 'وَمَن يَتَّقِ ٱللَّهَ …'
+]);
+assert.ok(cards.filter(card => card.type === 'ayah').every(card => !ambiguousAyahPrompts.has(card.prompt)), 'known multi-location Ayah fragments are extended');
+assert.equal(cards.find(card => card.id === 'AYAH-044').source, 'Qur’an 23:1–2');
+assert.equal(cards.find(card => card.id === 'AYAH-059').source, 'Qur’an 65:2–3');
+
+const correctedAyahIds = [
+  'AYAH-002','AYAH-004','AYAH-010','AYAH-017','AYAH-020','AYAH-021','AYAH-024','AYAH-027',
+  'AYAH-040','AYAH-041','AYAH-042','AYAH-044','AYAH-046','AYAH-053','AYAH-055','AYAH-059'
+];
+for (const id of correctedAyahIds) {
+  const card = cards.find(item => item.id === id);
+  assert.ok(card.answer.trim().split(/\s+/).length >= 2, `${id} must leave a meaningful multi-word continuation`);
+}
+assert.equal(cards.find(card => card.id === 'AYAH-002').source, 'Qur’an 1:5–6');
+assert.equal(cards.find(card => card.id === 'AYAH-041').source, 'Qur’an 20:24–25');
+
+const reviewedDecode = cards.filter(card => card.type === 'arabish').slice(0, 100);
+assert.equal(reviewedDecode.length, 100, 'the everyday Decode set must contain 100 reviewed cards');
+assert.equal(new Set(reviewedDecode.map(card => card.prompt)).size, 100, 'reviewed Decode prompts must remain unique');
+assert.ok(reviewedDecode.every(card => card.prompt.split(/\s+/).length <= 4), 'reviewed Decode prompts must disguise obvious word boundaries');
+
+console.log('content: 605 object records, balanced Ayah continuations, reviewed Decode prompts, schemas, and labels passed');

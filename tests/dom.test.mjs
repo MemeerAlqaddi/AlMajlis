@@ -20,6 +20,11 @@ window.AudioContext = class {
 };
 window.scrollTo = () => {};
 window.requestAnimationFrame = callback => window.setTimeout(callback, 0);
+const viewportListeners = {};
+window.visualViewport = {
+  height: 640,
+  addEventListener(type, listener) { viewportListeners[type] = listener; }
+};
 window.navigator.serviceWorker = {register: () => Promise.resolve()};
 window.navigator.vibrate = () => true;
 let wakeLockRequests = 0;
@@ -36,6 +41,13 @@ const click = element => element.dispatchEvent(new window.MouseEvent('click', {b
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 assert.equal($('welcomeScreen').hidden, false);
+assert.equal(window.document.documentElement.style.getPropertyValue('--game-height'), '640px');
+window.visualViewport.height = 568;
+viewportListeners.resize();
+assert.equal(window.document.documentElement.style.getPropertyValue('--game-height'), '568px', 'visible phone height is followed automatically');
+assert.equal($('install').hidden, false, 'Install App is available in a normal browser');
+window.dispatchEvent(new window.Event('appinstalled'));
+assert.equal($('install').hidden, true, 'Install App disappears immediately after installation');
 click($('openSetup'));
 assert.equal(window.document.querySelectorAll('.modeGroup').length, 2);
 assert.equal(window.document.querySelectorAll('.modeGroup')[0].querySelectorAll('.setupMode').length, 6);
@@ -44,6 +56,10 @@ assert.ok([...window.document.querySelectorAll('.setupMode small')].every(elemen
 
 click(window.document.querySelector('[data-mode="mizan"]'));
 assert.equal($('gameShell').hidden, false, 'conversation begins directly');
+assert.equal(window.document.documentElement.classList.contains('roundActive'), true, 'root viewport locks during gameplay');
+const gameplayPan = new window.Event('touchmove', {bubbles: true, cancelable: true});
+$('gameCard').dispatchEvent(gameplayPan);
+assert.equal(gameplayPan.defaultPrevented, true, 'gameplay cannot rubber-band scroll');
 assert.equal($('setupScreen').hidden, true);
 assert.equal($('countdownScreen').hidden, true, 'conversation has no countdown');
 assert.equal(countdownNotes.length, 0);
@@ -81,19 +97,19 @@ click(window.document.querySelector('[data-style="teams"]'));
 assert.match($('modeInstruction').textContent, /Pass the phone/);
 click($('beginGame'));
 await wait(35);
-assert.deepEqual(countdownNotes.slice(-3), [392, 440, 523.25]);
+assert.deepEqual(countdownNotes.slice(-5), [392, 440, 523.25, 659.25, 880]);
 assert.equal($('countdownScreen').hidden, true);
 if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
 assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, true);
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v33')).timerRunning, true);
 
 visibilityState = 'hidden';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, false, 'backgrounding pauses the saved timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v33')).timerRunning, false, 'backgrounding pauses the saved timer');
 visibilityState = 'visible';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
 await wait(2);
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, true, 'returning resumes the timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v33')).timerRunning, true, 'returning resumes the timer');
 
 click($('correct'));
 click($('correct'));
@@ -105,8 +121,10 @@ click($('undoPoint'));
 assert.match($('roundScore').textContent, /earned 0 points/);
 
 for (let turn = 1; turn < 6; turn++) {
+  const endedCard = $('question').textContent;
   click($('nextRound'));
   await wait(35);
+  assert.notEqual($('question').textContent, endedCard, `turn ${turn + 1} starts on a fresh card`);
   click($('correct'));
   await wait(8);
   click($('finishRound'));

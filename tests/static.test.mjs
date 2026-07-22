@@ -12,8 +12,8 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
   assert.ok(sw.includes(asset), `offline cache includes ${asset}`);
 }
 assert.match(manifest.description, /605-card/);
-assert.match(sw, /al-majlis-v29/);
-assert.ok(html.includes('./styles.css?v=29') && html.includes('./cards-data.js?v=29') && html.includes('./app.js?v=29'), 'core assets use release-specific URLs');
+assert.match(sw, /al-majlis-v33/);
+assert.ok(html.includes('./styles.css?v=32') && html.includes('./cards-data.js?v=32') && html.includes('./app.js?v=32'), 'core assets use release-specific URLs');
 assert.match(sw, /fetch\(request\)[\s\S]*catch\(\(\) => caches\.match\(request\)\)/, 'core assets update from the network before falling back offline');
 assert.match(sw, /request\.method !== 'GET'/);
 assert.match(sw, /url\.origin !== self\.location\.origin/);
@@ -25,6 +25,8 @@ assert.ok(html.includes('id="cardHome"') && html.includes('id="exitSheet"'), 'ca
 assert.ok(html.includes('id="resumeGame"') && app.includes('SESSION_KEY'), 'game recovery is available');
 assert.ok(html.includes('id="sourceSheet"') && html.includes('aria-haspopup="dialog"'), 'full sources are expandable');
 assert.ok(!html.includes('id="num"') && !html.includes('id="progress"'), 'card IDs and deck counts are absent from gameplay');
+assert.ok(!html.includes('data-style="solo"'), 'Solo and Just for Fun are merged into one unscored option');
+assert.equal((html.match(/class="styleChoice"/g) || []).length, 3, 'three play-style choices remain');
 
 assert.ok(app.includes("title: 'Competitive Modes'") && app.includes("title: 'Conversational Modes'"), 'all modes share one grouped page');
 assert.ok(!app.includes('modeCount(') && !app.includes('cards</small>'), 'mode tiles do not expose deck counts');
@@ -42,5 +44,18 @@ assert.match(css, /\.ref\{[^}]*font-size:11px/);
 assert.ok(app.includes('trapDialogFocus') && app.includes('element.inert = inert'), 'dialogs trap focus and make the background inert');
 assert.match(app, /contentVersion: String\(APP_VERSION\)/);
 assert.ok(app.includes('const storage = {') && app.includes('catch { return false; }'), 'blocked browser storage cannot abort game launch');
+assert.match(app, /five forbidden clues, their opposites, or their translations in another language/);
+assert.match(app, /playRoundStartTone\(\)/);
+assert.match(app, /remaining > 0 && remaining <= 10/);
+assert.match(css, /\.actions\{[^}]*display:flex[^}]*justify-content:center/);
+assert.match(css, /\.playStyles\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+assert.match(css, /html\.roundActive,html\.roundActive body\{[^}]*height:var\(--game-height,100dvh\)[^}]*overflow:hidden/);
+assert.match(css, /#gameShell:not\(\[hidden\]\)\{[^}]*height:var\(--game-height,100dvh\)[^}]*overflow:hidden/);
+assert.ok(app.includes('window.visualViewport?.height') && app.includes("document.documentElement.classList.toggle('roundActive'"), 'gameplay follows and locks the actual visible phone viewport');
+assert.ok(app.includes("document.addEventListener('touchmove'") && app.includes("{passive: false}"), 'gameplay rubber-band scrolling is blocked');
+assert.ok(html.includes('id="install" type="button" hidden') && app.includes('isInstalledMode') && app.includes("window.addEventListener('appinstalled'"), 'Install App hides in installed mode and after installation');
+assert.ok(html.includes('id="decodeDialect"') && app.includes("card.type === 'arabish' ? card.source"), 'Decode dialect label is visible independently of Reveal');
+assert.doesNotMatch(css.match(/\.decodeDialect\{[^}]*\}/)?.[0] || '', /background\s*:/, 'Decode dialect label has no bar background');
+assert.match(app, /else roundNumber\+\+;\s*advance\(\);\s*if \(isConversationMode\(\)\)/, 'resuming after a round advances to a fresh card');
 
 console.log('static: lifecycle, recovery, reporting, controls, sources, and accessibility passed');

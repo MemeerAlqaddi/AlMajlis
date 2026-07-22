@@ -1,6 +1,6 @@
 const modes = {
   all: ['Game Night Shuffle', 'A competitive mix of all five answer-based games.'],
-  say: ['Guess The Word', 'Describe the word without using any of the five forbidden clues.'],
+  say: ['Guess The Word', 'Describe the word without using any of the five forbidden clues, their opposites, or their translations in another language.'],
   arabish: ['Decode the Gibberish', 'Read the strange-looking sounds aloud until you discover the hidden Arabic phrase.'],
   ayah: ['Complete the Ayah', 'Complete the missing words, then reveal the Arabic, transliteration, and English meaning.'],
   trivia: ['Trivia', 'Answer challenging questions using your knowledge of the Qur’an, hadith, and Islamic concepts.'],
@@ -12,7 +12,7 @@ const modes = {
 
 const modeInstructions = {
   all: 'Pass the phone to the person taking the turn. Follow the instruction shown on each card.',
-  say: 'Hand the phone to the clue-giver. Keep the word and forbidden clues hidden from the guessing side.',
+  say: 'Hand the phone to the clue-giver. Keep the word and forbidden clues hidden from the guessing side. You may not use a forbidden clue, its opposite, or translate it into another language.',
   arabish: 'Hand the phone to the reader. Read the sound-spelling aloud; the other side guesses the Arabic phrase.',
   ayah: 'Only the player taking the turn should see the screen before the answer is revealed.',
   trivia: 'Only the player reading the question should see the answer before Reveal.',
@@ -22,13 +22,13 @@ const modeInstructions = {
 const objectiveTypes = new Set(['say', 'arabish', 'ayah', 'trivia', 'identity']);
 const conversationTypes = new Set(['mizan', 'reflection']);
 const competitiveModes = new Set(['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']);
-const soloFriendly = new Set(['arabish', 'ayah', 'trivia', 'identity']);
 const modeTimes = {all: 60, say: 60, arabish: 90, ayah: 90, trivia: 90, identity: 90, conversation: 0, mizan: 0, reflection: 0};
-const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', solo: 'Solo', conversation: 'Untimed conversation'};
+const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
-const APP_VERSION = 29;
-const SESSION_KEY = 'al-majlis-active-game-v29';
+const INSTALL_STATE_KEY = 'al-majlis-installed-v1';
+const APP_VERSION = 33;
+const SESSION_KEY = 'al-majlis-active-game-v33';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -44,6 +44,7 @@ let timerTick = null;
 let timerDeadline = 0;
 let timerRunning = false;
 let timerWasRunningBeforeHidden = false;
+let lastTimerCueSecond = null;
 let activeSide = 'a';
 let countdownTick = null;
 let roundNumber = 1;
@@ -87,10 +88,11 @@ const sounds = typeof Audio === 'undefined' ? {} : {
   correct: new Audio('./majlis-correct.mp3'),
   complete: new Audio('./majlis-complete.mp3')
 };
-const soundVolumes = {open: .56, select: .52, correct: .58, complete: .62};
+const soundVolumes = {open: .9, select: .78, correct: .92, complete: .82};
 Object.entries(sounds).forEach(([name, audio]) => {
   audio.preload = 'auto';
   audio.volume = soundVolumes[name];
+  audio.load?.();
 });
 
 function playSound(name) {
@@ -100,27 +102,51 @@ function playSound(name) {
   audio.play().catch(() => {});
 }
 
-function playCountdownTone(value) {
+function primeAudio() {
+  Object.values(sounds).forEach(audio => audio.load?.());
   if (!soundEnabled) return;
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return;
   try {
     countdownAudioContext ||= new AudioContextClass();
     if (countdownAudioContext.state === 'suspended') countdownAudioContext.resume().catch(() => {});
-    const now = countdownAudioContext.currentTime;
+  } catch {}
+}
+
+function playTone(frequency, {delay = 0, duration = .12, peak = .018, type = 'sine'} = {}) {
+  if (!soundEnabled) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    countdownAudioContext ||= new AudioContextClass();
+    if (countdownAudioContext.state === 'suspended') countdownAudioContext.resume().catch(() => {});
+    const now = countdownAudioContext.currentTime + delay;
     const oscillator = countdownAudioContext.createOscillator();
     const gain = countdownAudioContext.createGain();
-    const notes = {3: 392, 2: 440, 1: 523.25};
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(notes[value] || 440, now);
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, now);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.018, now + 0.018);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+    gain.gain.exponentialRampToValueAtTime(peak, now + .012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     oscillator.connect(gain);
     gain.connect(countdownAudioContext.destination);
     oscillator.start(now);
-    oscillator.stop(now + 0.19);
+    oscillator.stop(now + duration + .01);
   } catch {}
+}
+
+function playCountdownTone(value) {
+  const notes = {3: 392, 2: 440, 1: 523.25};
+  playTone(notes[value] || 440, {duration: .18, peak: .022});
+}
+
+function playRoundStartTone() {
+  playTone(659.25, {duration: .16, peak: .034});
+  playTone(880, {delay: .105, duration: .2, peak: .04});
+}
+
+function playFinalSecondsTick() {
+  playTone(760, {duration: .055, peak: .012, type: 'triangle'});
 }
 
 function isCompetitive() { return ['teams', 'duel'].includes(playStyle); }
@@ -349,12 +375,20 @@ function resetViewport() {
   document.body.scrollTop = 0;
 }
 
+function syncGameplayViewport() {
+  const visibleHeight = Math.round(window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight);
+  if (visibleHeight > 0) document.documentElement.style.setProperty('--game-height', `${visibleHeight}px`);
+  scheduleCardFit();
+}
+
 function showScreen(id) {
   ['welcomeScreen', 'setupScreen', 'gameShell'].forEach(screenId => {
     const element = $(screenId);
     element.hidden = screenId !== id;
   });
   document.body.classList.toggle('roundActive', id === 'gameShell');
+  document.documentElement.classList.toggle('roundActive', id === 'gameShell');
+  syncGameplayViewport();
   resetViewport();
   if (id === 'gameShell') requestWakeLock();
   else releaseWakeLock();
@@ -394,22 +428,20 @@ function selectSetupMode(selectedMode) {
   }
 
   const canCompete = competitiveModes.has(selectedMode);
-  const canSolo = soloFriendly.has(selectedMode);
   document.querySelector('[data-style="teams"]').disabled = !canCompete;
   document.querySelector('[data-style="duel"]').disabled = !canCompete;
-  document.querySelector('[data-style="solo"]').disabled = !canSolo;
   $('styleModeName').textContent = modes[selectedMode][0];
   showSetupStep('styleStep');
 }
 
 function selectStyle(style) {
-  if ((['teams', 'duel'].includes(style) && !competitiveModes.has(mode)) || (style === 'solo' && !soloFriendly.has(mode))) return;
+  if (['teams', 'duel'].includes(style) && !competitiveModes.has(mode)) return;
   playSound('select');
   playStyle = style;
   document.querySelectorAll('.styleChoice').forEach(element => element.classList.toggle('selected', element.dataset.style === style));
   const competitive = isCompetitive();
   $('matchField').hidden = !competitive;
-  $('playersTitle').textContent = style === 'teams' ? 'Teams ready?' : style === 'duel' ? 'Ready for 1 vs 1?' : style === 'solo' ? 'Ready for a solo session?' : 'Ready to play?';
+  $('playersTitle').textContent = style === 'teams' ? 'Teams ready?' : style === 'duel' ? 'Ready for 1 vs 1?' : 'Ready to play?';
   $('selectedModeName').textContent = modes[mode][0];
   $('selectedStyleName').textContent = `${styleNames[style]}${competitive ? ' · 3 rounds' : ''}`;
   $('modeInstruction').textContent = modeInstructions[mode];
@@ -505,6 +537,7 @@ function startCountdown() {
   roundStartScore = scores[activeSide];
   pointEvents = [];
   seconds = modeTimes[mode];
+  lastTimerCueSecond = null;
   showTime();
   $('countdownScreen').hidden = false;
   let count = 3;
@@ -525,6 +558,7 @@ function startCountdown() {
       countdownTick = null;
       $('countdownScreen').hidden = true;
       $('question').focus({preventScroll: true});
+      playRoundStartTone();
       startTimer();
     }
   }, 560);
@@ -534,7 +568,7 @@ function setAnswerVisible(visible) {
   $('answer').hidden = !visible;
   $('answer').setAttribute('aria-hidden', String(!visible));
   $('answerRule').hidden = !visible;
-  $('ref').hidden = !visible;
+  $('ref').hidden = !visible || currentCard()?.type === 'arabish';
   $('reveal').setAttribute('aria-expanded', String(visible));
   restoredAnswerVisible = visible;
   scheduleCardFit();
@@ -544,12 +578,17 @@ function setAnswerVisible(visible) {
 function fitCardToViewport() {
   const card = $('gameCard');
   if (!card || $('gameShell').hidden) return;
-  card.classList.remove('fitLevel1', 'fitLevel2');
+  card.classList.remove('fitLevel1', 'fitLevel2', 'fitLevel3');
   if (card.scrollHeight > card.clientHeight) card.classList.add('fitLevel1');
   if (card.scrollHeight > card.clientHeight) card.classList.add('fitLevel2');
+  if (card.scrollHeight > card.clientHeight) card.classList.add('fitLevel3');
 }
 
 function scheduleCardFit() { requestAnimationFrame(() => requestAnimationFrame(fitCardToViewport)); }
+
+function decodeDisplay(card) {
+  return card.prompt;
+}
 
 function render() {
   const card = currentCard();
@@ -560,7 +599,7 @@ function render() {
   const dense = !isAyah && !isReflection && (card.prompt.length > 105 || card.answer.length > 130);
 
   $('type').textContent = modes[card.type][0].toUpperCase();
-  $('question').textContent = isAyah ? arabicDisplay(card.prompt) : card.prompt;
+  $('question').textContent = isAyah ? arabicDisplay(card.prompt) : decodeDisplay(card);
   $('gameCard').classList.toggle('ayahCard', isAyah);
   $('gameCard').classList.toggle('reflectionCard', isReflection);
   $('gameCard').classList.toggle('dense', dense);
@@ -571,6 +610,8 @@ function render() {
   $('answerTranslation').textContent = card.answerTranslation || '';
   $('ref').textContent = card.source;
   $('fullSource').textContent = card.source;
+  $('decodeDialect').textContent = card.type === 'arabish' ? card.source : '';
+  $('decodeDialect').hidden = card.type !== 'arabish';
   $('reveal').hidden = isWord || isReflection;
   $('reveal').textContent = isDilemma ? 'Considerations' : 'Reveal';
   setAnswerVisible(isWord || restoredAnswerVisible);
@@ -657,6 +698,10 @@ function timerFrame() {
   if (remaining !== seconds) {
     seconds = remaining;
     showTime();
+    if (remaining > 0 && remaining <= 10 && remaining !== lastTimerCueSecond) {
+      lastTimerCueSecond = remaining;
+      playFinalSecondsTick();
+    }
     persistSession();
   }
   if (remaining <= 0) {
@@ -766,6 +811,7 @@ function beginNextRound() {
     if (activeSide === 'a') activeSide = 'b';
     else { activeSide = 'a'; roundNumber++; }
   } else roundNumber++;
+  advance();
   if (isConversationMode()) {
     $('question').focus({preventScroll: true});
     persistSession();
@@ -880,6 +926,7 @@ function returnHome() {
   updateResumeAvailability();
 }
 
+$('openSetup').onpointerdown = primeAudio;
 $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); resetSetup(); };
 $('resumeGame').onclick = restoreGame;
 $('setupBack').onclick = () => {
@@ -991,6 +1038,11 @@ document.addEventListener('visibilitychange', () => {
     retryPendingReports();
   }
 });
+document.addEventListener('touchmove', event => {
+  if (!document.body.classList.contains('roundActive')) return;
+  if (event.target.closest?.('.sheetPanel,.installPanel,.roundPanel')) return;
+  event.preventDefault();
+}, {passive: false});
 window.addEventListener('pagehide', () => { pauseTimer(); persistSession(); });
 window.addEventListener('online', retryPendingReports);
 window.addEventListener('popstate', () => {
@@ -1001,6 +1053,21 @@ window.addEventListener('popstate', () => {
 });
 
 let installPrompt;
+function isInstalledMode() {
+  return window.matchMedia?.('(display-mode: standalone)').matches === true
+    || window.navigator.standalone === true
+    || document.referrer.startsWith('android-app://');
+}
+function updateInstallVisibility() {
+  const installed = isInstalledMode() || storage.get(INSTALL_STATE_KEY) === 'yes';
+  if (isInstalledMode()) storage.set(INSTALL_STATE_KEY, 'yes');
+  $('install').hidden = installed;
+  if (installed) {
+    installPrompt = null;
+    $('installNative').hidden = true;
+    if (!$('installSheet').hidden) closeInstallSheet();
+  }
+}
 function openInstallSheet() {
   $('installNative').hidden = !installPrompt;
   openDialog('installSheet', 'installClose', {pauseGame: false});
@@ -1013,24 +1080,37 @@ async function runNativeInstall() {
   installPrompt = null;
   $('installNative').hidden = true;
 }
-window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; });
-window.addEventListener('appinstalled', () => {
-  $('install').textContent = 'Installed';
-  setTimeout(() => $('install').textContent = 'Install App', 2200);
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  if (isInstalledMode() || storage.get(INSTALL_STATE_KEY) === 'yes') return;
+  installPrompt = event;
+  $('install').hidden = false;
 });
-window.addEventListener('resize', scheduleCardFit);
+window.addEventListener('appinstalled', () => {
+  storage.set(INSTALL_STATE_KEY, 'yes');
+  installPrompt = null;
+  $('install').hidden = true;
+  $('installNative').hidden = true;
+  if (!$('installSheet').hidden) closeInstallSheet();
+});
+window.addEventListener('resize', syncGameplayViewport);
+window.addEventListener('orientationchange', syncGameplayViewport);
+window.visualViewport?.addEventListener('resize', syncGameplayViewport);
+window.visualViewport?.addEventListener('scroll', syncGameplayViewport);
 $('install').onclick = () => installPrompt ? runNativeInstall() : openInstallSheet();
 $('installNative').onclick = runNativeInstall;
 $('installClose').onclick = closeInstallSheet;
 $('installSheet').onclick = event => { if (event.target === $('installSheet')) closeInstallSheet(); };
 
 updateSoundToggle();
+syncGameplayViewport();
+updateInstallVisibility();
 updateReportCount();
 updateResumeAvailability();
 retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=29', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=31', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });
