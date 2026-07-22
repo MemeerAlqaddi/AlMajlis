@@ -21,9 +21,12 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=38');
-assert.match(sw, /al-majlis-v38/);
-assert.ok(html.includes('./styles.css?v=38') && html.includes('./cards-data.js?v=38') && html.includes('./app.js?v=38'), 'core assets use release-specific URLs');
+assert.equal(manifest.start_url, './index.html?v=40');
+assert.match(sw, /al-majlis-v40/);
+assert.ok(html.includes('./styles.css?v=38') && html.includes('./cards-data.js?v=38') && html.includes('./app.js?v=40'), 'core assets use release-specific URLs');
+assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
+assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
+assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
 assert.match(sw, /fetch\(request\)[\s\S]*catch\(\(\) => caches\.match\(request\)\)/, 'core assets update from the network before falling back offline');
 assert.match(sw, /request\.method !== 'GET'/);
 assert.match(sw, /url\.origin !== self\.location\.origin/);
@@ -84,7 +87,8 @@ assert.match(css, /html\.roundActive,html\.roundActive body\{[^}]*height:var\(--
 assert.match(css, /#gameShell:not\(\[hidden\]\)\{[^}]*height:var\(--game-height,100dvh\)[^}]*overflow:hidden/);
 assert.ok(app.includes('window.visualViewport?.height') && app.includes("document.documentElement.classList.toggle('roundActive'"), 'gameplay follows and locks the actual visible phone viewport');
 assert.ok(app.includes("document.addEventListener('touchmove'") && app.includes("{passive: false}"), 'gameplay rubber-band scrolling is blocked');
-assert.ok(html.includes('id="install" type="button" hidden') && app.includes('isInstalledMode') && app.includes("window.addEventListener('appinstalled'"), 'Install App hides in installed mode and after installation');
+assert.ok(html.includes('id="install" type="button">Install App</button>') && app.includes('isInstalledMode') && app.includes("window.addEventListener('appinstalled'"), 'Install App is visible on the website and controlled by the current display mode');
+assert.ok(!app.includes('INSTALL_STATE_KEY') && !app.includes("storage.get('al-majlis-installed"), 'a past installation cannot permanently hide Install App on the website');
 assert.match(html, /class="welcomeMain"[\s\S]*class="welcomeUtilities"/, 'home utilities follow the main launch content');
 assert.match(css, /\.welcomeScreen\{[^}]*display:grid[^}]*grid-template-rows:minmax\(0,1fr\) auto/);
 assert.match(css, /\.welcomeUtilities\{[^}]*justify-self:center[^}]*margin-top:24px/, 'home utilities stay in a spaced bottom row');

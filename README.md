@@ -1,4 +1,4 @@
-# Al Majlis v38
+# Al Majlis v39
 
 An installable, offline-capable Islamic and Arabic gathering game with 605 cards.
 
@@ -8,7 +8,7 @@ An installable, offline-capable Islamic and Arabic gathering game with 605 cards
 - Conversational modes are untimed, unscored, and begin directly from mode selection.
 - Active games are saved on the device and can be resumed after leaving, refreshing, or closing the app.
 
-V38 keeps every prior content, phone-fit, gameplay, timing, and audio correction. Every timed mode uses one consistent 60-second round. The quiet 3–2–1 notes remain intact, followed by a separate uplifting round-start chime. Round-complete controls share one centered layout in every play style and mode.
+V39 keeps every prior content, phone-fit, gameplay, timing, and audio correction. It restores the Install App option on the regular website and hides it only while Al Majlis is running as an installed home-screen app. Every timed mode uses one consistent 60-second round. The quiet 3–2–1 notes remain intact, followed by a separate uplifting round-start chime. Round-complete controls share one centered layout in every play style and mode.
 
 Design A is the default light appearance, while Design B is available as dark mode in Settings. Light-mode setup panels and mode cards now use layered grey marble, editorial numbering, depth, and restrained aqua details instead of flat white boxes. The Bismillah appears only on the home and countdown screens. The saved theme choice applies throughout setup, countdowns, gameplay, dialogs, and score screens. Saved-game recovery also remains in Settings so the home screen stays uncluttered.
 

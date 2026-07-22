@@ -217,4 +217,5 @@ body{min-height:100svh;background:linear-gradient(var(--veil),var(--veil)),var(-
 @media(max-width:430px){.forbiddenList{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.forbiddenWord:last-child:nth-child(3n+1){grid-column:1/-1}.forbiddenWord{min-height:34px;padding:6px 7px;font-size:11px}.forbiddenHeading{margin-bottom:9px}}
 @media(max-height:650px){.forbiddenList{gap:5px}.forbiddenWord{min-height:29px;padding:4px 7px;font-size:10px}.forbiddenHeading{margin-bottom:6px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(display-mode:standalone){.welcomeInstall{display:none!important}}
 @media(forced-colors:active){button,.card,.sheetPanel,.installPanel{border:1px solid CanvasText}.stripe{background:Highlight}.launchBtn{background:Highlight;color:HighlightText}}

@@ -1148,7 +1148,7 @@ updateResumeAvailability();
 retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=39', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=40', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });
