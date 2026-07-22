@@ -30,7 +30,7 @@ window.navigator.wakeLock = {request: async () => ({release: async () => {}, add
 window.fetch = async () => ({ok: true, json: async () => ({success: 'true'})});
 const nativeSetInterval = window.setInterval.bind(window);
 const nativeSetTimeout = window.setTimeout.bind(window);
-window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 560 ? 3 : delay);
+window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 1000 ? 3 : delay);
 window.setTimeout = (callback, delay) => nativeSetTimeout(callback, delay === 420 ? 4 : delay);
 
 window.eval(`${cardsSource}\n${appSource}\nwindow.__majlisTest = {
@@ -78,8 +78,10 @@ assert.equal($('answer').hidden, false, 'Reveal works in Shuffle');
 click($('reveal'));
 assert.equal($('answer').hidden, true, 'Hide works in Shuffle');
 const beforePass = $('question').textContent;
+const toneCountBeforePass = tones.length;
 click($('skip'));
 assert.notEqual($('question').textContent, beforePass, 'Pass advances in Shuffle');
+assert.deepEqual(tones.slice(toneCountBeforePass, toneCountBeforePass + 2), [246.94, 174.61], 'Pass plays a distinct descending negative cue');
 await wait(8);
 
 window.__majlisTest.showShuffleCard('arabish');
@@ -91,9 +93,11 @@ assert.equal($('ref').hidden, true, 'Decode variety is not shown in the white so
 window.__majlisTest.showShuffleCard('say');
 assert.equal($('reveal').hidden, true, 'Guess the Word removes the inapplicable Reveal control');
 assert.equal([...window.document.querySelectorAll('.actions .action')].filter(button => !button.hidden).length, 3);
+assert.equal(window.document.querySelectorAll('.forbiddenWord').length, 7, 'seven forbidden clues are rendered as separate, scannable items');
+const toneCountBeforePoint = tones.length;
 click($('correct'));
-assert.ok(audioPlays.some(src => src.endsWith('majlis-correct.mp3')), 'Correct +1 plays positive feedback');
-assert.equal($('pointToast').hidden, false, 'Correct +1 awards a point and offers Undo');
+assert.deepEqual(tones.slice(toneCountBeforePoint, toneCountBeforePoint + 2), [783.99, 1046.5], 'Correct +1 plays a distinct rising positive cue');
+assert.equal($('pointToast'), null, 'Correct +1 does not open an Undo point pop-up');
 await wait(8);
 
 const toneCountBeforeTicks = tones.length;

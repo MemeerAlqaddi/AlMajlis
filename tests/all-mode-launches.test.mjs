@@ -22,10 +22,11 @@ const wait = milliseconds => new Promise(resolve => setTimeout(resolve, millisec
 for (const [mode, style] of modes) {
   const dom = new JSDOM(html, {runScripts: 'outside-only', url: 'https://example.test/'});
   const {window} = dom;
+  const tones = [];
   window.Audio = class { play() { return Promise.resolve(); } };
   window.AudioContext = class {
     constructor() { this.currentTime = 0; this.state = 'running'; this.destination = {}; }
-    createOscillator() { return {frequency: {setValueAtTime() {}}, connect() {}, start() {}, stop() {}}; }
+    createOscillator() { return {frequency: {setValueAtTime: value => tones.push(value)}, connect() {}, start() {}, stop() {}}; }
     createGain() { return {gain: {setValueAtTime() {}, exponentialRampToValueAtTime() {}}, connect() {}}; }
     resume() { return Promise.resolve(); }
   };
@@ -35,7 +36,9 @@ for (const [mode, style] of modes) {
   window.navigator.vibrate = () => true;
   window.fetch = async () => ({ok: true, json: async () => ({success: 'true'})});
   const nativeSetInterval = window.setInterval.bind(window);
-  window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 560 ? 3 : delay);
+  const nativeSetTimeout = window.setTimeout.bind(window);
+  window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 1000 ? 3 : delay);
+  window.setTimeout = (callback, delay) => nativeSetTimeout(callback, delay === 420 ? 4 : delay);
   window.eval(`${cardsSource}\n${appSource}`);
 
   const click = element => element.dispatchEvent(new window.MouseEvent('click', {bubbles: true}));
@@ -51,7 +54,18 @@ for (const [mode, style] of modes) {
   assert.equal(window.document.getElementById('countdownScreen').hidden, true, `${mode} clears or skips countdown`);
   assert.ok(window.document.getElementById('question').textContent.length > 0, `${mode} renders its first card`);
   assert.equal(window.document.getElementById('playTimer').textContent, style ? '60' : '—', `${mode} uses the correct round duration`);
+
+  const beforeNext = tones.length;
+  click(window.document.getElementById('correct'));
+  assert.deepEqual(tones.slice(beforeNext, beforeNext + 2), [783.99, 1046.5], `${mode} Correct/Next plays the positive cue`);
+  await wait(8);
+
+  if (style) {
+    const beforePass = tones.length;
+    click(window.document.getElementById('skip'));
+    assert.deepEqual(tones.slice(beforePass, beforePass + 2), [246.94, 174.61], `${mode} Pass plays the negative cue`);
+  }
   dom.window.close();
 }
 
-console.log('all modes: six competitive and three conversational launch flows passed');
+console.log('all modes: launch flows and consistent Correct/Next/Pass sounds passed');

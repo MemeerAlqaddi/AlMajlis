@@ -8,6 +8,14 @@ vm.runInNewContext(`${source}\nglobalThis.__cards=cards;`, context);
 const cards = context.__cards;
 const expectedCounts = {say:100, arabish:160, ayah:60, trivia:80, identity:70, mizan:45, reflection:90};
 
+const guessCards = cards.filter(card => card.type === 'say');
+assert.equal(guessCards.length, 100, 'Guess the Word retains all 100 cards');
+for (const card of guessCards) {
+  const forbidden = card.answer.replace(/^Do not say:\s*/i, '').split('·').map(word => word.trim()).filter(Boolean);
+  assert.equal(forbidden.length, 7, `${card.id} has exactly seven useful forbidden clues`);
+  assert.equal(new Set(forbidden.map(word => word.toLowerCase())).size, 7, `${card.id} has no duplicate forbidden clues`);
+}
+
 assert.equal(cards.length, 605, 'total card count');
 for (const [type, expected] of Object.entries(expectedCounts)) assert.equal(cards.filter(card => card.type === type).length, expected, `${type} count`);
 

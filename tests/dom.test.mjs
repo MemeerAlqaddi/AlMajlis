@@ -32,7 +32,7 @@ window.navigator.wakeLock = {request: async () => { wakeLockRequests++; return {
 window.fetch = async () => ({ok: true, json: async () => ({success: 'true'})});
 const nativeSetInterval = window.setInterval.bind(window);
 const nativeSetTimeout = window.setTimeout.bind(window);
-window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 560 ? 3 : delay);
+window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 1000 ? 3 : delay);
 window.setTimeout = (callback, delay) => nativeSetTimeout(callback, delay === 420 ? 4 : delay);
 
 window.eval(`${cardsSource}\n${appSource}`);
@@ -84,8 +84,9 @@ const conversationPrompt = $('question').textContent;
 click($('cardHome'));
 click($('confirmHome'));
 assert.equal($('welcomeScreen').hidden, false);
-assert.equal($('resumeGame').hidden, false);
-click($('resumeGame'));
+assert.equal($('resumeSavedGame').hidden, false);
+click($('settingsOpen'));
+click($('resumeSavedGame'));
 assert.equal($('question').textContent, conversationPrompt, 'resume returns to the same card');
 
 click($('cardHome'));
@@ -102,24 +103,27 @@ assert.equal($('countdownScreen').hidden, true);
 if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
 assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
 assert.equal($('playTimer').textContent, '60', 'timed play begins at 60 seconds');
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v34')).timerRunning, true);
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, true);
 
 visibilityState = 'hidden';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v34')).timerRunning, false, 'backgrounding pauses the saved timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, false, 'backgrounding pauses the saved timer');
 visibilityState = 'visible';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
 await wait(2);
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v34')).timerRunning, true, 'returning resumes the timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, true, 'returning resumes the timer');
 
 click($('correct'));
 click($('correct'));
-assert.equal($('pointToast').hidden, false, 'point feedback includes immediate undo');
+assert.equal($('pointToast'), null, 'Next does not open an Undo point pop-up');
 await wait(8);
 click($('finishRound'));
-assert.match($('roundScore').textContent, /earned 1 point/, 'rapid double tap awards only one point');
+assert.match($('roundScore').textContent, /scored 1 point/, 'rapid double tap awards only one point');
+assert.equal($('matchScoreboard').hidden, false, 'team totals are separated into a clear scoreboard');
+assert.equal($('finalLabelA').textContent, 'Team A');
+assert.equal($('finalLabelB').textContent, 'Team B');
 click($('undoPoint'));
-assert.match($('roundScore').textContent, /earned 0 points/);
+assert.match($('roundScore').textContent, /scored 0 points/);
 
 for (let turn = 1; turn < 6; turn++) {
   const endedCard = $('question').textContent;
@@ -136,13 +140,19 @@ assert.equal($('roundHistory').children.length, 6);
 assert.equal($('finalA').textContent, '2');
 assert.equal($('finalB').textContent, '3');
 assert.match($('roundResult').textContent, /Team B wins/);
+assert.equal($('roundScore').textContent, 'Final score');
 
 click($('roundHome'));
-assert.equal($('resumeGame').hidden, false, 'completed game remains recoverable until discarded or replaced');
+assert.equal($('resumeSavedGame').hidden, false, 'completed game remains recoverable until discarded or replaced');
 click($('settingsOpen'));
 assert.equal($('settingsSheet').hidden, false);
+click($('themeDark'));
+assert.equal(window.document.documentElement.dataset.theme, 'dark', 'dark design can be selected in Settings');
+assert.equal(window.localStorage.getItem('al-majlis-theme-v1'), 'dark');
+click($('themeLight'));
+assert.equal(window.document.documentElement.dataset.theme, 'light', 'light Design A can be restored');
 click($('discardSavedGame'));
-assert.equal($('resumeGame').hidden, true);
+assert.equal($('resumeSavedGame').hidden, true);
 
 dom.window.close();
 console.log('dom: direct conversations, source dialog, confirmed exit, recovery, tap lock, scoring, and winner passed');

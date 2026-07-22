@@ -27,7 +27,7 @@ storagePrototype.setItem = () => { throw new window.DOMException('Storage blocke
 storagePrototype.removeItem = () => { throw new window.DOMException('Storage blocked', 'SecurityError'); };
 
 const nativeSetInterval = window.setInterval.bind(window);
-window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 560 ? 3 : delay);
+window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 1000 ? 3 : delay);
 window.eval(`${cardsSource}\n${appSource}`);
 
 const $ = id => window.document.getElementById(id);
