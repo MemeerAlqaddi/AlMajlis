@@ -1,15 +1,22 @@
-# AL MAJLIS — GitHub Pages upload
+# The Majlis
 
-Upload all files in this folder to the root of the `main` branch in:
+A source-aware Islamic game night and conversation PWA with 605 cards.
 
-https://github.com/MemeerAlqaddi/AlMajlis
+## Structure
 
-Then open the repository's **Settings → Pages** and choose:
+- `index.html` — accessible screens and dialogs
+- `styles.css` — responsive, scroll-free gameplay layout
+- `cards-data.js` — versioned card records with stable IDs
+- `app.js` — setup, gameplay, scoring, reporting, and installation
+- `service-worker.js` — offline asset cache
+- `tests/` — content and release checks
 
-- Source: **Deploy from a branch**
-- Branch: **main**
-- Folder: **/(root)**
+Run the release checks with:
 
-The public app address will be:
+```sh
+node --check app.js
+node tests/content.test.mjs
+node tests/static.test.mjs
+```
 
-https://memeeralqaddi.github.io/AlMajlis/
+See [CONTENT-METHODOLOGY.md](CONTENT-METHODOLOGY.md) for the content boundaries and review rules.

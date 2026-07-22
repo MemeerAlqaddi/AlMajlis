@@ -1,0 +1,11 @@
+{
+  "name": "the-majlis",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --check app.js && node tests/content.test.mjs && node tests/static.test.mjs && node tests/dom.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}
