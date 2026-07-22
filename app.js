@@ -10,14 +10,24 @@ const modes = {
   reflection: ['Under The Surface', 'Explore deeper questions about intention, character, faith, and real life.']
 };
 
+const modeInstructions = {
+  all: 'Pass the phone to the person taking the turn. Follow the instruction shown on each card.',
+  say: 'Hand the phone to the clue-giver. Keep the word and forbidden clues hidden from the guessing side.',
+  arabish: 'Hand the phone to the reader. Read the sound-spelling aloud; the other side guesses the Arabic phrase.',
+  ayah: 'Only the player taking the turn should see the screen before the answer is revealed.',
+  trivia: 'Only the player reading the question should see the answer before Reveal.',
+  identity: 'Read the clues aloud without showing the answer to the guessing side.'
+};
+
 const objectiveTypes = new Set(['say', 'arabish', 'ayah', 'trivia', 'identity']);
 const conversationTypes = new Set(['mizan', 'reflection']);
 const competitiveModes = new Set(['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']);
-const soloFriendly = new Set(['arabish', 'ayah', 'trivia', 'identity', 'conversation', 'mizan', 'reflection']);
+const soloFriendly = new Set(['arabish', 'ayah', 'trivia', 'identity']);
 const modeTimes = {all: 60, say: 60, arabish: 90, ayah: 90, trivia: 90, identity: 90, conversation: 0, mizan: 0, reflection: 0};
-const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', solo: 'Solo'};
-const REPORTS_KEY = 'al-majlis-card-reports-v2';
+const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', solo: 'Solo', conversation: 'Untimed conversation'};
+const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
+const SESSION_KEY = 'al-majlis-active-game-v28';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -26,35 +36,46 @@ const $ = id => document.getElementById(id);
 let mode = null;
 let playStyle = null;
 let deck = [];
-let i = 0;
+let cardIndex = 0;
 let scores = {a: 0, b: 0};
 let seconds = 60;
-let tick;
+let timerTick = null;
+let timerDeadline = 0;
+let timerRunning = false;
+let timerWasRunningBeforeHidden = false;
 let activeSide = 'a';
-let countdownTick;
-let countdownTimeout;
+let countdownTick = null;
 let roundNumber = 1;
 let roundStartScore = 0;
 let roundLog = [];
 let pointEvents = [];
 let roundClosed = false;
 let matchComplete = false;
-let sessionBase = '';
 let currentSetupStep = 'modeStep';
 let soundEnabled = localStorage.getItem(SOUND_KEY) !== 'off';
+let countdownAudioContext = null;
 let lastReport = null;
-let reportShouldResume = false;
-let toastTimer;
+let toastTimer = null;
+let pointToastTimer = null;
+let controlsLocked = false;
+let activeDialog = null;
+let dialogResumeTimer = false;
 let lastFocusedBeforeDialog = null;
+let wakeLock = null;
+let reportRetryRunning = false;
+let restoredAnswerVisible = false;
 
 const sounds = typeof Audio === 'undefined' ? {} : {
   open: new Audio('./majlis-open.mp3'),
   select: new Audio('./majlis-select.mp3'),
-  ready: new Audio('./majlis-ready.mp3'),
   correct: new Audio('./majlis-correct.mp3'),
   complete: new Audio('./majlis-complete.mp3')
 };
-Object.values(sounds).forEach(audio => { audio.preload = 'auto'; audio.volume = .72; });
+const soundVolumes = {open: .56, select: .52, correct: .58, complete: .62};
+Object.entries(sounds).forEach(([name, audio]) => {
+  audio.preload = 'auto';
+  audio.volume = soundVolumes[name];
+});
 
 function playSound(name) {
   if (!soundEnabled || !sounds[name]) return;
@@ -63,21 +84,46 @@ function playSound(name) {
   audio.play().catch(() => {});
 }
 
-function getCardId(card) { return card[card[0] === 'ayah' ? 8 : 4]; }
-function getCardSource(card) { return card[0] === 'ayah' ? card[7] : card[3]; }
-function getCardAnswer(card) { return card[0] === 'ayah' ? card[4] : card[2]; }
-function isConversationCard(card) { return conversationTypes.has(card[0]); }
+function playCountdownTone(value) {
+  if (!soundEnabled) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    countdownAudioContext ||= new AudioContextClass();
+    if (countdownAudioContext.state === 'suspended') countdownAudioContext.resume().catch(() => {});
+    const now = countdownAudioContext.currentTime;
+    const oscillator = countdownAudioContext.createOscillator();
+    const gain = countdownAudioContext.createGain();
+    const notes = {3: 392, 2: 440, 1: 523.25};
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(notes[value] || 440, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.018, now + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+    oscillator.connect(gain);
+    gain.connect(countdownAudioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.19);
+  } catch {}
+}
+
 function isCompetitive() { return ['teams', 'duel'].includes(playStyle); }
 function isConversationMode() { return ['conversation', 'mizan', 'reflection'].includes(mode); }
 function deckFor(selectedMode) {
-  if (selectedMode === 'all') return cards.filter(card => objectiveTypes.has(card[0]));
-  if (selectedMode === 'conversation') return cards.filter(card => conversationTypes.has(card[0]));
-  return cards.filter(card => card[0] === selectedMode);
+  if (selectedMode === 'all') return cards.filter(card => objectiveTypes.has(card.type));
+  if (selectedMode === 'conversation') return cards.filter(card => conversationTypes.has(card.type));
+  return cards.filter(card => card.type === selectedMode);
+}
+function currentCard() { return deck[cardIndex % deck.length]; }
+function sideLabel(side = activeSide) {
+  if (playStyle === 'duel') return side === 'a' ? 'Player 1' : 'Player 2';
+  return side === 'a' ? 'Team A' : 'Team B';
 }
 
 function updateSoundToggle() {
   $('soundToggle').textContent = `Sound · ${soundEnabled ? 'On' : 'Off'}`;
   $('soundToggle').setAttribute('aria-pressed', String(soundEnabled));
+  $('settingsSoundValue').textContent = soundEnabled ? 'On' : 'Off';
 }
 
 function getReports() {
@@ -93,67 +139,22 @@ function saveReports(reports) {
 }
 
 function updateReportCount() {
-  const count = getReports().length;
-  $('reportCount').textContent = count;
-  $('reportsOpen').setAttribute('aria-label', `${count} saved card report${count === 1 ? '' : 's'}`);
+  const reports = getReports();
+  const pending = reports.filter(report => report.deliveryStatus !== 'sent').length;
+  $('reportCount').textContent = pending ? `${pending} pending` : String(reports.length);
+  $('reportsOpen').setAttribute('aria-label', `${pending} pending and ${reports.length} total saved card reports`);
 }
 
 function currentCardReport() {
-  const card = deck[i % deck.length];
+  const card = currentCard();
   return {
-    cardId: getCardId(card),
-    mode: modes[card[0]][0],
-    prompt: card[1],
-    answer: getCardAnswer(card),
-    source: getCardSource(card),
-    contentVersion: '24'
+    cardId: card.id,
+    mode: modes[card.type][0],
+    prompt: card.prompt,
+    answer: card.answer,
+    source: card.source,
+    contentVersion: '28'
   };
-}
-
-function showToast(message) {
-  clearTimeout(toastTimer);
-  $('softToast').textContent = message;
-  $('softToast').classList.add('show');
-  toastTimer = setTimeout(() => $('softToast').classList.remove('show'), 1800);
-}
-
-function openDialog(id, focusId) {
-  lastFocusedBeforeDialog = document.activeElement;
-  $(id).hidden = false;
-  $(focusId)?.focus();
-}
-
-function closeDialog(id) {
-  if ($(id).hidden) return;
-  $(id).hidden = true;
-  lastFocusedBeforeDialog?.focus?.();
-}
-
-function pauseForReport() {
-  reportShouldResume = Boolean(modeTimes[mode] && seconds > 0 && !roundClosed && $('countdownScreen').hidden);
-  clearInterval(tick);
-}
-
-function resumeAfterReport() {
-  if (!reportShouldResume) return;
-  reportShouldResume = false;
-  startTimer();
-}
-
-function openReport() {
-  pauseForReport();
-  const card = currentCardReport();
-  $('reportCardMeta').textContent = `${card.mode} · ${card.cardId}`;
-  $('reportForm').reset();
-  $('reportForm').hidden = false;
-  $('reportThanks').hidden = true;
-  openDialog('reportSheet', 'reportClose');
-}
-
-function closeReport() {
-  if ($('reportSheet').hidden) return;
-  closeDialog('reportSheet');
-  resumeAfterReport();
 }
 
 function reportText(report) {
@@ -182,15 +183,48 @@ async function sendReportByEmail(report) {
   if (!response.ok) throw new Error(`Report delivery failed (${response.status})`);
   const result = await response.json();
   if (String(result.success) !== 'true') throw new Error(result.message || 'Report delivery failed');
-  return result;
+}
+
+async function deliverStoredReport(index, announce = false) {
+  const reports = getReports();
+  const report = reports[index];
+  if (!report || report.deliveryStatus === 'sent') return true;
+  try {
+    await sendReportByEmail(report);
+    const latest = getReports();
+    if (!latest[index] || latest[index].reportedAt !== report.reportedAt) return true;
+    latest[index] = {...latest[index], deliveryStatus: 'sent', deliveredAt: new Date().toISOString(), attempts: (latest[index].attempts || 0) + 1};
+    saveReports(latest);
+    if (announce) showToast('Report sent');
+    return true;
+  } catch {
+    const latest = getReports();
+    if (latest[index] && latest[index].reportedAt === report.reportedAt) {
+      latest[index] = {...latest[index], deliveryStatus: 'pending', attempts: (latest[index].attempts || 0) + 1, lastAttemptAt: new Date().toISOString()};
+      saveReports(latest);
+    }
+    return false;
+  }
+}
+
+async function retryPendingReports() {
+  if (reportRetryRunning || navigator.onLine === false) return;
+  reportRetryRunning = true;
+  try {
+    const reports = getReports();
+    for (let index = 0; index < reports.length; index++) {
+      if (reports[index].deliveryStatus !== 'sent') await deliverStoredReport(index);
+    }
+  } finally { reportRetryRunning = false; }
 }
 
 function renderReportSummary() {
   const reports = getReports();
+  const pending = reports.filter(report => report.deliveryStatus !== 'sent').length;
   const counts = {};
   reports.forEach(report => counts[report.issue] = (counts[report.issue] || 0) + 1);
   $('reportSummary').innerHTML = reports.length
-    ? `<div class="reportSummaryRow"><span>Total cards flagged</span><b>${reports.length}</b></div>${Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([issue, count]) => `<div class="reportSummaryRow"><span>${issue}</span><b>${count}</b></div>`).join('')}`
+    ? `<div class="reportSummaryRow"><span>Total saved</span><b>${reports.length}</b></div><div class="reportSummaryRow"><span>Waiting to send</span><b>${pending}</b></div>${Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([issue, count]) => `<div class="reportSummaryRow"><span>${issue}</span><b>${count}</b></div>`).join('')}`
     : '<div class="reportEmpty">No cards have been flagged on this device.</div>';
   $('reportExport').hidden = !reports.length;
 }
@@ -199,8 +233,8 @@ function exportReports() {
   const reports = getReports();
   const quote = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
   const rows = [
-    ['Card ID', 'Mode', 'Issue', 'Note', 'Prompt', 'Answer', 'Source', 'Content version', 'Reported at'],
-    ...reports.map(report => [report.cardId, report.mode, report.issue, report.note, report.prompt, report.answer, report.source, report.contentVersion, report.reportedAt])
+    ['Card ID', 'Mode', 'Issue', 'Note', 'Prompt', 'Answer', 'Source', 'Delivery', 'Content version', 'Reported at'],
+    ...reports.map(report => [report.cardId, report.mode, report.issue, report.note, report.prompt, report.answer, report.source, report.deliveryStatus, report.contentVersion, report.reportedAt])
   ];
   const blob = new Blob([rows.map(row => row.map(quote).join(',')).join('\n')], {type: 'text/csv;charset=utf-8'});
   const url = URL.createObjectURL(blob);
@@ -212,13 +246,83 @@ function exportReports() {
   showToast('Report file ready');
 }
 
+function showToast(message) {
+  clearTimeout(toastTimer);
+  $('softToast').textContent = message;
+  $('softToast').classList.add('show');
+  toastTimer = setTimeout(() => $('softToast').classList.remove('show'), 1900);
+}
+
+function setBackgroundInert(dialog, inert) {
+  [...document.body.children].forEach(element => {
+    if (element === dialog || element.tagName === 'SCRIPT' || element.id === 'softToast' || element.id === 'pointToast') return;
+    element.inert = inert;
+  });
+}
+
+function pauseTimer() {
+  if (!timerRunning) return false;
+  seconds = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+  clearInterval(timerTick);
+  timerTick = null;
+  timerRunning = false;
+  timerDeadline = 0;
+  showTime();
+  persistSession();
+  return true;
+}
+
+function openDialog(id, focusId, {pauseGame = true} = {}) {
+  if (activeDialog) closeDialog(activeDialog.id, {resume: false, restoreFocus: false});
+  lastFocusedBeforeDialog = document.activeElement;
+  dialogResumeTimer = pauseGame && pauseTimer();
+  const dialog = $(id);
+  dialog.hidden = false;
+  activeDialog = dialog;
+  setBackgroundInert(dialog, true);
+  $(focusId)?.focus();
+}
+
+function closeDialog(id, {resume = true, restoreFocus = true} = {}) {
+  const dialog = $(id);
+  if (!dialog || dialog.hidden) return;
+  dialog.hidden = true;
+  setBackgroundInert(dialog, false);
+  activeDialog = null;
+  const shouldResume = dialogResumeTimer && resume && !$('gameShell').hidden && !roundClosed;
+  dialogResumeTimer = false;
+  if (restoreFocus) lastFocusedBeforeDialog?.focus?.();
+  if (shouldResume) startTimer();
+}
+
+function trapDialogFocus(event) {
+  if (!activeDialog || event.key !== 'Tab') return;
+  const focusables = [...activeDialog.querySelectorAll('button:not([disabled]),input:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(element => !element.hidden);
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables.at(-1);
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+}
+
+function openReport() {
+  const card = currentCardReport();
+  $('reportCardMeta').textContent = `${card.mode} · ${card.cardId}`;
+  $('reportForm').reset();
+  $('reportForm').hidden = false;
+  $('reportThanks').hidden = true;
+  openDialog('reportSheet', 'reportClose');
+}
+
+function closeReport() { closeDialog('reportSheet'); }
+
 const arabicDisplay = value => value.replace(/ۡ/g, 'ْ').replace(/[ۣۖۗۘۙۚۛۜ۟۠ۢۤۥۦۧۨ۩۪ۭ۫۬]/g, '');
 
 function shuffle(items) {
   const copy = [...items];
   for (let n = copy.length - 1; n > 0; n--) {
-    const j = Math.floor(Math.random() * (n + 1));
-    [copy[n], copy[j]] = [copy[j], copy[n]];
+    const randomIndex = Math.floor(Math.random() * (n + 1));
+    [copy[n], copy[randomIndex]] = [copy[randomIndex], copy[n]];
   }
   return copy;
 }
@@ -232,13 +336,12 @@ function resetViewport() {
 function showScreen(id) {
   ['welcomeScreen', 'setupScreen', 'gameShell'].forEach(screenId => {
     const element = $(screenId);
-    const active = screenId === id;
-    element.hidden = !active;
-    element.classList.remove('screenEntering');
-    if (active) { void element.offsetWidth; element.classList.add('screenEntering'); }
+    element.hidden = screenId !== id;
   });
   document.body.classList.toggle('roundActive', id === 'gameShell');
   resetViewport();
+  if (id === 'gameShell') requestWakeLock();
+  else releaseWakeLock();
 }
 
 function showSetupStep(step) {
@@ -268,17 +371,17 @@ function selectSetupMode(selectedMode) {
   document.querySelectorAll('.setupMode').forEach(element => element.classList.toggle('selected', element.dataset.mode === selectedMode));
   document.querySelectorAll('.styleChoice').forEach(element => element.classList.remove('selected'));
 
+  if (isConversationMode()) {
+    playStyle = 'conversation';
+    prepareGame();
+    return;
+  }
+
   const canCompete = competitiveModes.has(selectedMode);
   const canSolo = soloFriendly.has(selectedMode);
-  const teamsButton = document.querySelector('[data-style="teams"]');
-  const duelButton = document.querySelector('[data-style="duel"]');
-  const soloButton = document.querySelector('[data-style="solo"]');
-  teamsButton.disabled = !canCompete;
-  duelButton.disabled = !canCompete;
-  soloButton.disabled = !canSolo;
-  teamsButton.querySelector('small').textContent = canCompete ? 'Two teams compete and alternate turns' : 'Conversation modes are not scored';
-  duelButton.querySelector('small').textContent = canCompete ? 'Two players go head-to-head' : 'Conversation modes are not scored';
-  soloButton.querySelector('small').textContent = canSolo ? 'Explore or challenge yourself at your own pace' : 'This mode needs at least two players';
+  document.querySelector('[data-style="teams"]').disabled = !canCompete;
+  document.querySelector('[data-style="duel"]').disabled = !canCompete;
+  document.querySelector('[data-style="solo"]').disabled = !canSolo;
   $('styleModeName').textContent = modes[selectedMode][0];
   showSetupStep('styleStep');
 }
@@ -293,29 +396,43 @@ function selectStyle(style) {
   $('playersTitle').textContent = style === 'teams' ? 'Teams ready?' : style === 'duel' ? 'Ready for 1 vs 1?' : style === 'solo' ? 'Ready for a solo session?' : 'Ready to play?';
   $('selectedModeName').textContent = modes[mode][0];
   $('selectedStyleName').textContent = `${styleNames[style]}${competitive ? ' · 3 rounds' : ''}`;
-  $('beginGame').textContent = isConversationMode() ? 'Begin Conversation' : 'Start Countdown';
-  $('beginGame').disabled = !(mode && playStyle);
+  $('modeInstruction').textContent = modeInstructions[mode];
+  $('beginGame').textContent = 'Start Game';
+  $('beginGame').disabled = false;
   showSetupStep('playersStep');
 }
 
-function modeCount(key) { return deckFor(key).length; }
+const modeGroups = [
+  {title: 'Competitive Modes', note: 'Answer-based games with optional scoring and timed rounds.', keys: ['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']},
+  {title: 'Conversational Modes', note: 'One simple format: untimed, unscored, and made for talking.', keys: ['conversation', 'mizan', 'reflection']}
+];
 
-Object.entries(modes).forEach(([key, value]) => {
-  const button = document.createElement('button');
-  const canCompete = competitiveModes.has(key);
-  const canSolo = soloFriendly.has(key);
-  const formats = canCompete ? `${canSolo ? 'SOLO · ' : ''}TEAMS · 1V1 · CASUAL` : 'CONVERSATION · NO SCORING';
-  button.type = 'button';
-  button.className = 'setupMode';
-  button.dataset.mode = key;
-  button.innerHTML = `<strong>${value[0]}</strong><small>${value[1]} · ${modeCount(key)} cards</small><span class="formatBadge">${formats}</span>`;
-  button.onclick = () => selectSetupMode(key);
-  $('setupModes').appendChild(button);
+modeGroups.forEach(group => {
+  const section = document.createElement('section');
+  section.className = 'modeGroup';
+  const heading = document.createElement('h3');
+  heading.textContent = group.title;
+  const note = document.createElement('p');
+  note.textContent = group.note;
+  const list = document.createElement('div');
+  list.className = 'modeGroupList';
+  group.keys.forEach(key => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'setupMode';
+    button.dataset.mode = key;
+    button.innerHTML = `<strong>${modes[key][0]}</strong><small>${modes[key][1]}</small>`;
+    button.onclick = () => selectSetupMode(key);
+    list.appendChild(button);
+  });
+  section.append(heading, note, list);
+  $('setupModes').appendChild(section);
 });
 
 function prepareGame() {
+  localStorage.removeItem(SESSION_KEY);
   deck = shuffle(deckFor(mode));
-  i = 0;
+  cardIndex = 0;
   scores = {a: 0, b: 0};
   activeSide = 'a';
   roundNumber = 1;
@@ -324,81 +441,62 @@ function prepareGame() {
   pointEvents = [];
   roundClosed = false;
   matchComplete = false;
+  restoredAnswerVisible = false;
   $('roundScreen').hidden = true;
   $('countdownScreen').hidden = true;
   $('matchFinal').hidden = true;
   $('undoPoint').hidden = true;
-  $('currentMode').textContent = modes[mode][0];
-  $('modeHelp').textContent = modes[mode][1];
-  sessionBase = playStyle === 'teams' ? 'TEAMS' : playStyle === 'duel' ? '1 VS 1' : playStyle === 'solo' ? 'SOLO' : 'JUST FOR FUN';
-  const competitive = isCompetitive();
-  $('labelA').textContent = playStyle === 'duel' ? 'PLAYER 1' : 'TEAM A';
-  $('labelB').textContent = playStyle === 'duel' ? 'PLAYER 2' : 'TEAM B';
-  $('turnCard').style.display = competitive ? '' : 'none';
-  document.querySelectorAll('.score').forEach(element => element.style.display = competitive ? '' : 'none');
   configureControls();
-  updateScoreDisplay();
-  updateTurn();
   render();
   showScreen('gameShell');
-  startCountdown();
+  history.pushState({majlisGame: true}, '', location.href);
+  if (isConversationMode()) {
+    seconds = 0;
+    showTime();
+    $('question').focus({preventScroll: true});
+    persistSession();
+  } else startCountdown();
 }
 
 function configureControls() {
   const conversation = isConversationMode();
+  $('playTimer').hidden = conversation;
   $('correct').textContent = conversation ? 'Next Prompt' : isCompetitive() ? 'Correct +1' : 'Next Card';
   $('correct').classList.toggle('primary', conversation || !isCompetitive());
   $('skip').hidden = conversation;
   $('finishRound').textContent = conversation ? 'End Session' : isCompetitive() ? 'End Turn' : 'End Round';
-  $('endRound').textContent = $('finishRound').textContent;
-}
-
-function updateScoreDisplay() {
-  $('a').textContent = scores.a;
-  $('b').textContent = scores.b;
-}
-
-function turnLabel(side = activeSide) {
-  if (playStyle === 'teams') return side === 'a' ? 'Team A' : 'Team B';
-  return side === 'a' ? 'Player 1' : 'Player 2';
-}
-
-function updateTurn() {
-  const competitive = isCompetitive();
-  $('activeTurn').textContent = turnLabel();
-  $('roundStatus').textContent = competitive ? `ROUND ${roundNumber} OF ${totalRounds}` : `SESSION ${roundNumber}`;
-  $('sessionLabel').textContent = `${sessionBase} · ${competitive ? `ROUND ${roundNumber}/${totalRounds}` : `SESSION ${roundNumber}`}`;
-  document.querySelectorAll('.score').forEach((element, index) => element.style.outline = competitive && ((index === 0) === (activeSide === 'a')) ? '1px solid var(--aqua)' : 'none');
 }
 
 function startCountdown() {
   clearInterval(countdownTick);
-  clearTimeout(countdownTimeout);
-  clearInterval(tick);
+  pauseTimer();
   roundClosed = false;
   roundStartScore = scores[activeSide];
   pointEvents = [];
   seconds = modeTimes[mode];
   showTime();
-  const competitive = isCompetitive();
-  $('countdownMode').textContent = competitive ? `ROUND ${roundNumber} · ${turnLabel().toUpperCase()} · ${modes[mode][0].toUpperCase()}` : modes[mode][0].toUpperCase();
   $('countdownScreen').hidden = false;
   let count = 3;
-  $('countdownNumber').textContent = count;
+  const showCount = value => {
+    const number = $('countdownNumber');
+    number.textContent = value;
+    number.classList.remove('countdownPulse');
+    void number.offsetWidth;
+    number.classList.add('countdownPulse');
+    playCountdownTone(value);
+  };
+  showCount(count);
   countdownTick = setInterval(() => {
     count--;
-    if (count > 0) $('countdownNumber').textContent = count;
+    if (count > 0) showCount(count);
     else {
       clearInterval(countdownTick);
-      $('countdownNumber').textContent = 'GO';
-      playSound('ready');
-      countdownTimeout = setTimeout(() => {
-        $('countdownScreen').hidden = true;
-        $('question').focus({preventScroll: true});
-        if (seconds) startTimer();
-      }, 450);
+      countdownTick = null;
+      $('countdownScreen').hidden = true;
+      $('question').focus({preventScroll: true});
+      startTimer();
     }
-  }, 700);
+  }, 560);
 }
 
 function setAnswerVisible(visible) {
@@ -407,7 +505,9 @@ function setAnswerVisible(visible) {
   $('answerRule').hidden = !visible;
   $('ref').hidden = !visible;
   $('reveal').setAttribute('aria-expanded', String(visible));
+  restoredAnswerVisible = visible;
   scheduleCardFit();
+  persistSession();
 }
 
 function fitCardToViewport() {
@@ -421,90 +521,130 @@ function fitCardToViewport() {
 function scheduleCardFit() { requestAnimationFrame(() => requestAnimationFrame(fitCardToViewport)); }
 
 function render() {
-  const card = deck[i % deck.length];
-  const isAyah = card[0] === 'ayah';
-  const isReflection = card[0] === 'reflection';
-  const isDilemma = card[0] === 'mizan';
-  const isWord = card[0] === 'say';
-  const dense = !isAyah && !isReflection && (card[1].length > 105 || card[2].length > 130);
-  const source = getCardSource(card);
+  const card = currentCard();
+  const isAyah = card.type === 'ayah';
+  const isReflection = card.type === 'reflection';
+  const isDilemma = card.type === 'mizan';
+  const isWord = card.type === 'say';
+  const dense = !isAyah && !isReflection && (card.prompt.length > 105 || card.answer.length > 130);
 
-  $('type').textContent = modes[card[0]][0].toUpperCase();
-  $('question').textContent = isAyah ? arabicDisplay(card[1]) : card[1];
+  $('type').textContent = modes[card.type][0].toUpperCase();
+  $('question').textContent = isAyah ? arabicDisplay(card.prompt) : card.prompt;
   $('gameCard').classList.toggle('ayahCard', isAyah);
   $('gameCard').classList.toggle('reflectionCard', isReflection);
   $('gameCard').classList.toggle('dense', dense);
-  $('promptTransliteration').textContent = isAyah ? card[2] : '';
-  $('promptTranslation').textContent = isAyah ? card[3] : '';
-  $('answerMain').textContent = isAyah ? arabicDisplay(card[4]) : card[2];
-  $('answerTransliteration').textContent = isAyah ? card[5] : '';
-  $('answerTranslation').textContent = isAyah ? card[6] : '';
-  $('ref').dataset.source = source;
-  $('ref').textContent = source;
+  $('promptTransliteration').textContent = card.promptTransliteration || '';
+  $('promptTranslation').textContent = card.promptTranslation || '';
+  $('answerMain').textContent = isAyah ? arabicDisplay(card.answer) : card.answer;
+  $('answerTransliteration').textContent = card.answerTransliteration || '';
+  $('answerTranslation').textContent = card.answerTranslation || '';
+  $('ref').textContent = card.source;
+  $('fullSource').textContent = card.source;
   $('reveal').hidden = isWord || isReflection;
   $('reveal').textContent = isDilemma ? 'Considerations' : 'Reveal';
-  setAnswerVisible(isWord);
+  setAnswerVisible(isWord || restoredAnswerVisible);
   if (isReflection) {
     $('answer').hidden = true;
     $('answerRule').hidden = true;
     $('ref').hidden = true;
   }
-  $('num').textContent = getCardId(card);
-  $('progress').textContent = `${i + 1} / ${deck.length}`;
-  $('deckLabel').textContent = modes[mode][0].toUpperCase();
-  $('timerHint').textContent = modeTimes[mode] ? `${modeTimes[mode]}-second round` : 'Untimed conversation';
-  $('start').disabled = !seconds;
   scheduleCardFit();
 }
 
+function lockAdvanceControls() {
+  if (controlsLocked) return false;
+  controlsLocked = true;
+  ['correct', 'skip'].forEach(id => $(id).disabled = true);
+  setTimeout(() => {
+    controlsLocked = false;
+    ['correct', 'skip'].forEach(id => $(id).disabled = false);
+  }, 420);
+  return true;
+}
+
 function advance() {
-  if (i + 1 >= deck.length) {
-    const last = deck[i];
+  if (cardIndex + 1 >= deck.length) {
+    const lastCard = currentCard();
     deck = shuffle(deck);
-    if (deck.length > 1 && deck[0] === last) [deck[0], deck[1]] = [deck[1], deck[0]];
-    i = 0;
-  } else i++;
+    if (deck.length > 1 && deck[0].id === lastCard.id) [deck[0], deck[1]] = [deck[1], deck[0]];
+    cardIndex = 0;
+  } else cardIndex++;
+  restoredAnswerVisible = false;
   render();
   $('question').focus({preventScroll: true});
+  persistSession();
 }
 
 function revealAnswer() {
   const visible = !$('answer').hidden;
   setAnswerVisible(!visible);
-  $('reveal').textContent = visible ? (deck[i][0] === 'mizan' ? 'Considerations' : 'Reveal') : 'Hide';
+  $('reveal').textContent = visible ? (currentCard().type === 'mizan' ? 'Considerations' : 'Reveal') : 'Hide';
+}
+
+function showPointUndo() {
+  clearTimeout(pointToastTimer);
+  $('pointToast').hidden = false;
+  pointToastTimer = setTimeout(() => $('pointToast').hidden = true, 4200);
+}
+
+function undoRecentPoint() {
+  const event = pointEvents.at(-1);
+  if (!event || event.undone || scores[event.side] < 1 || roundClosed) return;
+  scores[event.side]--;
+  event.undone = true;
+  $('pointToast').hidden = true;
+  showToast('Point removed');
+  persistSession();
 }
 
 function awardAndAdvance() {
+  if (!lockAdvanceControls()) return;
   if (isCompetitive()) {
     scores[activeSide]++;
-    pointEvents.push({side: activeSide, cardId: getCardId(deck[i])});
-    updateScoreDisplay();
+    pointEvents.push({side: activeSide, cardId: currentCard().id, undone: false});
     playSound('correct');
+    showPointUndo();
   }
+  advance();
+}
+
+function passAndAdvance() {
+  if (!lockAdvanceControls()) return;
   advance();
 }
 
 function showTime() {
   const display = seconds || '—';
   const low = seconds > 0 && seconds <= 10;
-  $('timer').textContent = display;
   $('playTimer').textContent = display;
-  $('timer').classList.toggle('low', low);
   $('playTimer').classList.toggle('low', low);
 }
 
-function startTimer() {
-  if (!seconds || roundClosed) return;
-  clearInterval(tick);
-  tick = setInterval(() => {
-    seconds--;
+function timerFrame() {
+  if (!timerRunning) return;
+  const remaining = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+  if (remaining !== seconds) {
+    seconds = remaining;
     showTime();
-    if (seconds <= 0) {
-      clearInterval(tick);
-      navigator.vibrate?.([150, 80, 150]);
-      endRound();
-    }
-  }, 1000);
+    persistSession();
+  }
+  if (remaining <= 0) {
+    clearInterval(timerTick);
+    timerTick = null;
+    timerRunning = false;
+    timerDeadline = 0;
+    navigator.vibrate?.([120, 60, 120]);
+    endRound();
+  }
+}
+
+function startTimer() {
+  if (!seconds || roundClosed || isConversationMode()) return;
+  clearInterval(timerTick);
+  timerDeadline = Date.now() + seconds * 1000;
+  timerRunning = true;
+  timerTick = setInterval(timerFrame, 200);
+  persistSession();
 }
 
 function renderRoundHistory() {
@@ -514,10 +654,10 @@ function renderRoundHistory() {
 function showMatchWinner() {
   matchComplete = true;
   $('roundHeading').textContent = 'MATCH COMPLETE';
-  $('roundResult').textContent = scores.a === scores.b ? 'It’s a tie!' : `${turnLabel(scores.a > scores.b ? 'a' : 'b')} wins!`;
-  $('roundScore').textContent = `Final score · ${$('labelA').textContent} ${scores.a} — ${$('labelB').textContent} ${scores.b}`;
-  $('finalLabelA').textContent = $('labelA').textContent;
-  $('finalLabelB').textContent = $('labelB').textContent;
+  $('roundResult').textContent = scores.a === scores.b ? 'It’s a tie!' : `${sideLabel(scores.a > scores.b ? 'a' : 'b')} wins!`;
+  $('roundScore').textContent = `Final score · ${sideLabel('a')} ${scores.a} — ${sideLabel('b')} ${scores.b}`;
+  $('finalLabelA').textContent = sideLabel('a');
+  $('finalLabelB').textContent = sideLabel('b');
   $('finalA').textContent = scores.a;
   $('finalB').textContent = scores.b;
   renderRoundHistory();
@@ -527,39 +667,50 @@ function showMatchWinner() {
 
 function updateBetweenTurnSummary() {
   const latest = roundLog.at(-1);
-  const label = latest.label;
-  $('roundScore').textContent = `${label} earned ${latest.points} point${latest.points === 1 ? '' : 's'} · Match score ${$('labelA').textContent} ${scores.a} — ${$('labelB').textContent} ${scores.b}`;
+  $('roundScore').textContent = `${latest.label} earned ${latest.points} point${latest.points === 1 ? '' : 's'} · Match score ${sideLabel('a')} ${scores.a} — ${sideLabel('b')} ${scores.b}`;
   $('undoPoint').hidden = latest.points < 1;
+}
+
+function renderClosedRound() {
+  $('matchFinal').hidden = true;
+  $('undoPoint').hidden = true;
+  if (isCompetitive()) {
+    $('roundHeading').textContent = 'TURN COMPLETE';
+    updateBetweenTurnSummary();
+    if (matchComplete) showMatchWinner();
+    else if (activeSide === 'a') {
+      $('roundResult').textContent = `${sideLabel()} finished · ${sideLabel('b')} is next`;
+      $('nextRound').textContent = 'Next Turn';
+    } else {
+      $('roundResult').textContent = `Round ${roundNumber} finished · Round ${roundNumber + 1} is next`;
+      $('nextRound').textContent = 'Next Round';
+    }
+  } else {
+    $('roundHeading').textContent = isConversationMode() ? 'SESSION COMPLETE' : 'ROUND COMPLETE';
+    $('roundResult').textContent = isConversationMode() ? 'Conversation paused' : `Round ${roundNumber} finished`;
+    $('roundScore').textContent = 'Continue only when everyone is ready.';
+    $('nextRound').textContent = isConversationMode() ? 'Keep Talking' : 'Next Round';
+  }
+  $('roundScreen').hidden = false;
 }
 
 function endRound() {
   if (roundClosed) return;
   roundClosed = true;
   playSound('complete');
-  clearInterval(tick);
+  pauseTimer();
   clearInterval(countdownTick);
-  clearTimeout(countdownTimeout);
+  countdownTick = null;
   $('countdownScreen').hidden = true;
-  $('matchFinal').hidden = true;
-  $('undoPoint').hidden = true;
-  $('nextRound').textContent = 'Next Round';
+  $('pointToast').hidden = true;
 
   if (isCompetitive()) {
-    const entry = {round: roundNumber, side: activeSide, label: turnLabel(), points: Math.max(0, scores[activeSide] - roundStartScore)};
+    const entry = {round: roundNumber, side: activeSide, label: sideLabel(), points: Math.max(0, scores[activeSide] - roundStartScore)};
     roundLog.push(entry);
-    $('roundHeading').textContent = 'TURN COMPLETE';
-    updateBetweenTurnSummary();
-    if (roundNumber === totalRounds && activeSide === 'b') showMatchWinner();
-    else if (activeSide === 'a') {
-      $('roundResult').textContent = `${entry.label} finished · ${turnLabel('b')} is next`;
-      $('nextRound').textContent = 'Next Turn';
-    } else $('roundResult').textContent = `Round ${roundNumber} finished · Round ${roundNumber + 1} is next`;
-  } else {
-    $('roundHeading').textContent = isConversationMode() ? 'SESSION COMPLETE' : 'ROUND COMPLETE';
-    $('roundResult').textContent = isConversationMode() ? 'Conversation paused' : `Round ${roundNumber} finished`;
-    $('roundScore').textContent = 'Continue only when everyone is ready.';
+    if (roundNumber === totalRounds && activeSide === 'b') matchComplete = true;
   }
-  $('roundScreen').hidden = false;
+  renderClosedRound();
+  persistSession();
   $('nextRound').focus();
 }
 
@@ -568,42 +719,138 @@ function undoLastPoint() {
   if (!latest || latest.side !== activeSide || latest.points < 1 || scores[activeSide] < 1) return;
   scores[activeSide]--;
   latest.points--;
-  pointEvents.pop();
-  updateScoreDisplay();
+  const event = [...pointEvents].reverse().find(item => !item.undone);
+  if (event) event.undone = true;
   updateBetweenTurnSummary();
   if (matchComplete) showMatchWinner();
+  persistSession();
   showToast('Last point removed');
-}
-
-function setTime(value) {
-  clearInterval(tick);
-  seconds = value;
-  $('start').disabled = false;
-  $('timerHint').textContent = `${value}-second round selected`;
-  showTime();
 }
 
 function beginNextRound() {
   if (matchComplete) { prepareGame(); return; }
   $('roundScreen').hidden = true;
+  roundClosed = false;
   if (isCompetitive()) {
     if (activeSide === 'a') activeSide = 'b';
     else { activeSide = 'a'; roundNumber++; }
   } else roundNumber++;
-  updateTurn();
-  startCountdown();
+  if (isConversationMode()) {
+    $('question').focus({preventScroll: true});
+    persistSession();
+  } else startCountdown();
 }
 
-function goHome() {
-  clearInterval(tick);
-  clearInterval(countdownTick);
-  clearTimeout(countdownTimeout);
-  $('roundScreen').hidden = true;
+function sessionSnapshot() {
+  if (!mode || !playStyle || !deck.length) return null;
+  return {
+    version: 28,
+    mode,
+    playStyle,
+    deckIds: deck.map(card => card.id),
+    cardIndex,
+    scores,
+    seconds,
+    timerRunning,
+    activeSide,
+    roundNumber,
+    roundStartScore,
+    roundLog,
+    pointEvents,
+    roundClosed,
+    matchComplete,
+    answerVisible: !$('answer').hidden,
+    savedAt: new Date().toISOString()
+  };
+}
+
+function persistSession() {
+  const snapshot = sessionSnapshot();
+  if (!snapshot) return;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(snapshot));
+  updateResumeAvailability();
+}
+
+function getSavedSession() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+    if (!saved || saved.version !== 28 || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
+    return saved;
+  } catch { return null; }
+}
+
+function updateResumeAvailability() {
+  const available = Boolean(getSavedSession());
+  $('resumeGame').hidden = !available;
+  $('discardSavedGame').hidden = !available;
+}
+
+function discardSavedSession() {
+  localStorage.removeItem(SESSION_KEY);
+  updateResumeAvailability();
+  showToast('Saved game removed');
+}
+
+function restoreGame() {
+  const saved = getSavedSession();
+  if (!saved) { updateResumeAvailability(); return; }
+  const byId = new Map(cards.map(card => [card.id, card]));
+  const restoredDeck = saved.deckIds.map(id => byId.get(id)).filter(Boolean);
+  if (restoredDeck.length !== saved.deckIds.length) { discardSavedSession(); return; }
+  mode = saved.mode;
+  playStyle = saved.playStyle;
+  deck = restoredDeck;
+  cardIndex = Math.min(Math.max(0, saved.cardIndex || 0), deck.length - 1);
+  scores = {a: Number(saved.scores?.a) || 0, b: Number(saved.scores?.b) || 0};
+  seconds = Math.max(0, Number(saved.seconds) || 0);
+  activeSide = saved.activeSide === 'b' ? 'b' : 'a';
+  roundNumber = Math.max(1, Number(saved.roundNumber) || 1);
+  roundStartScore = Number(saved.roundStartScore) || 0;
+  roundLog = Array.isArray(saved.roundLog) ? saved.roundLog : [];
+  pointEvents = Array.isArray(saved.pointEvents) ? saved.pointEvents : [];
+  roundClosed = Boolean(saved.roundClosed);
+  matchComplete = Boolean(saved.matchComplete);
+  restoredAnswerVisible = Boolean(saved.answerVisible);
+  configureControls();
+  render();
+  showScreen('gameShell');
   $('countdownScreen').hidden = true;
+  $('roundScreen').hidden = true;
+  if (roundClosed) renderClosedRound();
+  else if (saved.timerRunning && seconds > 0 && !isConversationMode()) startTimer();
+  $('question').focus({preventScroll: true});
+  showToast('Game restored');
+}
+
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator) || document.visibilityState !== 'visible' || $('gameShell').hidden) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener?.('release', () => { wakeLock = null; });
+  } catch {}
+}
+
+async function releaseWakeLock() {
+  try { await wakeLock?.release?.(); } catch {}
+  wakeLock = null;
+}
+
+function openExitConfirmation() { openDialog('exitSheet', 'keepPlaying'); }
+function keepPlaying() { closeDialog('exitSheet'); }
+function returnHome() {
+  closeDialog('exitSheet', {resume: false});
+  pauseTimer();
+  clearInterval(countdownTick);
+  countdownTick = null;
+  $('countdownScreen').hidden = true;
+  $('roundScreen').hidden = true;
+  persistSession();
   showScreen('welcomeScreen');
+  updateResumeAvailability();
 }
 
 $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); resetSetup(); };
+$('resumeGame').onclick = restoreGame;
 $('setupBack').onclick = () => {
   if (currentSetupStep === 'playersStep') showSetupStep('styleStep');
   else if (currentSetupStep === 'styleStep') showSetupStep('modeStep');
@@ -612,26 +859,27 @@ $('setupBack').onclick = () => {
 document.querySelectorAll('.styleChoice').forEach(button => button.onclick = () => selectStyle(button.dataset.style));
 $('beginGame').onclick = prepareGame;
 $('reveal').onclick = revealAnswer;
-$('skip').onclick = advance;
+$('skip').onclick = passAndAdvance;
 $('correct').onclick = awardAndAdvance;
 $('finishRound').onclick = endRound;
-$('endRound').onclick = endRound;
-$('start').onclick = startTimer;
-$('reset').onclick = () => { clearInterval(tick); seconds = modeTimes[mode]; showTime(); };
-$('thirty').onclick = () => setTime(30);
-$('sixty').onclick = () => setTime(60);
-$('ninety').onclick = () => setTime(90);
 $('nextRound').onclick = beginNextRound;
 $('undoPoint').onclick = undoLastPoint;
-$('gameHome').onclick = goHome;
-$('roundHome').onclick = goHome;
+$('undoRecentPoint').onclick = undoRecentPoint;
+$('cardHome').onclick = openExitConfirmation;
+$('roundHome').onclick = returnHome;
+$('exitClose').onclick = keepPlaying;
+$('keepPlaying').onclick = keepPlaying;
+$('confirmHome').onclick = returnHome;
+$('exitSheet').onclick = event => { if (event.target === $('exitSheet')) keepPlaying(); };
 
-$('soundToggle').onclick = () => {
+function toggleSound() {
   soundEnabled = !soundEnabled;
   localStorage.setItem(SOUND_KEY, soundEnabled ? 'on' : 'off');
   updateSoundToggle();
   if (soundEnabled) playSound('select');
-};
+}
+$('soundToggle').onclick = toggleSound;
+$('settingsSound').onclick = toggleSound;
 
 $('reportCard').onclick = openReport;
 $('reportClose').onclick = closeReport;
@@ -640,24 +888,23 @@ $('reportSheet').onclick = event => { if (event.target === $('reportSheet')) clo
 $('reportForm').onsubmit = async event => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
-  const report = {...currentCardReport(), issue: data.get('reportIssue'), note: $('reportNote').value.trim(), reportedAt: new Date().toISOString()};
+  const report = {...currentCardReport(), issue: data.get('reportIssue'), note: $('reportNote').value.trim(), reportedAt: new Date().toISOString(), deliveryStatus: 'pending', attempts: 0};
   const reports = getReports();
   reports.push(report);
   saveReports(reports);
+  const index = reports.length - 1;
   lastReport = report;
   $('reportForm').hidden = true;
   $('reportThanks').hidden = false;
   $('reportThanksText').textContent = 'Sending your report…';
   $('reportShare').hidden = true;
   $('reportDone').focus();
-  try {
-    await sendReportByEmail(report);
-    $('reportThanksText').textContent = 'Your report was sent for review. The game is exactly where you left it.';
-    showToast('Report sent');
-  } catch {
-    $('reportThanksText').textContent = 'It is saved safely on this device, but email delivery did not complete.';
+  const delivered = await deliverStoredReport(index, true);
+  if (delivered) $('reportThanksText').textContent = 'Your report was sent for review. The game is exactly where you left it.';
+  else {
+    $('reportThanksText').textContent = 'It is saved on this device and will retry automatically when the connection returns.';
     $('reportShare').hidden = false;
-    showToast('Saved locally — email unavailable');
+    showToast('Saved — waiting to send');
   }
 };
 $('reportShare').onclick = async () => {
@@ -670,27 +917,62 @@ $('reportShare').onclick = async () => {
   try { await navigator.clipboard.writeText(text); showToast('Report copied to share'); }
   catch { showToast('Report remains saved on this device'); }
 };
-$('reportsOpen').onclick = () => { renderReportSummary(); openDialog('reportsSheet', 'reportsClose'); };
+
+$('settingsOpen').onclick = () => openDialog('settingsSheet', 'settingsClose', {pauseGame: false});
+$('settingsClose').onclick = () => closeDialog('settingsSheet');
+$('settingsSheet').onclick = event => { if (event.target === $('settingsSheet')) closeDialog('settingsSheet'); };
+$('reportsOpen').onclick = () => {
+  closeDialog('settingsSheet', {resume: false, restoreFocus: false});
+  renderReportSummary();
+  openDialog('reportsSheet', 'reportsClose', {pauseGame: false});
+};
 $('reportsClose').onclick = () => closeDialog('reportsSheet');
 $('reportsSheet').onclick = event => { if (event.target === $('reportsSheet')) closeDialog('reportsSheet'); };
 $('reportExport').onclick = exportReports;
+$('discardSavedGame').onclick = () => { discardSavedSession(); closeDialog('settingsSheet'); };
 
-$('contentNotesOpen').onclick = () => openDialog('contentNotesSheet', 'contentNotesClose');
+$('contentNotesOpen').onclick = () => openDialog('contentNotesSheet', 'contentNotesClose', {pauseGame: false});
 $('contentNotesClose').onclick = () => closeDialog('contentNotesSheet');
 $('contentNotesSheet').onclick = event => { if (event.target === $('contentNotesSheet')) closeDialog('contentNotesSheet'); };
+$('ref').onclick = () => {
+  $('fullSource').textContent = currentCard().source;
+  openDialog('sourceSheet', 'sourceClose');
+};
+$('sourceClose').onclick = () => closeDialog('sourceSheet');
+$('sourceSheet').onclick = event => { if (event.target === $('sourceSheet')) closeDialog('sourceSheet'); };
 
 document.addEventListener('keydown', event => {
-  if (event.key !== 'Escape') return;
-  if (!$('reportSheet').hidden) closeReport();
-  else if (!$('reportsSheet').hidden) closeDialog('reportsSheet');
-  else if (!$('contentNotesSheet').hidden) closeDialog('contentNotesSheet');
-  else if (!$('installSheet').hidden) closeInstallSheet();
+  trapDialogFocus(event);
+  if (event.key !== 'Escape' || !activeDialog) return;
+  if (activeDialog.id === 'exitSheet') keepPlaying();
+  else if (activeDialog.id === 'reportSheet') closeReport();
+  else closeDialog(activeDialog.id);
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    timerWasRunningBeforeHidden = pauseTimer();
+    releaseWakeLock();
+  } else {
+    if (timerWasRunningBeforeHidden && !$('gameShell').hidden && !roundClosed && !activeDialog) startTimer();
+    timerWasRunningBeforeHidden = false;
+    if (!$('gameShell').hidden) requestWakeLock();
+    retryPendingReports();
+  }
+});
+window.addEventListener('pagehide', () => { pauseTimer(); persistSession(); });
+window.addEventListener('online', retryPendingReports);
+window.addEventListener('popstate', () => {
+  if (!$('gameShell').hidden) {
+    history.pushState({majlisGame: true}, '', location.href);
+    if (!activeDialog) openExitConfirmation();
+  } else if (!$('setupScreen').hidden) showScreen('welcomeScreen');
 });
 
 let installPrompt;
 function openInstallSheet() {
   $('installNative').hidden = !installPrompt;
-  openDialog('installSheet', 'installClose');
+  openDialog('installSheet', 'installClose', {pauseGame: false});
 }
 function closeInstallSheet() { closeDialog('installSheet'); }
 async function runNativeInstall() {
@@ -713,5 +995,7 @@ $('installSheet').onclick = event => { if (event.target === $('installSheet')) c
 
 updateSoundToggle();
 updateReportCount();
+updateResumeAvailability();
+retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
 showScreen('welcomeScreen');

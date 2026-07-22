@@ -1,7 +1,7 @@
 {
   "name": "The Majlis",
   "short_name": "The Majlis",
-  "description": "A 605-card, source-aware Islamic game night and conversation app for teens and adults.",
+  "description": "A 605-card Islamic and Arabic game night with competitive and conversational modes.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

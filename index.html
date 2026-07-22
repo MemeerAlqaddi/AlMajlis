@@ -6,8 +6,9 @@
   <h1>AL MAJLIS</h1>
   <p>Think. Challenge. Connect.</p>
   <button class="launchBtn" id="openSetup">Start a Game</button>
+  <button class="install resumeGame" id="resumeGame" type="button" hidden>Resume Game</button>
   <button class="install welcomeInstall" id="install">Install App</button>
-  <div class="welcomeUtilities"><button class="utilityBtn" id="soundToggle" type="button" aria-pressed="true">Sound · On</button><button class="utilityBtn" id="contentNotesOpen" type="button">Content notes</button><button class="utilityBtn" id="reportsOpen" type="button">Reports <span id="reportCount">0</span></button></div>
+  <div class="welcomeUtilities"><button class="utilityBtn" id="soundToggle" type="button" aria-pressed="true">Sound · On</button><button class="utilityBtn" id="contentNotesOpen" type="button">Content notes</button><button class="utilityBtn" id="settingsOpen" type="button">Settings</button></div>
 </section>
 
 <div class="installSheet" id="installSheet" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle">
@@ -31,7 +32,7 @@
     <form id="reportForm">
       <div class="welcomeEyebrow">HELP US KEEP IT CLEAR</div>
       <h2 id="reportTitle">Report this card</h2>
-      <p class="sheetIntro">Choose what felt off. The round will wait for you. Please do not include private personal details.</p>
+      <p class="sheetIntro">Choose what felt off. The round will wait for you. Reports are sent through FormSubmit to the game owner; please do not include private personal details.</p>
       <div class="reportCardMeta" id="reportCardMeta"></div>
       <div class="reportChoices">
         <label class="reportChoice"><input type="radio" name="reportIssue" value="Incorrect answer" required><span>Incorrect answer</span></label>
@@ -45,6 +46,19 @@
       <button class="launchBtn reportSubmit" type="submit">Save Report</button>
     </form>
     <div class="reportThanks" id="reportThanks" hidden><strong>JazakAllahu khayran.</strong><p id="reportThanksText">Sending your report…</p><button class="install reportShare" id="reportShare" type="button" hidden>Send another way</button><button class="backBtn centerBack" id="reportDone" type="button">Back to card</button></div>
+  </div>
+</div>
+
+<div class="sheetBackdrop" id="settingsSheet" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="sheetPanel settingsPanel">
+    <button class="sheetClose" id="settingsClose" type="button" aria-label="Close settings">×</button>
+    <div class="welcomeEyebrow">SETTINGS</div>
+    <h2 id="settingsTitle">Game settings</h2>
+    <div class="settingsRows">
+      <button class="settingsRow" id="settingsSound" type="button"><span>Sound</span><strong id="settingsSoundValue">On</strong></button>
+      <button class="settingsRow" id="reportsOpen" type="button"><span>Saved report queue</span><strong id="reportCount">0</strong></button>
+      <button class="settingsRow dangerRow" id="discardSavedGame" type="button" hidden><span>Discard saved game</span><strong>Remove</strong></button>
+    </div>
   </div>
 </div>
 
@@ -74,17 +88,38 @@
   </div>
 </div>
 <div class="softToast" id="softToast" role="status" aria-live="polite"></div>
+<div class="pointToast" id="pointToast" role="status" aria-live="polite" hidden><span>Point added</span><button id="undoRecentPoint" type="button">Undo</button></div>
+
+<div class="sheetBackdrop sourceSheet" id="sourceSheet" hidden role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
+  <div class="sheetPanel compactSheet">
+    <button class="sheetClose" id="sourceClose" type="button" aria-label="Close source">×</button>
+    <div class="welcomeEyebrow">CARD SOURCE</div>
+    <h2 id="sourceTitle">Full reference</h2>
+    <p class="fullSource" id="fullSource"></p>
+  </div>
+</div>
+
+<div class="sheetBackdrop" id="exitSheet" hidden role="dialog" aria-modal="true" aria-labelledby="exitTitle">
+  <div class="sheetPanel compactSheet exitPanel">
+    <button class="sheetClose" id="exitClose" type="button" aria-label="Keep playing">×</button>
+    <div class="welcomeEyebrow">LEAVE THE GAME?</div>
+    <h2 id="exitTitle">Your place will be saved.</h2>
+    <p class="sheetIntro">You can resume this game from the opening screen.</p>
+    <button class="launchBtn" id="confirmHome" type="button">Save &amp; Return Home</button>
+    <button class="backBtn centerBack" id="keepPlaying" type="button">Keep Playing</button>
+  </div>
+</div>
 
 <section class="screen setupScreen" id="setupScreen" hidden>
   <button class="backBtn setupBack" id="setupBack">← Home</button>
   <div class="setupInner">
     <div class="setupStep" id="modeStep">
-      <div class="stepLabel">STEP 1 OF 3</div><h2>Choose a game mode</h2>
-      <p class="stepIntro">Tap a mode to continue.</p>
-      <div class="setupModes" id="setupModes"></div>
+      <div class="stepLabel">SELECT A MODE</div><h2>What are you in the mood for?</h2>
+      <p class="stepIntro">Every mode is here—organized by the kind of moment you want.</p>
+      <div class="modeColumns" id="setupModes"></div>
     </div>
     <div class="setupStep" id="styleStep" hidden>
-      <div class="stepLabel">STEP 2 OF 3</div><h2>How are you playing?</h2>
+      <div class="stepLabel">COMPETITIVE SETUP</div><h2>How are you playing?</h2>
       <p class="stepIntro"><span id="styleModeName">Your mode</span> is selected. Choose a play style.</p>
       <div class="playStyles">
         <button class="styleChoice" data-style="teams"><strong>Teams</strong><small>Two teams compete and alternate rounds</small></button>
@@ -94,19 +129,16 @@
       </div>
     </div>
     <div class="setupStep" id="playersStep" hidden>
-      <div class="stepLabel">STEP 3 OF 3</div><h2 id="playersTitle">Player setup</h2>
+      <div class="stepLabel">READY</div><h2 id="playersTitle">Ready to begin?</h2>
       <div class="selectionSummary"><span id="selectedModeName"></span><strong id="selectedStyleName"></strong></div>
+      <p class="modeInstruction" id="modeInstruction"></p>
       <div class="matchField" id="matchField" hidden><span>Match length</span><strong>3 rounds</strong><small>Both sides play once per round—three turns each and six turns total.</small></div>
-      <button class="launchBtn beginGame" id="beginGame" disabled>Start Countdown</button>
+      <button class="launchBtn beginGame" id="beginGame" disabled>Start Game</button>
     </div>
   </div>
 </section>
 
-<div class="countdownScreen" id="countdownScreen" hidden><div><span id="countdownMode"></span><strong id="countdownNumber">3</strong><small>Get ready</small></div></div>
+<div class="countdownScreen" id="countdownScreen" hidden role="status" aria-live="polite" aria-label="Get ready"><div class="countdownCue"><span id="countdownMode" hidden></span><strong id="countdownNumber">3</strong></div></div>
 <div class="roundScreen" id="roundScreen" hidden><div class="roundPanel"><span id="roundHeading">ROUND COMPLETE</span><strong id="roundResult"></strong><p class="roundScore" id="roundScore"></p><div id="matchFinal" hidden><div class="finalScores"><div class="finalScore"><span id="finalLabelA">TEAM A</span><b id="finalA">0</b></div><div class="finalScore"><span id="finalLabelB">TEAM B</span><b id="finalB">0</b></div></div><div class="roundHistory" id="roundHistory"></div></div><button class="backBtn undoPoint" id="undoPoint" type="button" hidden>Undo last point</button><button class="launchBtn" id="nextRound">Next Round</button><button class="backBtn centerBack" id="roundHome">Return Home</button></div></div>
 
-<main class="shell" id="gameShell" hidden><header class="top"><div class="brand">AL MAJLIS<span>.</span></div><div class="topActions"><button class="homeBtn" id="gameHome">Home</button><div class="tag" id="sessionLabel"></div></div></header><div class="layout">
-<aside class="panel side"><div class="label">CURRENT GAME</div><h3 id="currentMode"></h3><p class="small" id="modeHelp"></p><div class="turnCard" id="turnCard"><span>CURRENT TURN</span><strong id="activeTurn"></strong><em id="roundStatus"></em></div><div class="note">Educational game, not a source of fatwa. Reflection and dilemma cards may have more than one thoughtful response.</div></aside>
-<section class="stage"><div class="status"><span id="deckLabel">ALL CARDS</span><span id="progress">1 / 1</span></div><article class="card" id="gameCard"><div class="stripe"></div><button class="reportCardButton" id="reportCard" type="button" aria-label="Report this card">!</button><div class="type" id="type"></div><div class="playTimer" id="playTimer" role="timer" aria-label="Round timer">60</div><div class="num" id="num"></div><h1 class="question" id="question" tabindex="-1"></h1><div class="ayahPromptMeta ayahTransliteration" id="promptTransliteration"></div><div class="ayahPromptMeta ayahTranslation" id="promptTranslation"></div><div class="rule" id="answerRule"></div><div class="answer" id="answer" hidden aria-hidden="true"><div class="answerMain" id="answerMain"></div><div class="ayahAnswerMeta ayahTransliteration" id="answerTransliteration"></div><div class="ayahAnswerMeta ayahTranslation" id="answerTranslation"></div></div><div class="ref" id="ref" hidden></div></article><div class="actions"><button class="action" id="reveal" type="button">Reveal</button><button class="action good" id="correct" type="button">Correct +1</button><button class="action bad" id="skip" type="button">Pass</button><button class="action finishAction" id="finishRound" type="button">End Turn</button></div></section>
-<aside class="panel right"><div class="label">SCOREBOARD</div><div class="score"><span id="labelA">TEAM A</span><strong id="a">0</strong><div class="scoreBtns"><button data-team="a" data-d="-1">−</button><button data-team="a" data-d="1">+</button></div></div><div class="score"><span id="labelB">TEAM B</span><strong id="b">0</strong><div class="scoreBtns"><button data-team="b" data-d="-1">−</button><button data-team="b" data-d="1">+</button></div></div><div class="label" style="margin-top:25px">ROUND TIMER</div><div class="timer" id="timer">60</div><div class="small" id="timerHint" style="text-align:center;margin:0 0 12px"></div><div class="timerBtns"><button id="start">Start</button><button id="reset">Reset</button><button id="thirty">30s</button><button id="sixty">60s</button><button id="ninety">90s</button><button class="finishRound" id="endRound">End Round</button></div></aside>
-</div></main><script src="./cards-data.js"></script><script src="./app.js"></script></body></html>
+<main class="shell" id="gameShell" hidden><section class="stage"><article class="card" id="gameCard"><div class="stripe"></div><button class="reportCardButton" id="reportCard" type="button" aria-label="Report this card">!</button><button class="cardHomeButton" id="cardHome" type="button" aria-label="Save game and return home">⌂</button><div class="type" id="type"></div><div class="playTimer" id="playTimer" role="timer" aria-label="Round timer">60</div><h1 class="question" id="question" tabindex="-1"></h1><div class="ayahPromptMeta ayahTransliteration" id="promptTransliteration"></div><div class="ayahPromptMeta ayahTranslation" id="promptTranslation"></div><div class="rule" id="answerRule"></div><div class="answer" id="answer" hidden aria-hidden="true"><div class="answerMain" id="answerMain"></div><div class="ayahAnswerMeta ayahTransliteration" id="answerTransliteration"></div><div class="ayahAnswerMeta ayahTranslation" id="answerTranslation"></div></div><button class="ref" id="ref" type="button" hidden aria-haspopup="dialog"></button></article><div class="actions"><button class="action" id="reveal" type="button">Reveal</button><button class="action good" id="correct" type="button">Correct +1</button><button class="action bad" id="skip" type="button">Pass</button><button class="action finishAction" id="finishRound" type="button">End Turn</button></div></section></main><script src="./cards-data.js"></script><script src="./app.js"></script></body></html>

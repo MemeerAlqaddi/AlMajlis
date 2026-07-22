@@ -7,17 +7,28 @@ const cardsSource = fs.readFileSync(new URL('../cards-data.js', import.meta.url)
 const appSource = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 const dom = new JSDOM(html, {runScripts: 'outside-only', url: 'https://example.test/'});
 const {window} = dom;
+let visibilityState = 'visible';
+Object.defineProperty(window.document, 'visibilityState', {configurable: true, get: () => visibilityState});
 
 window.Audio = class { play() { return Promise.resolve(); } };
+const countdownNotes = [];
+window.AudioContext = class {
+  constructor() { this.currentTime = 0; this.state = 'running'; this.destination = {}; }
+  createOscillator() { return {type: '', frequency: {setValueAtTime: value => countdownNotes.push(value)}, connect() {}, start() {}, stop() {}}; }
+  createGain() { return {gain: {setValueAtTime() {}, exponentialRampToValueAtTime() {}}, connect() {}}; }
+  resume() { return Promise.resolve(); }
+};
 window.scrollTo = () => {};
 window.requestAnimationFrame = callback => window.setTimeout(callback, 0);
 window.navigator.serviceWorker = {register: () => Promise.resolve()};
 window.navigator.vibrate = () => true;
+let wakeLockRequests = 0;
+window.navigator.wakeLock = {request: async () => { wakeLockRequests++; return {release: async () => {}, addEventListener() {}}; }};
 window.fetch = async () => ({ok: true, json: async () => ({success: 'true'})});
 const nativeSetInterval = window.setInterval.bind(window);
 const nativeSetTimeout = window.setTimeout.bind(window);
-window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 700 ? 3 : delay);
-window.setTimeout = (callback, delay) => nativeSetTimeout(callback, delay === 450 ? 3 : delay);
+window.setInterval = (callback, delay) => nativeSetInterval(callback, delay === 560 ? 3 : delay);
+window.setTimeout = (callback, delay) => nativeSetTimeout(callback, delay === 420 ? 4 : delay);
 
 window.eval(`${cardsSource}\n${appSource}`);
 const $ = id => window.document.getElementById(id);
@@ -26,50 +37,93 @@ const wait = milliseconds => new Promise(resolve => setTimeout(resolve, millisec
 
 assert.equal($('welcomeScreen').hidden, false);
 click($('openSetup'));
+assert.equal(window.document.querySelectorAll('.modeGroup').length, 2);
+assert.equal(window.document.querySelectorAll('.modeGroup')[0].querySelectorAll('.setupMode').length, 6);
+assert.equal(window.document.querySelectorAll('.modeGroup')[1].querySelectorAll('.setupMode').length, 3);
+assert.ok([...window.document.querySelectorAll('.setupMode small')].every(element => !/\d+ cards/.test(element.textContent)));
+
 click(window.document.querySelector('[data-mode="mizan"]'));
-assert.equal(window.document.querySelector('[data-style="teams"]').disabled, true);
-assert.equal(window.document.querySelector('[data-style="duel"]').disabled, true);
-click(window.document.querySelector('[data-style="casual"]'));
-click($('beginGame'));
-await wait(30);
-assert.equal($('countdownScreen').hidden, true);
+assert.equal($('gameShell').hidden, false, 'conversation begins directly');
+assert.equal($('setupScreen').hidden, true);
+assert.equal($('countdownScreen').hidden, true, 'conversation has no countdown');
+assert.equal(countdownNotes.length, 0);
+assert.equal($('playTimer').hidden, true);
 assert.equal($('skip').hidden, true);
 assert.equal($('correct').textContent, 'Next Prompt');
 assert.equal($('answer').hidden, true);
 click($('reveal'));
 assert.equal($('answer').hidden, false);
 assert.equal($('answer').getAttribute('aria-hidden'), 'false');
-click($('finishRound'));
-assert.equal($('roundScreen').hidden, false);
-click($('roundHome'));
+assert.equal($('ref').hidden, false);
+click($('ref'));
+assert.equal($('sourceSheet').hidden, false);
+assert.ok($('fullSource').textContent.length > 0);
+click($('sourceClose'));
 
+click($('cardHome'));
+assert.equal($('exitSheet').hidden, false);
+click($('keepPlaying'));
+assert.equal($('gameShell').hidden, false);
+const conversationPrompt = $('question').textContent;
+click($('cardHome'));
+click($('confirmHome'));
+assert.equal($('welcomeScreen').hidden, false);
+assert.equal($('resumeGame').hidden, false);
+click($('resumeGame'));
+assert.equal($('question').textContent, conversationPrompt, 'resume returns to the same card');
+
+click($('cardHome'));
+click($('confirmHome'));
 click($('openSetup'));
 click(window.document.querySelector('[data-mode="all"]'));
+assert.equal($('styleStep').hidden, false);
 click(window.document.querySelector('[data-style="teams"]'));
+assert.match($('modeInstruction').textContent, /Pass the phone/);
 click($('beginGame'));
+await wait(35);
+assert.deepEqual(countdownNotes.slice(-3), [392, 440, 523.25]);
+assert.equal($('countdownScreen').hidden, true);
+if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
+assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, true);
 
-for (let turn = 0; turn < 6; turn++) {
-  await wait(30);
-  if (!$('reveal').hidden) {
-    assert.equal($('answer').hidden, true);
-    assert.equal($('answer').getAttribute('aria-hidden'), 'true');
-  }
+visibilityState = 'hidden';
+window.document.dispatchEvent(new window.Event('visibilitychange'));
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, false, 'backgrounding pauses the saved timer');
+visibilityState = 'visible';
+window.document.dispatchEvent(new window.Event('visibilitychange'));
+await wait(2);
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, true, 'returning resumes the timer');
+
+click($('correct'));
+click($('correct'));
+assert.equal($('pointToast').hidden, false, 'point feedback includes immediate undo');
+await wait(8);
+click($('finishRound'));
+assert.match($('roundScore').textContent, /earned 1 point/, 'rapid double tap awards only one point');
+click($('undoPoint'));
+assert.match($('roundScore').textContent, /earned 0 points/);
+
+for (let turn = 1; turn < 6; turn++) {
+  click($('nextRound'));
+  await wait(35);
   click($('correct'));
-  click($('correct'));
+  await wait(8);
   click($('finishRound'));
-  if (turn === 0) {
-    assert.equal($('undoPoint').hidden, false);
-    click($('undoPoint'));
-    assert.match($('roundScore').textContent, /earned 1 point/);
-  }
-  if (turn < 5) click($('nextRound'));
 }
 
 assert.equal($('roundHeading').textContent, 'MATCH COMPLETE');
 assert.equal($('roundHistory').children.length, 6);
-assert.equal($('finalA').textContent, '5');
-assert.equal($('finalB').textContent, '6');
-assert.match($('roundResult').textContent, /Player 2 wins|Team B wins/);
+assert.equal($('finalA').textContent, '2');
+assert.equal($('finalB').textContent, '3');
+assert.match($('roundResult').textContent, /Team B wins/);
+
+click($('roundHome'));
+assert.equal($('resumeGame').hidden, false, 'completed game remains recoverable until discarded or replaced');
+click($('settingsOpen'));
+assert.equal($('settingsSheet').hidden, false);
+click($('discardSavedGame'));
+assert.equal($('resumeGame').hidden, true);
 
 dom.window.close();
-console.log('dom: conversation restrictions, reveal accessibility, 3-round scoring, undo, and winner passed');
+console.log('dom: direct conversations, source dialog, confirmed exit, recovery, tap lock, scoring, and winner passed');
