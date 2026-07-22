@@ -1,4 +1,4 @@
-# The Majlis v28
+# The Majlis v29
 
 An installable, offline-capable Islamic and Arabic gathering game with 605 cards.
 
@@ -7,6 +7,8 @@ An installable, offline-capable Islamic and Arabic gathering game with 605 cards
 - Competitive modes are timed and may be scored.
 - Conversational modes are untimed, unscored, and begin directly from mode selection.
 - Active games are saved on the device and can be resumed after leaving, refreshing, or closing the app.
+
+V29 prevents mixed old/new offline files from breaking game launch. Core scripts are versioned and refreshed from the network when available while remaining available offline. Games still launch when browser storage is blocked; only Resume Game and local report backup are unavailable for that session.
 
 ## Content status
 

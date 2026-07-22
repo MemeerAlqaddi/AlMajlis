@@ -1,6 +1,6 @@
-const CACHE = 'al-majlis-v28';
+const CACHE = 'al-majlis-v29';
 const ASSETS = [
-  './', './index.html', './styles.css', './cards-data.js', './app.js',
+  './', './index.html', './styles.css?v=29', './cards-data.js?v=29', './app.js?v=29',
   './manifest.webmanifest', './al-majlis-icon.svg', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './majlis-open.mp3', './majlis-select.mp3', './majlis-correct.mp3', './majlis-complete.mp3'
@@ -36,9 +36,11 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith(
-    caches.match(request).then(cached => cached || fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
-      return response;
-    }))
+    fetch(request)
+      .then(response => {
+        if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
+        return response;
+      })
+      .catch(() => caches.match(request))
   );
 });

@@ -27,7 +27,8 @@ const modeTimes = {all: 60, say: 60, arabish: 90, ayah: 90, trivia: 90, identity
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', solo: 'Solo', conversation: 'Untimed conversation'};
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
-const SESSION_KEY = 'al-majlis-active-game-v28';
+const APP_VERSION = 29;
+const SESSION_KEY = 'al-majlis-active-game-v29';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -52,7 +53,22 @@ let pointEvents = [];
 let roundClosed = false;
 let matchComplete = false;
 let currentSetupStep = 'modeStep';
-let soundEnabled = localStorage.getItem(SOUND_KEY) !== 'off';
+const storage = {
+  get(key) {
+    try { return window.localStorage.getItem(key); }
+    catch { return null; }
+  },
+  set(key, value) {
+    try { window.localStorage.setItem(key, value); return true; }
+    catch { return false; }
+  },
+  remove(key) {
+    try { window.localStorage.removeItem(key); return true; }
+    catch { return false; }
+  }
+};
+
+let soundEnabled = storage.get(SOUND_KEY) !== 'off';
 let countdownAudioContext = null;
 let lastReport = null;
 let toastTimer = null;
@@ -128,13 +144,13 @@ function updateSoundToggle() {
 
 function getReports() {
   try {
-    const value = JSON.parse(localStorage.getItem(REPORTS_KEY) || '[]');
+    const value = JSON.parse(storage.get(REPORTS_KEY) || '[]');
     return Array.isArray(value) ? value : [];
   } catch { return []; }
 }
 
 function saveReports(reports) {
-  localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
+  storage.set(REPORTS_KEY, JSON.stringify(reports));
   updateReportCount();
 }
 
@@ -153,7 +169,7 @@ function currentCardReport() {
     prompt: card.prompt,
     answer: card.answer,
     source: card.source,
-    contentVersion: '28'
+    contentVersion: String(APP_VERSION)
   };
 }
 
@@ -373,7 +389,7 @@ function selectSetupMode(selectedMode) {
 
   if (isConversationMode()) {
     playStyle = 'conversation';
-    prepareGame();
+    launchGame();
     return;
   }
 
@@ -430,7 +446,7 @@ modeGroups.forEach(group => {
 });
 
 function prepareGame() {
-  localStorage.removeItem(SESSION_KEY);
+  storage.remove(SESSION_KEY);
   deck = shuffle(deckFor(mode));
   cardIndex = 0;
   scores = {a: 0, b: 0};
@@ -449,13 +465,28 @@ function prepareGame() {
   configureControls();
   render();
   showScreen('gameShell');
-  history.pushState({majlisGame: true}, '', location.href);
+  try { history.pushState({majlisGame: true}, '', location.href); } catch {}
   if (isConversationMode()) {
     seconds = 0;
     showTime();
     $('question').focus({preventScroll: true});
     persistSession();
   } else startCountdown();
+}
+
+function launchGame() {
+  if (!mode || !playStyle) return;
+  try {
+    prepareGame();
+  } catch (error) {
+    console.error('The Majlis could not start the selected game.', error);
+    pauseTimer();
+    clearInterval(countdownTick);
+    countdownTick = null;
+    $('countdownScreen').hidden = true;
+    showScreen('setupScreen');
+    showToast('That game could not start. Please try again.');
+  }
 }
 
 function configureControls() {
@@ -728,7 +759,7 @@ function undoLastPoint() {
 }
 
 function beginNextRound() {
-  if (matchComplete) { prepareGame(); return; }
+  if (matchComplete) { launchGame(); return; }
   $('roundScreen').hidden = true;
   roundClosed = false;
   if (isCompetitive()) {
@@ -744,7 +775,7 @@ function beginNextRound() {
 function sessionSnapshot() {
   if (!mode || !playStyle || !deck.length) return null;
   return {
-    version: 28,
+    version: APP_VERSION,
     mode,
     playStyle,
     deckIds: deck.map(card => card.id),
@@ -767,14 +798,14 @@ function sessionSnapshot() {
 function persistSession() {
   const snapshot = sessionSnapshot();
   if (!snapshot) return;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(snapshot));
+  storage.set(SESSION_KEY, JSON.stringify(snapshot));
   updateResumeAvailability();
 }
 
 function getSavedSession() {
   try {
-    const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
-    if (!saved || saved.version !== 28 || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
+    const saved = JSON.parse(storage.get(SESSION_KEY) || 'null');
+    if (!saved || saved.version !== APP_VERSION || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
     return saved;
   } catch { return null; }
 }
@@ -786,7 +817,7 @@ function updateResumeAvailability() {
 }
 
 function discardSavedSession() {
-  localStorage.removeItem(SESSION_KEY);
+  storage.remove(SESSION_KEY);
   updateResumeAvailability();
   showToast('Saved game removed');
 }
@@ -857,7 +888,7 @@ $('setupBack').onclick = () => {
   else showScreen('welcomeScreen');
 };
 document.querySelectorAll('.styleChoice').forEach(button => button.onclick = () => selectStyle(button.dataset.style));
-$('beginGame').onclick = prepareGame;
+$('beginGame').onclick = launchGame;
 $('reveal').onclick = revealAnswer;
 $('skip').onclick = passAndAdvance;
 $('correct').onclick = awardAndAdvance;
@@ -874,7 +905,7 @@ $('exitSheet').onclick = event => { if (event.target === $('exitSheet')) keepPla
 
 function toggleSound() {
   soundEnabled = !soundEnabled;
-  localStorage.setItem(SOUND_KEY, soundEnabled ? 'on' : 'off');
+  storage.set(SOUND_KEY, soundEnabled ? 'on' : 'off');
   updateSoundToggle();
   if (soundEnabled) playSound('select');
 }
@@ -964,7 +995,7 @@ window.addEventListener('pagehide', () => { pauseTimer(); persistSession(); });
 window.addEventListener('online', retryPendingReports);
 window.addEventListener('popstate', () => {
   if (!$('gameShell').hidden) {
-    history.pushState({majlisGame: true}, '', location.href);
+    try { history.pushState({majlisGame: true}, '', location.href); } catch {}
     if (!activeDialog) openExitConfirmation();
   } else if (!$('setupScreen').hidden) showScreen('welcomeScreen');
 });
@@ -997,5 +1028,10 @@ updateSoundToggle();
 updateReportCount();
 updateResumeAvailability();
 retryPendingReports();
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
+if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
+  try {
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=29', {updateViaCache: 'none'});
+    registration.update().catch(() => {});
+  } catch {}
+});
 showScreen('welcomeScreen');

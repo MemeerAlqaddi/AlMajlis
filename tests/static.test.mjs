@@ -12,7 +12,9 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
   assert.ok(sw.includes(asset), `offline cache includes ${asset}`);
 }
 assert.match(manifest.description, /605-card/);
-assert.match(sw, /al-majlis-v28/);
+assert.match(sw, /al-majlis-v29/);
+assert.ok(html.includes('./styles.css?v=29') && html.includes('./cards-data.js?v=29') && html.includes('./app.js?v=29'), 'core assets use release-specific URLs');
+assert.match(sw, /fetch\(request\)[\s\S]*catch\(\(\) => caches\.match\(request\)\)/, 'core assets update from the network before falling back offline');
 assert.match(sw, /request\.method !== 'GET'/);
 assert.match(sw, /url\.origin !== self\.location\.origin/);
 assert.ok(!sw.includes('majlis-ready.mp3'), 'unused ready sound removed');
@@ -26,7 +28,7 @@ assert.ok(!html.includes('id="num"') && !html.includes('id="progress"'), 'card I
 
 assert.ok(app.includes("title: 'Competitive Modes'") && app.includes("title: 'Conversational Modes'"), 'all modes share one grouped page');
 assert.ok(!app.includes('modeCount(') && !app.includes('cards</small>'), 'mode tiles do not expose deck counts');
-assert.match(app, /if \(isConversationMode\(\)\) \{\s*playStyle = 'conversation';\s*prepareGame\(\)/);
+assert.match(app, /if \(isConversationMode\(\)\) \{\s*playStyle = 'conversation';\s*launchGame\(\)/);
 assert.match(app, /if \(isConversationMode\(\)\) \{\s*seconds = 0;/);
 assert.ok(app.includes('Date.now() + seconds * 1000') && app.includes("document.addEventListener('visibilitychange'"), 'timer is timestamp-based and lifecycle-aware');
 assert.ok(app.includes("navigator.wakeLock.request('screen')"), 'active play requests a screen wake lock');
@@ -38,6 +40,7 @@ assert.ok(html.includes('aria-hidden="true"') && app.includes("setAttribute('ari
 assert.match(css, /\.reportCardButton,.cardHomeButton\{[^}]*width:44px;height:44px/);
 assert.match(css, /\.ref\{[^}]*font-size:11px/);
 assert.ok(app.includes('trapDialogFocus') && app.includes('element.inert = inert'), 'dialogs trap focus and make the background inert');
-assert.match(app, /contentVersion: '28'/);
+assert.match(app, /contentVersion: String\(APP_VERSION\)/);
+assert.ok(app.includes('const storage = {') && app.includes('catch { return false; }'), 'blocked browser storage cannot abort game launch');
 
 console.log('static: lifecycle, recovery, reporting, controls, sources, and accessibility passed');

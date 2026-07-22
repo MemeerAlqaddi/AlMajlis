@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --check app.js && node tests/content.test.mjs && node tests/static.test.mjs && node tests/dom.test.mjs"
+    "test": "node --check app.js && node tests/content.test.mjs && node tests/static.test.mjs && node tests/dom.test.mjs && node tests/launch-resilience.test.mjs && node tests/all-mode-launches.test.mjs"
   },
   "devDependencies": {
     "jsdom": "^26.1.0"

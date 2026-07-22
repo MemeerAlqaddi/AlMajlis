@@ -85,15 +85,15 @@ assert.deepEqual(countdownNotes.slice(-3), [392, 440, 523.25]);
 assert.equal($('countdownScreen').hidden, true);
 if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
 assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, true);
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, true);
 
 visibilityState = 'hidden';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, false, 'backgrounding pauses the saved timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, false, 'backgrounding pauses the saved timer');
 visibilityState = 'visible';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
 await wait(2);
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v28')).timerRunning, true, 'returning resumes the timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v29')).timerRunning, true, 'returning resumes the timer');
 
 click($('correct'));
 click($('correct'));
