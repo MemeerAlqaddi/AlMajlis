@@ -22,13 +22,13 @@ const modeInstructions = {
 const objectiveTypes = new Set(['say', 'arabish', 'ayah', 'trivia', 'identity']);
 const conversationTypes = new Set(['mizan', 'reflection']);
 const competitiveModes = new Set(['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']);
-const modeTimes = {all: 60, say: 60, arabish: 90, ayah: 90, trivia: 90, identity: 90, conversation: 0, mizan: 0, reflection: 0};
+const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity: 60, conversation: 0, mizan: 0, reflection: 0};
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
 const INSTALL_STATE_KEY = 'al-majlis-installed-v1';
-const APP_VERSION = 33;
-const SESSION_KEY = 'al-majlis-active-game-v33';
+const APP_VERSION = 34;
+const SESSION_KEY = 'al-majlis-active-game-v34';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -927,6 +927,9 @@ function returnHome() {
 }
 
 $('openSetup').onpointerdown = primeAudio;
+$('beginGame').onpointerdown = primeAudio;
+$('nextRound').onpointerdown = primeAudio;
+$('resumeGame').onpointerdown = primeAudio;
 $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); resetSetup(); };
 $('resumeGame').onclick = restoreGame;
 $('setupBack').onclick = () => {

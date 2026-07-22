@@ -1,4 +1,4 @@
-# The Majlis v33
+# The Majlis v34
 
 An installable, offline-capable Islamic and Arabic gathering game with 605 cards.
 
@@ -8,7 +8,9 @@ An installable, offline-capable Islamic and Arabic gathering game with 605 cards
 - Conversational modes are untimed, unscored, and begin directly from mode selection.
 - Active games are saved on the device and can be resumed after leaving, refreshing, or closing the app.
 
-V33 keeps every v31 phone-fit, gameplay, and audio correction. Sixteen formerly ambiguous Ayah cards now include enough Qur’anic context to identify the intended passage while leaving a meaningful multi-word continuation. The first 100 everyday Decode cards each use an individually reviewed phonetic disguise without changing the Arabic phrase, meaning, or variety label. Each Decode variety remains quiet text before Reveal, and continuing after a completed round starts on a fresh card.
+V34 keeps every v33 content, phone-fit, gameplay, and audio correction. Every timed mode now uses one consistent 60-second round. The quiet 3–2–1 notes remain intact, followed by a separate uplifting round-start chime. Round-complete controls share one centered layout in every play style and mode.
+
+The home-screen Sound, Content Notes, and Settings controls now sit in a separate bottom utility row so the primary launch area stays uncluttered.
 
 Audio cues are event-specific: a louder immediate opening sound, soft countdown notes, a round-start chime, a positive point sound, subtle ticks during the final ten seconds, and a round-complete cue. Every cue follows the Sound On/Off setting.
 

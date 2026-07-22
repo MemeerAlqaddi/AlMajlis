@@ -50,6 +50,7 @@ for (const [mode, style] of modes) {
   assert.equal(window.document.getElementById('gameShell').hidden, false, `${mode} opens gameplay`);
   assert.equal(window.document.getElementById('countdownScreen').hidden, true, `${mode} clears or skips countdown`);
   assert.ok(window.document.getElementById('question').textContent.length > 0, `${mode} renders its first card`);
+  assert.equal(window.document.getElementById('playTimer').textContent, style ? '60' : '—', `${mode} uses the correct round duration`);
   dom.window.close();
 }
 

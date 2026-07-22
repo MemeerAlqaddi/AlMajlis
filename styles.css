@@ -7,19 +7,19 @@ button,input,textarea{font:inherit}
 button{touch-action:manipulation}
 button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--aqua-bright);outline-offset:3px}
 .screen{min-height:100svh;padding:28px;color:var(--text)}
-.welcomeScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.welcomeScreen{display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;text-align:center}.welcomeMain{display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:center}
 .bismillahMark{display:flex;align-items:center;justify-content:center;gap:18px;direction:rtl;margin:0 0 24px;color:var(--text);font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:clamp(32px,5.5vw,58px);line-height:1.45;text-shadow:0 8px 28px #000}
 .bismillahMark:before,.bismillahMark:after{content:"";width:52px;height:1px;background:linear-gradient(90deg,transparent,var(--aqua))}
 .bismillahMark:after{background:linear-gradient(90deg,var(--aqua),transparent)}
 .welcomeEyebrow,.stepLabel{color:var(--aqua);font-size:11px;font-weight:800;letter-spacing:.2em}
 .welcomeScreen h1{margin:18px 0 6px;font:800 clamp(48px,9vw,90px) Georgia,serif;letter-spacing:.06em}
-.welcomeScreen>p{margin:8px 0;color:var(--muted);letter-spacing:.14em}
+.welcomeMain>p{margin:8px 0;color:var(--muted);letter-spacing:.14em}
 .launchBtn,.install{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:16px;cursor:pointer;font-weight:900}
 .launchBtn{margin-top:28px;padding:13px 28px;border:0;background:var(--aqua);color:#061012;font-size:15px}
 .install{padding:10px 16px;border:1px solid var(--aqua);background:#101a1d;color:var(--aqua);border-radius:999px;font-size:11px;letter-spacing:.08em}
 .resumeGame{margin-top:12px}
 .welcomeInstall{margin-top:12px}
-.welcomeUtilities{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:13px;max-width:360px;margin-top:18px}
+.welcomeUtilities{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;justify-self:center;gap:18px;width:min(380px,100%);margin-top:24px;padding-top:10px;padding-bottom:max(0px,env(safe-area-inset-bottom));border-top:1px solid #33414766}
 .utilityBtn{min-height:44px;padding:8px 5px;border:0;background:transparent;color:#829095;font-size:10px;letter-spacing:.08em;cursor:pointer}
 .utilityBtn:hover{color:var(--aqua-bright)}
 
@@ -63,7 +63,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus
 .finalScore span{color:#99a7ab!important;font-size:10px!important}.finalScore b{display:block;margin-top:7px;font-size:44px}
 .roundHistory{display:grid;gap:7px;max-height:210px;overflow:auto;margin:14px 0 20px;text-align:left}
 .historyRow{display:flex;justify-content:space-between;gap:16px;padding:10px 12px;border-radius:10px;background:#0b1012;color:#9fabad;font-size:12px}.historyRow b{color:var(--aqua)}
-.undoPoint{display:block;margin:0 auto 2px;color:#91c7cc;text-decoration:underline;text-underline-offset:3px}.centerBack{display:block;margin:14px auto}
+.roundActions{display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(320px,100%);margin:0 auto;gap:4px}.roundActions .launchBtn{width:min(260px,100%);margin:0 auto}.undoPoint{display:block;margin:0 auto 2px;color:#91c7cc;text-decoration:underline;text-underline-offset:3px}.centerBack{display:block;margin:4px auto 0}
 
 html.roundActive,html.roundActive body{position:fixed;inset:0;width:100%;height:var(--game-height,100dvh);min-height:0;overflow:hidden;overscroll-behavior:none;touch-action:none}
 body.roundActive{margin:0}
