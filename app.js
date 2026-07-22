@@ -27,7 +27,6 @@ const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conv
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
 const THEME_KEY = 'al-majlis-theme-v1';
-const INSTALL_STATE_KEY = 'al-majlis-installed-v1';
 const APP_VERSION = 38;
 const SESSION_KEY = 'al-majlis-active-game-v38';
 const LEGACY_SESSION_KEY = 'al-majlis-active-game-v37';
@@ -1100,8 +1099,7 @@ function isInstalledMode() {
     || document.referrer.startsWith('android-app://');
 }
 function updateInstallVisibility() {
-  const installed = isInstalledMode() || storage.get(INSTALL_STATE_KEY) === 'yes';
-  if (isInstalledMode()) storage.set(INSTALL_STATE_KEY, 'yes');
+  const installed = isInstalledMode();
   $('install').hidden = installed;
   if (installed) {
     installPrompt = null;
@@ -1123,16 +1121,14 @@ async function runNativeInstall() {
 }
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
-  if (isInstalledMode() || storage.get(INSTALL_STATE_KEY) === 'yes') return;
+  if (isInstalledMode()) return;
   installPrompt = event;
   $('install').hidden = false;
 });
 window.addEventListener('appinstalled', () => {
-  storage.set(INSTALL_STATE_KEY, 'yes');
   installPrompt = null;
-  $('install').hidden = true;
   $('installNative').hidden = true;
-  if (!$('installSheet').hidden) closeInstallSheet();
+  updateInstallVisibility();
 });
 window.addEventListener('resize', syncGameplayViewport);
 window.addEventListener('orientationchange', syncGameplayViewport);
@@ -1152,7 +1148,7 @@ updateResumeAvailability();
 retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=35', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=39', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });
