@@ -1,8 +1,9 @@
-const CACHE = 'al-majlis-v34';
+const CACHE = 'al-majlis-v38';
 const ASSETS = [
-  './', './index.html', './styles.css?v=34', './cards-data.js?v=34', './app.js?v=34',
+  './', './index.html', './styles.css?v=38', './cards-data.js?v=38', './app.js?v=38',
   './manifest.webmanifest', './al-majlis-icon.svg', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
+  './assets/marble-light.webp', './assets/marble-dark.webp',
   './majlis-open.mp3', './majlis-select.mp3', './majlis-correct.mp3', './majlis-complete.mp3'
 ];
 

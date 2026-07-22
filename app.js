@@ -1,6 +1,6 @@
 const modes = {
   all: ['Game Night Shuffle', 'A competitive mix of all five answer-based games.'],
-  say: ['Guess The Word', 'Describe the word without using any of the five forbidden clues, their opposites, or their translations in another language.'],
+  say: ['Guess The Word', 'Describe the word without using any of the seven forbidden clues, their opposites, or their translations in another language.'],
   arabish: ['Decode the Gibberish', 'Read the strange-looking sounds aloud until you discover the hidden Arabic phrase.'],
   ayah: ['Complete the Ayah', 'Complete the missing words, then reveal the Arabic, transliteration, and English meaning.'],
   trivia: ['Trivia', 'Answer challenging questions using your knowledge of the Qur’an, hadith, and Islamic concepts.'],
@@ -26,9 +26,11 @@ const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
+const THEME_KEY = 'al-majlis-theme-v1';
 const INSTALL_STATE_KEY = 'al-majlis-installed-v1';
-const APP_VERSION = 34;
-const SESSION_KEY = 'al-majlis-active-game-v34';
+const APP_VERSION = 38;
+const SESSION_KEY = 'al-majlis-active-game-v38';
+const LEGACY_SESSION_KEY = 'al-majlis-active-game-v37';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -70,10 +72,10 @@ const storage = {
 };
 
 let soundEnabled = storage.get(SOUND_KEY) !== 'off';
+let activeTheme = storage.get(THEME_KEY) === 'dark' ? 'dark' : 'light';
 let countdownAudioContext = null;
 let lastReport = null;
 let toastTimer = null;
-let pointToastTimer = null;
 let controlsLocked = false;
 let activeDialog = null;
 let dialogResumeTimer = false;
@@ -145,6 +147,16 @@ function playRoundStartTone() {
   playTone(880, {delay: .105, duration: .2, peak: .04});
 }
 
+function playPointTone() {
+  playTone(783.99, {duration: .1, peak: .034, type: 'sine'});
+  playTone(1046.5, {delay: .075, duration: .19, peak: .042, type: 'sine'});
+}
+
+function playPassTone() {
+  playTone(246.94, {duration: .12, peak: .025, type: 'triangle'});
+  playTone(174.61, {delay: .085, duration: .2, peak: .029, type: 'triangle'});
+}
+
 function playFinalSecondsTick() {
   playTone(760, {duration: .055, peak: .012, type: 'triangle'});
 }
@@ -166,6 +178,17 @@ function updateSoundToggle() {
   $('soundToggle').textContent = `Sound · ${soundEnabled ? 'On' : 'Off'}`;
   $('soundToggle').setAttribute('aria-pressed', String(soundEnabled));
   $('settingsSoundValue').textContent = soundEnabled ? 'On' : 'Off';
+}
+
+function applyTheme(theme, {save = false} = {}) {
+  activeTheme = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = activeTheme;
+  document.documentElement.style.colorScheme = activeTheme;
+  $('themeLight').setAttribute('aria-pressed', String(activeTheme === 'light'));
+  $('themeDark').setAttribute('aria-pressed', String(activeTheme === 'dark'));
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', activeTheme === 'dark' ? '#0a0c0d' : '#ecebea');
+  document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')?.setAttribute('content', activeTheme === 'dark' ? 'black-translucent' : 'default');
+  if (save) storage.set(THEME_KEY, activeTheme);
 }
 
 function getReports() {
@@ -200,7 +223,7 @@ function currentCardReport() {
 }
 
 function reportText(report) {
-  return `The Majlis card report\n${report.mode} · ${report.cardId}\nIssue: ${report.issue}\nPrompt: ${report.prompt}\nAnswer: ${report.answer}\nSource: ${report.source}${report.note ? `\nNote: ${report.note}` : ''}`;
+  return `Al Majlis card report\n${report.mode} · ${report.cardId}\nIssue: ${report.issue}\nPrompt: ${report.prompt}\nAnswer: ${report.answer}\nSource: ${report.source}${report.note ? `\nNote: ${report.note}` : ''}`;
 }
 
 async function sendReportByEmail(report) {
@@ -208,7 +231,7 @@ async function sendReportByEmail(report) {
     method: 'POST',
     headers: {'Content-Type': 'application/json', Accept: 'application/json'},
     body: JSON.stringify({
-      _subject: `The Majlis card report · ${report.cardId}`,
+      _subject: `Al Majlis card report · ${report.cardId}`,
       _template: 'table',
       _captcha: 'false',
       card_id: report.cardId,
@@ -297,7 +320,7 @@ function showToast(message) {
 
 function setBackgroundInert(dialog, inert) {
   [...document.body.children].forEach(element => {
-    if (element === dialog || element.tagName === 'SCRIPT' || element.id === 'softToast' || element.id === 'pointToast') return;
+    if (element === dialog || element.tagName === 'SCRIPT' || element.id === 'softToast') return;
     element.inert = inert;
   });
 }
@@ -479,6 +502,7 @@ modeGroups.forEach(group => {
 
 function prepareGame() {
   storage.remove(SESSION_KEY);
+  storage.remove(LEGACY_SESSION_KEY);
   deck = shuffle(deckFor(mode));
   cardIndex = 0;
   scores = {a: 0, b: 0};
@@ -493,6 +517,7 @@ function prepareGame() {
   $('roundScreen').hidden = true;
   $('countdownScreen').hidden = true;
   $('matchFinal').hidden = true;
+  $('matchScoreboard').hidden = true;
   $('undoPoint').hidden = true;
   configureControls();
   render();
@@ -511,7 +536,7 @@ function launchGame() {
   try {
     prepareGame();
   } catch (error) {
-    console.error('The Majlis could not start the selected game.', error);
+    console.error('Al Majlis could not start the selected game.', error);
     pauseTimer();
     clearInterval(countdownTick);
     countdownTick = null;
@@ -561,7 +586,7 @@ function startCountdown() {
       playRoundStartTone();
       startTimer();
     }
-  }, 560);
+  }, 1000);
 }
 
 function setAnswerVisible(visible) {
@@ -602,10 +627,28 @@ function render() {
   $('question').textContent = isAyah ? arabicDisplay(card.prompt) : decodeDisplay(card);
   $('gameCard').classList.toggle('ayahCard', isAyah);
   $('gameCard').classList.toggle('reflectionCard', isReflection);
+  $('gameCard').classList.toggle('wordCard', isWord);
   $('gameCard').classList.toggle('dense', dense);
   $('promptTransliteration').textContent = card.promptTransliteration || '';
   $('promptTranslation').textContent = card.promptTranslation || '';
-  $('answerMain').textContent = isAyah ? arabicDisplay(card.answer) : card.answer;
+  if (isWord) {
+    const forbiddenWords = card.answer.replace(/^Do not say:\s*/i, '').split('·').map(word => word.trim()).filter(Boolean);
+    const heading = document.createElement('span');
+    heading.className = 'forbiddenHeading';
+    heading.textContent = 'Do not say';
+    const list = document.createElement('span');
+    list.className = 'forbiddenList';
+    list.setAttribute('aria-label', `Forbidden clues: ${forbiddenWords.join(', ')}`);
+    forbiddenWords.forEach(word => {
+      const item = document.createElement('span');
+      item.className = 'forbiddenWord';
+      item.textContent = word;
+      list.append(item);
+    });
+    $('answerMain').replaceChildren(heading, list);
+  } else {
+    $('answerMain').textContent = isAyah ? arabicDisplay(card.answer) : card.answer;
+  }
   $('answerTransliteration').textContent = card.answerTransliteration || '';
   $('answerTranslation').textContent = card.answerTranslation || '';
   $('ref').textContent = card.source;
@@ -653,35 +696,21 @@ function revealAnswer() {
   $('reveal').textContent = visible ? (currentCard().type === 'mizan' ? 'Considerations' : 'Reveal') : 'Hide';
 }
 
-function showPointUndo() {
-  clearTimeout(pointToastTimer);
-  $('pointToast').hidden = false;
-  pointToastTimer = setTimeout(() => $('pointToast').hidden = true, 4200);
-}
-
-function undoRecentPoint() {
-  const event = pointEvents.at(-1);
-  if (!event || event.undone || scores[event.side] < 1 || roundClosed) return;
-  scores[event.side]--;
-  event.undone = true;
-  $('pointToast').hidden = true;
-  showToast('Point removed');
-  persistSession();
-}
-
 function awardAndAdvance() {
   if (!lockAdvanceControls()) return;
   if (isCompetitive()) {
     scores[activeSide]++;
     pointEvents.push({side: activeSide, cardId: currentCard().id, undone: false});
-    playSound('correct');
-    showPointUndo();
   }
+  // The affirmative cue belongs to the action, not only to scored play.
+  // This keeps Correct, Next Card, and Next Prompt consistent in every mode.
+  playPointTone();
   advance();
 }
 
 function passAndAdvance() {
   if (!lockAdvanceControls()) return;
+  playPassTone();
   advance();
 }
 
@@ -724,18 +753,23 @@ function startTimer() {
 }
 
 function renderRoundHistory() {
-  $('roundHistory').innerHTML = roundLog.map(entry => `<div class="historyRow"><span>Round ${entry.round} · ${entry.label}</span><b>+${entry.points}</b></div>`).join('');
+  $('roundHistory').innerHTML = roundLog.map(entry => `<div class="historyRow"><span><small>Round ${entry.round}</small>${entry.label}</span><b>+${entry.points}</b></div>`).join('');
+}
+
+function updateMatchScoreboard() {
+  $('finalLabelA').textContent = sideLabel('a');
+  $('finalLabelB').textContent = sideLabel('b');
+  $('finalA').textContent = scores.a;
+  $('finalB').textContent = scores.b;
+  $('matchScoreboard').hidden = false;
 }
 
 function showMatchWinner() {
   matchComplete = true;
   $('roundHeading').textContent = 'MATCH COMPLETE';
   $('roundResult').textContent = scores.a === scores.b ? 'It’s a tie!' : `${sideLabel(scores.a > scores.b ? 'a' : 'b')} wins!`;
-  $('roundScore').textContent = `Final score · ${sideLabel('a')} ${scores.a} — ${sideLabel('b')} ${scores.b}`;
-  $('finalLabelA').textContent = sideLabel('a');
-  $('finalLabelB').textContent = sideLabel('b');
-  $('finalA').textContent = scores.a;
-  $('finalB').textContent = scores.b;
+  $('roundScore').textContent = 'Final score';
+  updateMatchScoreboard();
   renderRoundHistory();
   $('matchFinal').hidden = false;
   $('nextRound').textContent = 'Play Again';
@@ -743,22 +777,24 @@ function showMatchWinner() {
 
 function updateBetweenTurnSummary() {
   const latest = roundLog.at(-1);
-  $('roundScore').textContent = `${latest.label} earned ${latest.points} point${latest.points === 1 ? '' : 's'} · Match score ${sideLabel('a')} ${scores.a} — ${sideLabel('b')} ${scores.b}`;
+  $('roundScore').textContent = `${latest.label} scored ${latest.points} point${latest.points === 1 ? '' : 's'} this turn`;
+  updateMatchScoreboard();
   $('undoPoint').hidden = latest.points < 1;
 }
 
 function renderClosedRound() {
   $('matchFinal').hidden = true;
+  $('matchScoreboard').hidden = true;
   $('undoPoint').hidden = true;
   if (isCompetitive()) {
     $('roundHeading').textContent = 'TURN COMPLETE';
     updateBetweenTurnSummary();
     if (matchComplete) showMatchWinner();
     else if (activeSide === 'a') {
-      $('roundResult').textContent = `${sideLabel()} finished · ${sideLabel('b')} is next`;
+      $('roundResult').textContent = `${sideLabel('b')} is up next`;
       $('nextRound').textContent = 'Next Turn';
     } else {
-      $('roundResult').textContent = `Round ${roundNumber} finished · Round ${roundNumber + 1} is next`;
+      $('roundResult').textContent = `Round ${roundNumber} complete`;
       $('nextRound').textContent = 'Next Round';
     }
   } else {
@@ -778,7 +814,6 @@ function endRound() {
   clearInterval(countdownTick);
   countdownTick = null;
   $('countdownScreen').hidden = true;
-  $('pointToast').hidden = true;
 
   if (isCompetitive()) {
     const entry = {round: roundNumber, side: activeSide, label: sideLabel(), points: Math.max(0, scores[activeSide] - roundStartScore)};
@@ -845,25 +880,27 @@ function persistSession() {
   const snapshot = sessionSnapshot();
   if (!snapshot) return;
   storage.set(SESSION_KEY, JSON.stringify(snapshot));
+  storage.remove(LEGACY_SESSION_KEY);
   updateResumeAvailability();
 }
 
 function getSavedSession() {
   try {
-    const saved = JSON.parse(storage.get(SESSION_KEY) || 'null');
-    if (!saved || saved.version !== APP_VERSION || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
+    const saved = JSON.parse(storage.get(SESSION_KEY) || storage.get(LEGACY_SESSION_KEY) || 'null');
+    if (!saved || ![37, APP_VERSION].includes(saved.version) || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
     return saved;
   } catch { return null; }
 }
 
 function updateResumeAvailability() {
   const available = Boolean(getSavedSession());
-  $('resumeGame').hidden = !available;
+  $('resumeSavedGame').hidden = !available;
   $('discardSavedGame').hidden = !available;
 }
 
 function discardSavedSession() {
   storage.remove(SESSION_KEY);
+  storage.remove(LEGACY_SESSION_KEY);
   updateResumeAvailability();
   showToast('Saved game removed');
 }
@@ -929,9 +966,7 @@ function returnHome() {
 $('openSetup').onpointerdown = primeAudio;
 $('beginGame').onpointerdown = primeAudio;
 $('nextRound').onpointerdown = primeAudio;
-$('resumeGame').onpointerdown = primeAudio;
 $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); resetSetup(); };
-$('resumeGame').onclick = restoreGame;
 $('setupBack').onclick = () => {
   if (currentSetupStep === 'playersStep') showSetupStep('styleStep');
   else if (currentSetupStep === 'styleStep') showSetupStep('modeStep');
@@ -945,7 +980,6 @@ $('correct').onclick = awardAndAdvance;
 $('finishRound').onclick = endRound;
 $('nextRound').onclick = beginNextRound;
 $('undoPoint').onclick = undoLastPoint;
-$('undoRecentPoint').onclick = undoRecentPoint;
 $('cardHome').onclick = openExitConfirmation;
 $('roundHome').onclick = returnHome;
 $('exitClose').onclick = keepPlaying;
@@ -961,6 +995,8 @@ function toggleSound() {
 }
 $('soundToggle').onclick = toggleSound;
 $('settingsSound').onclick = toggleSound;
+$('themeLight').onclick = () => applyTheme('light', {save: true});
+$('themeDark').onclick = () => applyTheme('dark', {save: true});
 
 $('reportCard').onclick = openReport;
 $('reportClose').onclick = closeReport;
@@ -992,7 +1028,7 @@ $('reportShare').onclick = async () => {
   if (!lastReport) return;
   const text = reportText(lastReport);
   if (navigator.share) {
-    try { await navigator.share({title: 'The Majlis card report', text}); return; }
+    try { await navigator.share({title: 'Al Majlis card report', text}); return; }
     catch (error) { if (error.name === 'AbortError') return; }
   }
   try { await navigator.clipboard.writeText(text); showToast('Report copied to share'); }
@@ -1010,6 +1046,8 @@ $('reportsOpen').onclick = () => {
 $('reportsClose').onclick = () => closeDialog('reportsSheet');
 $('reportsSheet').onclick = event => { if (event.target === $('reportsSheet')) closeDialog('reportsSheet'); };
 $('reportExport').onclick = exportReports;
+$('resumeSavedGame').onpointerdown = primeAudio;
+$('resumeSavedGame').onclick = () => { closeDialog('settingsSheet', {resume: false}); restoreGame(); };
 $('discardSavedGame').onclick = () => { discardSavedSession(); closeDialog('settingsSheet'); };
 
 $('contentNotesOpen').onclick = () => openDialog('contentNotesSheet', 'contentNotesClose', {pauseGame: false});
@@ -1106,6 +1144,7 @@ $('installClose').onclick = closeInstallSheet;
 $('installSheet').onclick = event => { if (event.target === $('installSheet')) closeInstallSheet(); };
 
 updateSoundToggle();
+applyTheme(activeTheme);
 syncGameplayViewport();
 updateInstallVisibility();
 updateReportCount();
@@ -1113,7 +1152,7 @@ updateResumeAvailability();
 retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=31', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=35', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

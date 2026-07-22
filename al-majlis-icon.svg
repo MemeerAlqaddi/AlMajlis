@@ -1,20 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Al Majlis</title>
   <defs>
-    <radialGradient id="bg" cx="50%" cy="38%" r="72%">
-      <stop offset="0" stop-color="#11191b"/>
-      <stop offset="1" stop-color="#050708"/>
-    </radialGradient>
-    <linearGradient id="accent" x1="0" x2="1">
-      <stop offset="0" stop-color="#559ca4" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#6baab1"/>
-      <stop offset="1" stop-color="#559ca4" stop-opacity="0"/>
+    <linearGradient id="charcoal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#303638"/>
+      <stop offset="0.55" stop-color="#1d2325"/>
+      <stop offset="1" stop-color="#111719"/>
     </linearGradient>
+    <linearGradient id="ivory" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3f0e9"/>
+      <stop offset="1" stop-color="#d8d5cf"/>
+    </linearGradient>
+    <filter id="grain" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="11" result="noise"/>
+      <feColorMatrix in="noise" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .13 0"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="168" fill="none" stroke="#6b7b7f" stroke-opacity="0.11" stroke-width="1"/>
-  <text x="256" y="286" text-anchor="middle" direction="rtl" unicode-bidi="bidi-override" fill="#f4f5f5" font-family="Amiri, Noto Naskh Arabic, serif" font-size="76" font-weight="400">المجلس</text>
-  <g transform="translate(256 330)" fill="none" stroke="url(#accent)" stroke-width="1.5">
-    <path d="M-62 0H-10M10 0H62"/>
-    <path d="M0-5L5 0 0 5-5 0Z" fill="#6baab1" stroke="none"/>
-  </g>
+  <rect width="512" height="512" fill="url(#charcoal)"/>
+  <rect x="438" width="74" height="512" fill="url(#ivory)"/>
+  <rect x="435" width="3" height="512" fill="#62b8bd"/>
+  <rect width="512" height="512" filter="url(#grain)" opacity=".32"/>
+  <text x="244" y="282" text-anchor="middle" direction="rtl" fill="#eee9df" font-family="DejaVu Sans, Noto Naskh Arabic, Amiri, serif" font-size="70" font-weight="400">المجلس</text>
+  <text x="244" y="327" text-anchor="middle" fill="#eee9df" font-family="Georgia, Times New Roman, serif" font-size="20" letter-spacing="10">AL MAJLIS</text>
 </svg>

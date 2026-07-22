@@ -1,6 +1,6 @@
 # Content methodology
 
-The Majlis separates answer-based games from conversation prompts.
+Al Majlis separates answer-based games from conversation prompts.
 
 - **Game Night Shuffle** contains only Guess the Word, Decode, Complete the Ayah, Trivia, and Riddles. These cards have a checkable answer and may be scored.
 - **Conversation Shuffle** contains only Dilemmas and Under the Surface. These prompts are not scored and cannot be played as Teams or 1 vs 1.

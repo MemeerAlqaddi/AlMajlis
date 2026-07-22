@@ -3,420 +3,420 @@ const cards = [
   {
     "type": "say",
     "prompt": "ISTIDRAJ",
-    "answer": "Do not say: gradual · punishment · blessings · sin · unaware",
+    "answer": "Do not say: gradual · punishment · blessings · sin · unaware · increase · deception",
     "source": "Qur’an 7:182–183",
     "id": "WORD-001"
   },
   {
     "type": "say",
     "prompt": "KHUSHU’",
-    "answer": "Do not say: prayer · humble · focus · heart · stillness",
+    "answer": "Do not say: prayer · humble · focus · heart · stillness · presence · concentration",
     "source": "Qur’an 23:1–2",
     "id": "WORD-002"
   },
   {
     "type": "say",
     "prompt": "QANA’AH",
-    "answer": "Do not say: contentment · enough · wealth · satisfied · provision",
+    "answer": "Do not say: contentment · enough · wealth · satisfied · provision · gratitude · greed",
     "source": "Concept; see Sahih Muslim 1054",
     "id": "WORD-003"
   },
   {
     "type": "say",
     "prompt": "HUSN AL-DHANN",
-    "answer": "Do not say: good opinion · assume · suspicion · believer · think",
+    "answer": "Do not say: good opinion · assume · suspicion · believer · think · positive · doubt",
     "source": "See Qur’an 49:12",
     "id": "WORD-004"
   },
   {
     "type": "say",
     "prompt": "AMANAH",
-    "answer": "Do not say: trust · responsibility · return · duty · honest",
+    "answer": "Do not say: trust · responsibility · return · duty · honest · entrusted · fulfill",
     "source": "Qur’an 4:58",
     "id": "WORD-005"
   },
   {
     "type": "say",
     "prompt": "ISLAH",
-    "answer": "Do not say: reform · reconcile · improve · conflict · peace",
+    "answer": "Do not say: reform · reconcile · improve · conflict · peace · mend · restore",
     "source": "Qur’an 49:10",
     "id": "WORD-006"
   },
   {
     "type": "say",
     "prompt": "GHAFLAH",
-    "answer": "Do not say: heedless · forget · distracted · unaware · remembrance",
+    "answer": "Do not say: heedless · forget · distracted · unaware · remembrance · neglect · worship",
     "source": "Qur’an 7:179",
     "id": "WORD-007"
   },
   {
     "type": "say",
     "prompt": "SHUBUHAT",
-    "answer": "Do not say: doubtful · unclear · halal · haram · avoid",
+    "answer": "Do not say: doubtful · unclear · halal · haram · avoid · ambiguous · suspicion",
     "source": "See Sahih al-Bukhari 52",
     "id": "WORD-008"
   },
   {
     "type": "say",
     "prompt": "HASAD",
-    "answer": "Do not say: envy · blessing · disappear · jealous · person",
+    "answer": "Do not say: envy · blessing · disappear · jealous · person · resent · wish",
     "source": "See Qur’an 113:5",
     "id": "WORD-009"
   },
   {
     "type": "say",
     "prompt": "TADABBUR",
-    "answer": "Do not say: reflect · Qur’an · meaning · ponder · verses",
+    "answer": "Do not say: reflect · Qur’an · meaning · ponder · verses · contemplate · understand",
     "source": "Qur’an 47:24",
     "id": "WORD-010"
   },
   {
     "type": "say",
     "prompt": "TAQWA",
-    "answer": "Do not say: fear · Allah · conscious · protect · righteous",
+    "answer": "Do not say: fear · Allah · conscious · protect · righteous · mindful · obedience",
     "source": "Qur’an 2:197",
     "id": "WORD-011"
   },
   {
     "type": "say",
     "prompt": "TAWAKKUL",
-    "answer": "Do not say: trust · Allah · rely · outcome · plan",
+    "answer": "Do not say: trust · Allah · rely · outcome · plan · dependence · effort",
     "source": "Qur’an 3:159",
     "id": "WORD-012"
   },
   {
     "type": "say",
     "prompt": "SABR",
-    "answer": "Do not say: patience · endure · hardship · wait · steadfast",
+    "answer": "Do not say: patience · endure · hardship · wait · steadfast · persevere · adversity",
     "source": "Qur’an 2:153",
     "id": "WORD-013"
   },
   {
     "type": "say",
     "prompt": "SHUKR",
-    "answer": "Do not say: gratitude · thank · blessing · increase · appreciate",
+    "answer": "Do not say: gratitude · thank · blessing · increase · appreciate · grateful · favor",
     "source": "Qur’an 14:7",
     "id": "WORD-014"
   },
   {
     "type": "say",
     "prompt": "IKHLAS",
-    "answer": "Do not say: sincere · intention · pure · Allah · genuine",
+    "answer": "Do not say: sincere · intention · pure · Allah · genuine · motive · privately",
     "source": "See Qur’an 98:5",
     "id": "WORD-015"
   },
   {
     "type": "say",
     "prompt": "RIYA",
-    "answer": "Do not say: showing off · worship · people · praise · seen",
+    "answer": "Do not say: showing off · worship · people · praise · seen · attention · reputation",
     "source": "Qur’an 107:4–6",
     "id": "WORD-016"
   },
   {
     "type": "say",
     "prompt": "TAWBAH",
-    "answer": "Do not say: repent · return · sin · forgiveness · regret",
+    "answer": "Do not say: repent · return · sin · forgiveness · regret · remorse · change",
     "source": "Qur’an 39:53",
     "id": "WORD-017"
   },
   {
     "type": "say",
     "prompt": "IHSAN",
-    "answer": "Do not say: excellence · worship · see · Allah · beautiful",
+    "answer": "Do not say: excellence · worship · see · Allah · beautiful · best · perfection",
     "source": "Sahih al-Bukhari 50",
     "id": "WORD-018"
   },
   {
     "type": "say",
     "prompt": "ADL",
-    "answer": "Do not say: justice · fair · equal · judge · rights",
+    "answer": "Do not say: justice · fair · equal · judge · rights · balance · oppression",
     "source": "Qur’an 16:90",
     "id": "WORD-019"
   },
   {
     "type": "say",
     "prompt": "RAHMAH",
-    "answer": "Do not say: mercy · compassion · kind · forgive · gentle",
+    "answer": "Do not say: mercy · compassion · kind · forgive · gentle · tenderness · care",
     "source": "See Qur’an 21:107",
     "id": "WORD-020"
   },
   {
     "type": "say",
     "prompt": "FITNAH",
-    "answer": "Do not say: trial · temptation · turmoil · test · conflict",
+    "answer": "Do not say: trial · temptation · turmoil · test · conflict · ordeal · discord",
     "source": "See Qur’an 8:25; meaning depends on context",
     "id": "WORD-021"
   },
   {
     "type": "say",
     "prompt": "FIQH",
-    "answer": "Do not say: law · understanding · rulings · scholar · madhhab",
+    "answer": "Do not say: law · understanding · rulings · scholar · madhhab · jurisprudence · evidence",
     "source": "See Qur’an 9:122",
     "id": "WORD-022"
   },
   {
     "type": "say",
     "prompt": "SUNNAH",
-    "answer": "Do not say: Prophet · practice · example · hadith · follow",
+    "answer": "Do not say: Prophet · practice · example · hadith · follow · tradition · way",
     "source": "See Qur’an 33:21",
     "id": "WORD-023"
   },
   {
     "type": "say",
     "prompt": "BID‘AH",
-    "answer": "Do not say: innovation · religion · introduce · new · rejected",
+    "answer": "Do not say: innovation · religion · introduce · new · rejected · invented · worship",
     "source": "See Sahih Muslim 1718a",
     "id": "WORD-024"
   },
   {
     "type": "say",
     "prompt": "FARD",
-    "answer": "Do not say: obligatory · required · must · sin · duty",
+    "answer": "Do not say: obligatory · required · must · sin · duty · compulsory · accountable",
     "source": "Islamic legal category",
     "id": "WORD-025"
   },
   {
     "type": "say",
     "prompt": "MAKRUH",
-    "answer": "Do not say: disliked · avoid · haram · ruling · rewarded",
+    "answer": "Do not say: disliked · avoid · haram · ruling · rewarded · discouraged · permissible",
     "source": "Islamic legal category",
     "id": "WORD-026"
   },
   {
     "type": "say",
     "prompt": "MUBAH",
-    "answer": "Do not say: permissible · neutral · allowed · halal · choice",
+    "answer": "Do not say: permissible · neutral · allowed · halal · choice · optional · legal",
     "source": "Islamic legal category",
     "id": "WORD-027"
   },
   {
     "type": "say",
     "prompt": "WARA‘",
-    "answer": "Do not say: cautious · doubtful · avoid · piety · conscience",
+    "answer": "Do not say: cautious · doubtful · avoid · piety · conscience · scrupulous · restraint",
     "source": "Ethical concept; related to Sahih al-Bukhari 52",
     "id": "WORD-028"
   },
   {
     "type": "say",
     "prompt": "ZUHD",
-    "answer": "Do not say: ascetic · worldly · detach · simple · possessions",
+    "answer": "Do not say: ascetic · worldly · detach · simple · possessions · renounce · dunya",
     "source": "See Qur’an 57:20",
     "id": "WORD-029"
   },
   {
     "type": "say",
     "prompt": "TAZKIYAH",
-    "answer": "Do not say: purify · soul · growth · cleanse · character",
+    "answer": "Do not say: purify · soul · growth · cleanse · character · spiritual · refine",
     "source": "Qur’an 91:9–10",
     "id": "WORD-030"
   },
   {
     "type": "say",
     "prompt": "NIFAQ",
-    "answer": "Do not say: hypocrisy · pretend · believer · inside · outside",
+    "answer": "Do not say: hypocrisy · pretend · believer · inside · outside · two-faced · conceal",
     "source": "See Qur’an 2:8–10",
     "id": "WORD-031"
   },
   {
     "type": "say",
     "prompt": "KIBR",
-    "answer": "Do not say: arrogance · pride · reject · truth · people",
+    "answer": "Do not say: arrogance · pride · reject · truth · people · superiority · humble",
     "source": "Sahih Muslim 91a",
     "id": "WORD-032"
   },
   {
     "type": "say",
     "prompt": "‘UJB",
-    "answer": "Do not say: self-admiration · impressed · ego · deeds · superior",
+    "answer": "Do not say: self-admiration · impressed · ego · deeds · superior · boast · admire",
     "source": "Spiritual-ethics concept",
     "id": "WORD-033"
   },
   {
     "type": "say",
     "prompt": "GHIBAH",
-    "answer": "Do not say: backbiting · true · absent · dislike · mention",
+    "answer": "Do not say: backbiting · true · absent · dislike · mention · behind · reputation",
     "source": "Qur’an 49:12; Sahih Muslim 2589",
     "id": "WORD-034"
   },
   {
     "type": "say",
     "prompt": "NAMIMAH",
-    "answer": "Do not say: gossip · carry · tales · people · conflict",
+    "answer": "Do not say: gossip · carry · tales · people · conflict · spread · report",
     "source": "Prohibition of tale-bearing; see Sahih Muslim 105a",
     "id": "WORD-035"
   },
   {
     "type": "say",
     "prompt": "SADAQAH JARIYAH",
-    "answer": "Do not say: ongoing · charity · reward · death · benefit",
+    "answer": "Do not say: ongoing · charity · reward · death · benefit · continuous · deceased",
     "source": "Sahih Muslim 1631",
     "id": "WORD-036"
   },
   {
     "type": "say",
     "prompt": "BARAKAH",
-    "answer": "Do not say: blessing · increase · good · abundance · Allah",
+    "answer": "Do not say: blessing · increase · good · abundance · Allah · growth · benefit",
     "source": "See Qur’an 7:96",
     "id": "WORD-037"
   },
   {
     "type": "say",
     "prompt": "RIZQ",
-    "answer": "Do not say: provision · wealth · sustenance · Allah · provide",
+    "answer": "Do not say: provision · wealth · sustenance · Allah · provide · income · livelihood",
     "source": "See Qur’an 51:58",
     "id": "WORD-038"
   },
   {
     "type": "say",
     "prompt": "DU‘A",
-    "answer": "Do not say: supplication · ask · prayer · call · Allah",
+    "answer": "Do not say: supplication · ask · prayer · call · Allah · request · answer",
     "source": "Qur’an 40:60",
     "id": "WORD-039"
   },
   {
     "type": "say",
     "prompt": "DHIKR",
-    "answer": "Do not say: remembrance · Allah · tongue · heart · repeat",
+    "answer": "Do not say: remembrance · Allah · tongue · heart · repeat · remember · recite",
     "source": "Qur’an 33:41",
     "id": "WORD-040"
   },
   {
     "type": "say",
     "prompt": "ISTIGHFAR",
-    "answer": "Do not say: forgiveness · seek · Astaghfirullah · sin · repent",
+    "answer": "Do not say: forgiveness · seek · Astaghfirullah · sin · repent · pardon · remorse",
     "source": "See Qur’an 71:10",
     "id": "WORD-041"
   },
   {
     "type": "say",
     "prompt": "SHURA",
-    "answer": "Do not say: consultation · decision · community · discuss · advice",
+    "answer": "Do not say: consultation · decision · community · discuss · advice · meeting · opinions",
     "source": "Qur’an 42:38",
     "id": "WORD-042"
   },
   {
     "type": "say",
     "prompt": "UMMAH",
-    "answer": "Do not say: community · Muslims · nation · people · worldwide",
+    "answer": "Do not say: community · Muslims · nation · people · worldwide · believers · global",
     "source": "See Qur’an 3:110",
     "id": "WORD-043"
   },
   {
     "type": "say",
     "prompt": "AKHIRAH",
-    "answer": "Do not say: afterlife · next · world · death · eternal",
+    "answer": "Do not say: afterlife · next · world · death · eternal · resurrection · hereafter",
     "source": "Qur’an 87:17",
     "id": "WORD-044"
   },
   {
     "type": "say",
     "prompt": "QADR",
-    "answer": "Do not say: decree · destiny · Allah · written · fate",
+    "answer": "Do not say: decree · destiny · Allah · written · fate · predestination · measure",
     "source": "Sahih Muslim 8a",
     "id": "WORD-045"
   },
   {
     "type": "say",
     "prompt": "FITRAH",
-    "answer": "Do not say: natural · disposition · born · pure · instinct",
+    "answer": "Do not say: natural · disposition · born · pure · instinct · innate · nature",
     "source": "Qur’an 30:30",
     "id": "WORD-046"
   },
   {
     "type": "say",
     "prompt": "HALAL",
-    "answer": "Do not say: permissible · allowed · food · lawful · haram",
+    "answer": "Do not say: permissible · allowed · food · lawful · haram · permitted · legal",
     "source": "See Qur’an 16:116",
     "id": "WORD-047"
   },
   {
     "type": "say",
     "prompt": "HARAM",
-    "answer": "Do not say: forbidden · sinful · unlawful · halal · avoid",
+    "answer": "Do not say: forbidden · sinful · unlawful · halal · avoid · prohibited · ruling",
     "source": "See Qur’an 16:116",
     "id": "WORD-048"
   },
   {
     "type": "say",
     "prompt": "SHIRK",
-    "answer": "Do not say: partners · Allah · worship · associate · unforgiven",
+    "answer": "Do not say: partners · Allah · worship · associate · unforgiven · idol · polytheism",
     "source": "Qur’an 4:48",
     "id": "WORD-049"
   },
   {
     "type": "say",
     "prompt": "TAWHID",
-    "answer": "Do not say: one · Allah · monotheism · alone · worship",
+    "answer": "Do not say: one · Allah · monotheism · alone · worship · unity · Creator",
     "source": "See Qur’an 112:1–4",
     "id": "WORD-050"
   },
   {
     "type": "say",
     "prompt": "NIYYAH",
-    "answer": "Do not say: intention · deeds · heart · purpose · reward",
+    "answer": "Do not say: intention · deeds · heart · purpose · reward · motive · action",
     "source": "Sahih al-Bukhari 1",
     "id": "WORD-051"
   },
   {
     "type": "say",
     "prompt": "MAHR",
-    "answer": "Do not say: marriage · bride · gift · husband · dowry",
+    "answer": "Do not say: marriage · bride · gift · husband · dowry · payment · contract",
     "source": "Qur’an 4:4",
     "id": "WORD-052"
   },
   {
     "type": "say",
     "prompt": "WALI",
-    "answer": "Do not say: guardian · marriage · bride · consent · father",
+    "answer": "Do not say: guardian · marriage · bride · consent · father · protector · representative",
     "source": "Marriage-law concept; details require scholarship",
     "id": "WORD-053"
   },
   {
     "type": "say",
     "prompt": "ZAKAH",
-    "answer": "Do not say: charity · wealth · obligatory · poor · percentage",
+    "answer": "Do not say: charity · wealth · obligatory · poor · percentage · alms · nisab",
     "source": "See Qur’an 9:60",
     "id": "WORD-054"
   },
   {
     "type": "say",
     "prompt": "SUJUD",
-    "answer": "Do not say: prostration · forehead · prayer · ground · bow",
+    "answer": "Do not say: prostration · forehead · prayer · ground · bow · kneel · position",
     "source": "See Qur’an 96:19",
     "id": "WORD-055"
   },
   {
     "type": "say",
     "prompt": "QIBLAH",
-    "answer": "Do not say: direction · Ka‘bah · prayer · face · Makkah",
+    "answer": "Do not say: direction · Ka‘bah · prayer · face · Makkah · compass · mosque",
     "source": "Qur’an 2:144",
     "id": "WORD-056"
   },
   {
     "type": "say",
     "prompt": "IHRAM",
-    "answer": "Do not say: pilgrimage · clothing · Hajj · state · restrictions",
+    "answer": "Do not say: pilgrimage · clothing · Hajj · state · restrictions · sacred · intention",
     "source": "See Qur’an 2:196",
     "id": "WORD-057"
   },
   {
     "type": "say",
     "prompt": "WUDU",
-    "answer": "Do not say: ablution · wash · prayer · water · face",
+    "answer": "Do not say: ablution · wash · prayer · water · face · clean · limbs",
     "source": "Qur’an 5:6",
     "id": "WORD-058"
   },
   {
     "type": "say",
     "prompt": "TAYAMMUM",
-    "answer": "Do not say: dry · earth · water · purification · dust",
+    "answer": "Do not say: dry · earth · water · purification · dust · soil · strike",
     "source": "Qur’an 5:6",
     "id": "WORD-059"
   },
   {
     "type": "say",
     "prompt": "SIRAT AL-MUSTAQIM",
-    "answer": "Do not say: straight · path · guidance · Fatihah · road",
+    "answer": "Do not say: straight · path · guidance · Fatihah · road · upright · correct",
     "source": "Qur’an 1:6",
     "id": "WORD-060"
   },
@@ -3148,280 +3148,280 @@ const cards = [
   {
     "type": "say",
     "prompt": "SIDQ",
-    "answer": "Do not say: truth · honest · lie · sincere · speech",
+    "answer": "Do not say: truth · honest · lie · sincere · speech · truthful · verify",
     "source": "See Qur’an 9:119",
     "id": "WORD-061"
   },
   {
     "type": "say",
     "prompt": "HAYA",
-    "answer": "Do not say: modesty · shame · faith · shy · character",
+    "answer": "Do not say: modesty · shame · faith · shy · character · bashful · indecency",
     "source": "Sahih al-Bukhari 24",
     "id": "WORD-062"
   },
   {
     "type": "say",
     "prompt": "HILM",
-    "answer": "Do not say: forbearance · calm · anger · gentle · restraint",
+    "answer": "Do not say: forbearance · calm · anger · gentle · restraint · patience · composed",
     "source": "Islamic character concept",
     "id": "WORD-063"
   },
   {
     "type": "say",
     "prompt": "‘AFW",
-    "answer": "Do not say: pardon · forgive · erase · overlook · mercy",
+    "answer": "Do not say: pardon · forgive · erase · overlook · mercy · release · blame",
     "source": "See Qur’an 24:22",
     "id": "WORD-064"
   },
   {
     "type": "say",
     "prompt": "SULH",
-    "answer": "Do not say: settlement · peace · dispute · agreement · reconcile",
+    "answer": "Do not say: settlement · peace · dispute · agreement · reconcile · compromise · mediation",
     "source": "See Qur’an 4:128",
     "id": "WORD-065"
   },
   {
     "type": "say",
     "prompt": "SILAT AR-RAHIM",
-    "answer": "Do not say: relatives · family · ties · visit · maintain",
+    "answer": "Do not say: relatives · family · ties · visit · maintain · kinship · contact",
     "source": "See Sahih al-Bukhari 5984",
     "id": "WORD-066"
   },
   {
     "type": "say",
     "prompt": "BIRR AL-WALIDAYN",
-    "answer": "Do not say: parents · kindness · obey · mother · father",
+    "answer": "Do not say: parents · kindness · obey · mother · father · respect · serve",
     "source": "Qur’an 17:23–24",
     "id": "WORD-067"
   },
   {
     "type": "say",
     "prompt": "UKHUWWAH",
-    "answer": "Do not say: brotherhood · believers · community · bond · unity",
+    "answer": "Do not say: brotherhood · believers · community · bond · unity · siblings · support",
     "source": "Qur’an 49:10",
     "id": "WORD-068"
   },
   {
     "type": "say",
     "prompt": "MUHASABAH",
-    "answer": "Do not say: self-accounting · examine · deeds · reflect · soul",
+    "answer": "Do not say: self-accounting · examine · deeds · reflect · soul · audit · accountability",
     "source": "Spiritual-ethics concept",
     "id": "WORD-069"
   },
   {
     "type": "say",
     "prompt": "MURAQABAH",
-    "answer": "Do not say: watchful · Allah · aware · seen · heart",
+    "answer": "Do not say: watchful · Allah · aware · seen · heart · observing · presence",
     "source": "See Qur’an 4:1",
     "id": "WORD-070"
   },
   {
     "type": "say",
     "prompt": "MAHABBAH",
-    "answer": "Do not say: love · Allah · heart · affection · beloved",
+    "answer": "Do not say: love · Allah · heart · affection · beloved · devotion · cherish",
     "source": "See Qur’an 5:54",
     "id": "WORD-071"
   },
   {
     "type": "say",
     "prompt": "KHAWF",
-    "answer": "Do not say: fear · Allah · punishment · heart · awe",
+    "answer": "Do not say: fear · Allah · punishment · heart · awe · dread · warning",
     "source": "See Qur’an 3:175",
     "id": "WORD-072"
   },
   {
     "type": "say",
     "prompt": "RAJA’",
-    "answer": "Do not say: hope · mercy · expect · Allah · reward",
+    "answer": "Do not say: hope · mercy · expect · Allah · reward · optimism · despair",
     "source": "See Qur’an 18:110",
     "id": "WORD-073"
   },
   {
     "type": "say",
     "prompt": "RIDHA",
-    "answer": "Do not say: content · pleased · decree · accept · Allah",
+    "answer": "Do not say: content · pleased · decree · accept · Allah · acceptance · surrender",
     "source": "Spiritual-ethics concept",
     "id": "WORD-074"
   },
   {
     "type": "say",
     "prompt": "BALA’",
-    "answer": "Do not say: trial · test · hardship · affliction · patience",
+    "answer": "Do not say: trial · test · hardship · affliction · patience · calamity · suffering",
     "source": "See Qur’an 2:155",
     "id": "WORD-075"
   },
   {
     "type": "say",
     "prompt": "NASIHAH",
-    "answer": "Do not say: sincere advice · counsel · religion · guide · correct",
+    "answer": "Do not say: sincere advice · counsel · religion · guide · correct · remind · privately",
     "source": "Sahih Muslim 55a",
     "id": "WORD-076"
   },
   {
     "type": "say",
     "prompt": "AMR BIL-MA‘RUF",
-    "answer": "Do not say: command · good · right · community · encourage",
+    "answer": "Do not say: command · good · right · community · encourage · virtue · promote",
     "source": "Qur’an 3:104",
     "id": "WORD-077"
   },
   {
     "type": "say",
     "prompt": "NAHY ‘ANIL-MUNKAR",
-    "answer": "Do not say: forbid · wrong · evil · stop · community",
+    "answer": "Do not say: forbid · wrong · evil · stop · community · prevent · vice",
     "source": "Qur’an 3:104",
     "id": "WORD-078"
   },
   {
     "type": "say",
     "prompt": "DHULM",
-    "answer": "Do not say: injustice · oppression · wrong · rights · darkness",
+    "answer": "Do not say: injustice · oppression · wrong · rights · darkness · tyranny · harm",
     "source": "See Qur’an 31:13",
     "id": "WORD-079"
   },
   {
     "type": "say",
     "prompt": "ISRAF",
-    "answer": "Do not say: excess · waste · spend · food · limits",
+    "answer": "Do not say: excess · waste · spend · food · limits · extravagant · moderation",
     "source": "Qur’an 7:31",
     "id": "WORD-080"
   },
   {
     "type": "say",
     "prompt": "TABDHIR",
-    "answer": "Do not say: squander · wasteful · money · spend · reckless",
+    "answer": "Do not say: squander · wasteful · money · spend · reckless · careless · extravagance",
     "source": "Qur’an 17:26–27",
     "id": "WORD-081"
   },
   {
     "type": "say",
     "prompt": "RIBA",
-    "answer": "Do not say: interest · usury · loan · increase · forbidden",
+    "answer": "Do not say: interest · usury · loan · increase · forbidden · finance · debt",
     "source": "Qur’an 2:275",
     "id": "WORD-082"
   },
   {
     "type": "say",
     "prompt": "GHARAR",
-    "answer": "Do not say: uncertainty · contract · risk · unclear · sale",
+    "answer": "Do not say: uncertainty · contract · risk · unclear · sale · unknown · transaction",
     "source": "See Sahih Muslim 1513",
     "id": "WORD-083"
   },
   {
     "type": "say",
     "prompt": "WAQF",
-    "answer": "Do not say: endowment · charity · property · ongoing · preserve",
+    "answer": "Do not say: endowment · charity · property · ongoing · preserve · trust · perpetual",
     "source": "See Sahih al-Bukhari 2737",
     "id": "WORD-084"
   },
   {
     "type": "say",
     "prompt": "KAFFARAH",
-    "answer": "Do not say: expiation · compensate · oath · fasting · penalty",
+    "answer": "Do not say: expiation · compensate · oath · fasting · penalty · atone · violation",
     "source": "See Qur’an 5:89",
     "id": "WORD-085"
   },
   {
     "type": "say",
     "prompt": "FIDYAH",
-    "answer": "Do not say: compensation · fasting · feed · unable · ransom",
+    "answer": "Do not say: compensation · fasting · feed · unable · ransom · missed · needy",
     "source": "See Qur’an 2:184",
     "id": "WORD-086"
   },
   {
     "type": "say",
     "prompt": "NAFILAH",
-    "answer": "Do not say: voluntary · extra · worship · prayer · optional",
+    "answer": "Do not say: voluntary · extra · worship · prayer · optional · bonus · recommended",
     "source": "Islamic legal category",
     "id": "WORD-087"
   },
   {
     "type": "say",
     "prompt": "QIYAM AL-LAYL",
-    "answer": "Do not say: night · prayer · stand · sleep · worship",
+    "answer": "Do not say: night · prayer · stand · sleep · worship · midnight · tahajjud",
     "source": "See Qur’an 73:2",
     "id": "WORD-088"
   },
   {
     "type": "say",
     "prompt": "WITR",
-    "answer": "Do not say: odd · prayer · night · rak‘ah · final",
+    "answer": "Do not say: odd · prayer · night · rak‘ah · final · single · conclude",
     "source": "See Sahih al-Bukhari 990",
     "id": "WORD-089"
   },
   {
     "type": "say",
     "prompt": "I‘TIKAF",
-    "answer": "Do not say: retreat · mosque · Ramadan · worship · stay",
+    "answer": "Do not say: retreat · mosque · Ramadan · worship · stay · seclusion · ten days",
     "source": "See Qur’an 2:187",
     "id": "WORD-090"
   },
   {
     "type": "say",
     "prompt": "‘UMRAH",
-    "answer": "Do not say: pilgrimage · Makkah · Ka‘bah · ihram · tawaf",
+    "answer": "Do not say: pilgrimage · Makkah · Ka‘bah · ihram · tawaf · lesser Hajj · sa‘i",
     "source": "See Qur’an 2:196",
     "id": "WORD-091"
   },
   {
     "type": "say",
     "prompt": "TALBIYAH",
-    "answer": "Do not say: Labbayk · Hajj · call · pilgrimage · chant",
+    "answer": "Do not say: Labbayk · Hajj · call · pilgrimage · chant · response · here I am",
     "source": "Pilgrimage rite; Sahih Muslim 1184a",
     "id": "WORD-092"
   },
   {
     "type": "say",
     "prompt": "TAKBIR",
-    "answer": "Do not say: Allahu Akbar · great · prayer · Eid · phrase",
+    "answer": "Do not say: Allahu Akbar · great · prayer · Eid · phrase · magnify · opening",
     "source": "See Qur’an 2:185",
     "id": "WORD-093"
   },
   {
     "type": "say",
     "prompt": "TASBIH",
-    "answer": "Do not say: SubhanAllah · glorify · beads · remembrance · perfect",
+    "answer": "Do not say: SubhanAllah · glorify · beads · remembrance · perfect · praise · count",
     "source": "See Qur’an 33:42",
     "id": "WORD-094"
   },
   {
     "type": "say",
     "prompt": "TAHLIL",
-    "answer": "Do not say: la ilaha illallah · one · declaration · dhikr · worship",
+    "answer": "Do not say: la ilaha illallah · one · declaration · dhikr · worship · creed · pronounce",
     "source": "Remembrance formula",
     "id": "WORD-095"
   },
   {
     "type": "say",
     "prompt": "SALAWAT",
-    "answer": "Do not say: Prophet · blessings · peace · Muhammad · send",
+    "answer": "Do not say: Prophet · blessings · peace · Muhammad · send · invoke · Ibrahimiyyah",
     "source": "Qur’an 33:56",
     "id": "WORD-096"
   },
   {
     "type": "say",
     "prompt": "JANAZAH",
-    "answer": "Do not say: funeral · deceased · prayer · burial · body",
+    "answer": "Do not say: funeral · deceased · prayer · burial · body · coffin · cemetery",
     "source": "Islamic funeral rite; see Sahih al-Bukhari 1335",
     "id": "WORD-097"
   },
   {
     "type": "say",
     "prompt": "QISAS",
-    "answer": "Do not say: retaliation · justice · murder · equal · law",
+    "answer": "Do not say: retaliation · justice · murder · equal · law · punishment · crime",
     "source": "Qur’an 2:178",
     "id": "WORD-098"
   },
   {
     "type": "say",
     "prompt": "DIYAH",
-    "answer": "Do not say: blood money · compensation · killing · family · payment",
+    "answer": "Do not say: blood money · compensation · killing · family · payment · victim · damages",
     "source": "See Qur’an 4:92",
     "id": "WORD-099"
   },
   {
     "type": "say",
     "prompt": "SHAHADAH",
-    "answer": "Do not say: testimony · faith · witness · Allah · Messenger",
+    "answer": "Do not say: testimony · faith · witness · Allah · Messenger · declaration · two phrases",
     "source": "Testimony of faith; see Sahih Muslim 8a",
     "id": "WORD-100"
   },

@@ -1,13 +1,11 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07090a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="The Majlis"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>The Majlis — The Islamic Game Night</title>
-<link rel="stylesheet" href="./styles.css?v=34"></head><body>
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ecebea"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Al Majlis"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Al Majlis — The Islamic Game Night</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('al-majlis-theme-v1')==='dark'?'dark':'light'}catch{}</script><link rel="stylesheet" href="./styles.css?v=38"></head><body>
 <section class="screen welcomeScreen" id="welcomeScreen">
   <div class="welcomeMain">
     <div class="bismillahMark" lang="ar" dir="rtl" aria-label="Bismillah ir-Rahman ir-Rahim">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</div>
-    <div class="welcomeEyebrow">THE ISLAMIC GAME NIGHT</div>
-    <h1>AL MAJLIS</h1>
-    <p>Think. Challenge. Connect.</p>
-    <button class="launchBtn" id="openSetup">Start a Game</button>
-    <button class="install resumeGame" id="resumeGame" type="button" hidden>Resume Game</button>
+    <h1>Al Majlis</h1>
+    <p>Gather. Learn. Connect.</p>
+    <button class="launchBtn" id="openSetup">Start Game</button>
     <button class="install welcomeInstall" id="install" type="button" hidden>Install App</button>
   </div>
   <div class="welcomeUtilities"><button class="utilityBtn" id="soundToggle" type="button" aria-pressed="true">Sound · On</button><button class="utilityBtn" id="contentNotesOpen" type="button">Content notes</button><button class="utilityBtn" id="settingsOpen" type="button">Settings</button></div>
@@ -16,15 +14,15 @@
 <div class="installSheet" id="installSheet" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle">
   <div class="installPanel">
     <button class="installClose" id="installClose" type="button" aria-label="Close install instructions">×</button>
-    <div class="welcomeEyebrow">INSTALL THE MAJLIS</div>
+    <div class="welcomeEyebrow">INSTALL AL MAJLIS</div>
     <h2 id="installTitle">Add it to your home screen</h2>
-    <p class="installIntro">The Majlis installs free from this website—no App Store account or download fee needed.</p>
+    <p class="installIntro">Al Majlis installs free from this website—no App Store account or download fee needed.</p>
     <div class="installGrid">
       <section class="installSteps"><strong>iPhone or iPad</strong><ol><li>Open this page in <em>Safari</em>.</li><li>Tap the <em>Share</em> icon.</li><li>Choose <em>Add to Home Screen</em>, then <em>Add</em>.</li></ol></section>
       <section class="installSteps"><strong>Android</strong><ol><li>Open this page in <em>Chrome</em>.</li><li>Tap the <em>⋮ menu</em>.</li><li>Choose <em>Install app</em> or <em>Add to Home screen</em>.</li></ol></section>
     </div>
     <button class="launchBtn installNative" id="installNative" type="button" hidden>Install Now</button>
-    <small class="installFinePrint">Already installed? Open The Majlis from the icon on your home screen.</small>
+    <small class="installFinePrint">Already installed? Open Al Majlis from the icon on your home screen.</small>
   </div>
 </div>
 
@@ -57,8 +55,10 @@
     <div class="welcomeEyebrow">SETTINGS</div>
     <h2 id="settingsTitle">Game settings</h2>
     <div class="settingsRows">
+      <div class="settingsThemeGroup"><span>Appearance</span><div class="themeChoices" role="group" aria-label="Choose appearance"><button id="themeLight" type="button" aria-pressed="true">Light</button><button id="themeDark" type="button" aria-pressed="false">Dark</button></div></div>
       <button class="settingsRow" id="settingsSound" type="button"><span>Sound</span><strong id="settingsSoundValue">On</strong></button>
       <button class="settingsRow" id="reportsOpen" type="button"><span>Saved report queue</span><strong id="reportCount">0</strong></button>
+      <button class="settingsRow" id="resumeSavedGame" type="button" hidden><span>Resume saved game</span><strong>Continue</strong></button>
       <button class="settingsRow dangerRow" id="discardSavedGame" type="button" hidden><span>Discard saved game</span><strong>Remove</strong></button>
     </div>
   </div>
@@ -90,7 +90,6 @@
   </div>
 </div>
 <div class="softToast" id="softToast" role="status" aria-live="polite"></div>
-<div class="pointToast" id="pointToast" role="status" aria-live="polite" hidden><span>Point added</span><button id="undoRecentPoint" type="button">Undo</button></div>
 
 <div class="sheetBackdrop sourceSheet" id="sourceSheet" hidden role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
   <div class="sheetPanel compactSheet">
@@ -106,8 +105,8 @@
     <button class="sheetClose" id="exitClose" type="button" aria-label="Keep playing">×</button>
     <div class="welcomeEyebrow">LEAVE THE GAME?</div>
     <h2 id="exitTitle">Your place will be saved.</h2>
-    <p class="sheetIntro">You can resume this game from the opening screen.</p>
-    <button class="launchBtn" id="confirmHome" type="button">Save &amp; Return Home</button>
+    <p class="sheetIntro">You can resume this game later from Settings.</p>
+    <button class="launchBtn" id="confirmHome" type="button">Return Home</button>
     <button class="backBtn centerBack" id="keepPlaying" type="button">Keep Playing</button>
   </div>
 </div>
@@ -140,6 +139,6 @@
 </section>
 
 <div class="countdownScreen" id="countdownScreen" hidden role="status" aria-live="polite" aria-label="Get ready"><div class="countdownCue"><span id="countdownMode" hidden></span><strong id="countdownNumber">3</strong></div></div>
-<div class="roundScreen" id="roundScreen" hidden><div class="roundPanel"><span id="roundHeading">ROUND COMPLETE</span><strong id="roundResult"></strong><p class="roundScore" id="roundScore"></p><div id="matchFinal" hidden><div class="finalScores"><div class="finalScore"><span id="finalLabelA">TEAM A</span><b id="finalA">0</b></div><div class="finalScore"><span id="finalLabelB">TEAM B</span><b id="finalB">0</b></div></div><div class="roundHistory" id="roundHistory"></div></div><div class="roundActions"><button class="backBtn undoPoint" id="undoPoint" type="button" hidden>Undo last point</button><button class="launchBtn" id="nextRound">Next Round</button><button class="backBtn centerBack" id="roundHome">Return Home</button></div></div></div>
+<div class="roundScreen" id="roundScreen" hidden><div class="roundPanel"><header class="roundHeader"><span id="roundHeading">ROUND COMPLETE</span><strong id="roundResult"></strong><p class="roundScore" id="roundScore"></p></header><div class="matchScoreboard" id="matchScoreboard" hidden aria-label="Current match score"><div class="finalScores"><div class="finalScore"><span id="finalLabelA">TEAM A</span><b id="finalA">0</b></div><div class="scoreDivider" aria-hidden="true">—</div><div class="finalScore"><span id="finalLabelB">TEAM B</span><b id="finalB">0</b></div></div></div><div id="matchFinal" hidden><div class="historyHeading">Round history</div><div class="roundHistory" id="roundHistory"></div></div><div class="roundActions"><button class="backBtn undoPoint" id="undoPoint" type="button" hidden>Undo last point</button><button class="launchBtn" id="nextRound">Next Round</button><button class="backBtn centerBack" id="roundHome">Return Home</button></div></div></div>
 
-<main class="shell" id="gameShell" hidden><section class="stage"><article class="card" id="gameCard"><div class="stripe"></div><button class="reportCardButton" id="reportCard" type="button" aria-label="Report this card">!</button><button class="cardHomeButton" id="cardHome" type="button" aria-label="Save game and return home">⌂</button><div class="type" id="type"></div><div class="playTimer" id="playTimer" role="timer" aria-label="Round timer">60</div><h1 class="question" id="question" tabindex="-1"></h1><div class="ayahPromptMeta ayahTransliteration" id="promptTransliteration"></div><div class="ayahPromptMeta ayahTranslation" id="promptTranslation"></div><div class="rule" id="answerRule"></div><div class="answer" id="answer" hidden aria-hidden="true"><div class="answerMain" id="answerMain"></div><div class="ayahAnswerMeta ayahTransliteration" id="answerTransliteration"></div><div class="ayahAnswerMeta ayahTranslation" id="answerTranslation"></div></div><div class="decodeDialect" id="decodeDialect" hidden></div><button class="ref" id="ref" type="button" hidden aria-haspopup="dialog"></button></article><div class="actions"><button class="action" id="reveal" type="button">Reveal</button><button class="action good" id="correct" type="button">Correct +1</button><button class="action bad" id="skip" type="button">Pass</button><button class="action finishAction" id="finishRound" type="button">End Turn</button></div></section></main><script src="./cards-data.js?v=34"></script><script src="./app.js?v=34"></script></body></html>
+<main class="shell" id="gameShell" hidden><section class="stage"><article class="card" id="gameCard"><div class="stripe"></div><button class="reportCardButton" id="reportCard" type="button" aria-label="Report this card">!</button><button class="cardHomeButton" id="cardHome" type="button" aria-label="Return home">⌂</button><div class="type" id="type"></div><div class="playTimer" id="playTimer" role="timer" aria-label="Round timer">60</div><h1 class="question" id="question" tabindex="-1"></h1><div class="ayahPromptMeta ayahTransliteration" id="promptTransliteration"></div><div class="ayahPromptMeta ayahTranslation" id="promptTranslation"></div><div class="rule" id="answerRule"></div><div class="answer" id="answer" hidden aria-hidden="true"><div class="answerMain" id="answerMain"></div><div class="ayahAnswerMeta ayahTransliteration" id="answerTransliteration"></div><div class="ayahAnswerMeta ayahTranslation" id="answerTranslation"></div></div><div class="decodeDialect" id="decodeDialect" hidden></div><button class="ref" id="ref" type="button" hidden aria-haspopup="dialog"></button></article><div class="actions"><button class="action" id="reveal" type="button">Reveal</button><button class="action good" id="correct" type="button">Correct +1</button><button class="action bad" id="skip" type="button">Pass</button><button class="action finishAction" id="finishRound" type="button">End Turn</button></div></section></main><script src="./cards-data.js?v=38"></script><script src="./app.js?v=38"></script></body></html>
