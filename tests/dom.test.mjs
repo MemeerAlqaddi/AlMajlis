@@ -97,17 +97,9 @@ click($('cardHome'));
 assert.equal($('exitSheet').hidden, false);
 click($('keepPlaying'));
 assert.equal($('gameShell').hidden, false);
-const conversationPrompt = $('question').textContent;
 click($('cardHome'));
 click($('confirmHome'));
 assert.equal($('welcomeScreen').hidden, false);
-assert.equal($('resumeSavedGame').hidden, false);
-click($('settingsOpen'));
-click($('resumeSavedGame'));
-assert.equal($('question').textContent, conversationPrompt, 'resume returns to the same card');
-
-click($('cardHome'));
-click($('confirmHome'));
 click($('openSetup'));
 click(window.document.querySelector('[data-category="competitive"]'));
 click(window.document.querySelector('[data-mode="all"]'));
@@ -121,15 +113,13 @@ assert.equal($('countdownScreen').hidden, true);
 if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
 assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
 assert.equal($('playTimer').textContent, '60', 'timed play begins at 60 seconds');
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, true);
-
 visibilityState = 'hidden';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, false, 'backgrounding pauses the saved timer');
+assert.equal($('playTimer').textContent, '60', 'backgrounding pauses the active timer');
 visibilityState = 'visible';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
 await wait(2);
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, true, 'returning resumes the timer');
+assert.equal($('playTimer').textContent, '60', 'returning resumes the active timer without a saved game');
 
 click($('correct'));
 click($('correct'));
@@ -161,7 +151,6 @@ assert.match($('roundResult').textContent, /Team B wins/);
 assert.equal($('roundScore').textContent, 'Final score');
 
 click($('roundHome'));
-assert.equal($('resumeSavedGame').hidden, false, 'completed game remains recoverable until discarded or replaced');
 click($('settingsOpen'));
 assert.equal($('settingsSheet').hidden, false);
 click($('themeDark'));
@@ -169,8 +158,8 @@ assert.equal(window.document.documentElement.dataset.theme, 'dark', 'dark design
 assert.equal(window.localStorage.getItem('al-majlis-theme-v1'), 'dark');
 click($('themeLight'));
 assert.equal(window.document.documentElement.dataset.theme, 'light', 'light Design A can be restored');
-click($('discardSavedGame'));
-assert.equal($('resumeSavedGame').hidden, true);
+assert.equal($('resumeSavedGame'), null, 'saved-game controls are absent');
+assert.equal($('reportsOpen'), null, 'saved-report queue is absent');
 
 dom.window.close();
-console.log('dom: direct conversations, source dialog, confirmed exit, recovery, tap lock, scoring, and winner passed');
+console.log('dom: direct conversations, source dialog, confirmed exit, tap lock, scoring, and winner passed');

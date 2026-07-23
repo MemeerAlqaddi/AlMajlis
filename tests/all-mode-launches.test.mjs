@@ -23,7 +23,8 @@ for (const [mode, style] of modes) {
   const dom = new JSDOM(html, {runScripts: 'outside-only', url: 'https://example.test/'});
   const {window} = dom;
   const tones = [];
-  window.Audio = class { play() { return Promise.resolve(); } };
+  const audioPlays = [];
+  window.Audio = class { constructor(src) { this.src = src; } load() {} play() { audioPlays.push(this.src); return Promise.resolve(); } };
   window.AudioContext = class {
     constructor() { this.currentTime = 0; this.state = 'running'; this.destination = {}; }
     createOscillator() { return {frequency: {setValueAtTime: value => tones.push(value)}, connect() {}, start() {}, stop() {}}; }
@@ -56,9 +57,9 @@ for (const [mode, style] of modes) {
   assert.ok(window.document.getElementById('question').textContent.length > 0, `${mode} renders its first card`);
   assert.equal(window.document.getElementById('playTimer').textContent, style ? '60' : '—', `${mode} uses the correct round duration`);
 
-  const beforeNext = tones.length;
+  const playsBeforeNext = audioPlays.length;
   click(window.document.getElementById('correct'));
-  assert.deepEqual(tones.slice(beforeNext, beforeNext + 2), [783.99, 1046.5], `${mode} Correct/Next plays the positive cue`);
+  assert.ok(audioPlays.slice(playsBeforeNext).some(src => src.endsWith('majlis-correct.mp3')), `${mode} Correct/Next plays the positive cue`);
   await wait(8);
 
   if (style) {

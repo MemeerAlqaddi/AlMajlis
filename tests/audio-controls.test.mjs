@@ -96,7 +96,8 @@ assert.equal([...window.document.querySelectorAll('.actions .action')].filter(bu
 assert.equal(window.document.querySelectorAll('.forbiddenWord').length, 7, 'seven forbidden clues are rendered as separate, scannable items');
 const toneCountBeforePoint = tones.length;
 click($('correct'));
-assert.deepEqual(tones.slice(toneCountBeforePoint, toneCountBeforePoint + 2), [783.99, 1046.5], 'Correct +1 plays a distinct rising positive cue');
+assert.ok(audioPlays.some(src => src.endsWith('majlis-correct.mp3')), 'Correct +1 plays the positive chime');
+assert.equal(tones.length, toneCountBeforePoint, 'the positive file cue does not stack with a second tone');
 assert.equal($('pointToast'), null, 'Correct +1 does not open an Undo point pop-up');
 await wait(8);
 

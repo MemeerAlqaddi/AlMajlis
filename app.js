@@ -24,12 +24,9 @@ const conversationTypes = new Set(['mizan', 'reflection']);
 const competitiveModes = new Set(['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']);
 const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity: 60, conversation: 0, mizan: 0, reflection: 0};
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
-const REPORTS_KEY = 'al-majlis-card-reports-v3';
-const SOUND_KEY = 'al-majlis-sound-v1';
+const SOUND_KEY = 'al-majlis-sound-v42';
 const THEME_KEY = 'al-majlis-theme-v1';
-const APP_VERSION = 41;
-const SESSION_KEY = 'al-majlis-active-game-v41';
-const LEGACY_SESSION_KEY = 'al-majlis-active-game-v38';
+const APP_VERSION = 42;
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -81,7 +78,6 @@ let activeDialog = null;
 let dialogResumeTimer = false;
 let lastFocusedBeforeDialog = null;
 let wakeLock = null;
-let reportRetryRunning = false;
 let restoredAnswerVisible = false;
 
 const sounds = typeof Audio === 'undefined' ? {} : {
@@ -97,44 +93,66 @@ Object.entries(sounds).forEach(([name, audio]) => {
   audio.load?.();
 });
 
+function audioContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass || !soundEnabled) return null;
+  try { return countdownAudioContext ||= new AudioContextClass(); }
+  catch { return null; }
+}
+
+function playSoundFallback(name) {
+  if (name === 'open') {
+    playTone(392, {duration: .15, peak: .032});
+    playTone(523.25, {delay: .09, duration: .22, peak: .038});
+  } else if (name === 'select') {
+    playTone(659.25, {duration: .12, peak: .028});
+  } else if (name === 'correct') playPointTone();
+  else if (name === 'complete') {
+    playTone(523.25, {duration: .16, peak: .032});
+    playTone(659.25, {delay: .1, duration: .2, peak: .038});
+  }
+}
+
 function playSound(name) {
   if (!soundEnabled || !sounds[name]) return;
+  primeAudio();
   const audio = sounds[name];
   audio.currentTime = 0;
-  audio.play().catch(() => {});
+  try {
+    const attempt = audio.play();
+    attempt?.catch?.(() => playSoundFallback(name));
+  } catch { playSoundFallback(name); }
 }
 
 function primeAudio() {
   Object.values(sounds).forEach(audio => audio.load?.());
   if (!soundEnabled) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  try {
-    countdownAudioContext ||= new AudioContextClass();
-    if (countdownAudioContext.state === 'suspended') countdownAudioContext.resume().catch(() => {});
-  } catch {}
+  const context = audioContext();
+  if (context?.state === 'suspended') context.resume().catch(() => {});
 }
 
 function playTone(frequency, {delay = 0, duration = .12, peak = .018, type = 'sine'} = {}) {
   if (!soundEnabled) return;
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  try {
-    countdownAudioContext ||= new AudioContextClass();
-    if (countdownAudioContext.state === 'suspended') countdownAudioContext.resume().catch(() => {});
-    const now = countdownAudioContext.currentTime + delay;
-    const oscillator = countdownAudioContext.createOscillator();
-    const gain = countdownAudioContext.createGain();
+  const context = audioContext();
+  if (!context) return;
+  const schedule = () => {
+    try {
+    const now = context.currentTime + delay;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
     oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, now);
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(peak, now + .012);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     oscillator.connect(gain);
-    gain.connect(countdownAudioContext.destination);
+    gain.connect(context.destination);
     oscillator.start(now);
     oscillator.stop(now + duration + .01);
-  } catch {}
+    } catch {}
+  };
+  if (context.state === 'suspended') context.resume().then(schedule).catch(() => {});
+  else schedule();
 }
 
 function playCountdownTone(value) {
@@ -191,25 +209,6 @@ function applyTheme(theme, {save = false} = {}) {
   if (save) storage.set(THEME_KEY, activeTheme);
 }
 
-function getReports() {
-  try {
-    const value = JSON.parse(storage.get(REPORTS_KEY) || '[]');
-    return Array.isArray(value) ? value : [];
-  } catch { return []; }
-}
-
-function saveReports(reports) {
-  storage.set(REPORTS_KEY, JSON.stringify(reports));
-  updateReportCount();
-}
-
-function updateReportCount() {
-  const reports = getReports();
-  const pending = reports.filter(report => report.deliveryStatus !== 'sent').length;
-  $('reportCount').textContent = pending ? `${pending} pending` : String(reports.length);
-  $('reportsOpen').setAttribute('aria-label', `${pending} pending and ${reports.length} total saved card reports`);
-}
-
 function currentCardReport() {
   const card = currentCard();
   return {
@@ -248,67 +247,6 @@ async function sendReportByEmail(report) {
   if (!response.ok) throw new Error(`Report delivery failed (${response.status})`);
   const result = await response.json();
   if (String(result.success) !== 'true') throw new Error(result.message || 'Report delivery failed');
-}
-
-async function deliverStoredReport(index, announce = false) {
-  const reports = getReports();
-  const report = reports[index];
-  if (!report || report.deliveryStatus === 'sent') return true;
-  try {
-    await sendReportByEmail(report);
-    const latest = getReports();
-    if (!latest[index] || latest[index].reportedAt !== report.reportedAt) return true;
-    latest[index] = {...latest[index], deliveryStatus: 'sent', deliveredAt: new Date().toISOString(), attempts: (latest[index].attempts || 0) + 1};
-    saveReports(latest);
-    if (announce) showToast('Report sent');
-    return true;
-  } catch {
-    const latest = getReports();
-    if (latest[index] && latest[index].reportedAt === report.reportedAt) {
-      latest[index] = {...latest[index], deliveryStatus: 'pending', attempts: (latest[index].attempts || 0) + 1, lastAttemptAt: new Date().toISOString()};
-      saveReports(latest);
-    }
-    return false;
-  }
-}
-
-async function retryPendingReports() {
-  if (reportRetryRunning || navigator.onLine === false) return;
-  reportRetryRunning = true;
-  try {
-    const reports = getReports();
-    for (let index = 0; index < reports.length; index++) {
-      if (reports[index].deliveryStatus !== 'sent') await deliverStoredReport(index);
-    }
-  } finally { reportRetryRunning = false; }
-}
-
-function renderReportSummary() {
-  const reports = getReports();
-  const pending = reports.filter(report => report.deliveryStatus !== 'sent').length;
-  const counts = {};
-  reports.forEach(report => counts[report.issue] = (counts[report.issue] || 0) + 1);
-  $('reportSummary').innerHTML = reports.length
-    ? `<div class="reportSummaryRow"><span>Total saved</span><b>${reports.length}</b></div><div class="reportSummaryRow"><span>Waiting to send</span><b>${pending}</b></div>${Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([issue, count]) => `<div class="reportSummaryRow"><span>${issue}</span><b>${count}</b></div>`).join('')}`
-    : '<div class="reportEmpty">No cards have been flagged on this device.</div>';
-  $('reportExport').hidden = !reports.length;
-}
-
-function exportReports() {
-  const reports = getReports();
-  const quote = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
-  const rows = [
-    ['Card ID', 'Mode', 'Issue', 'Note', 'Prompt', 'Answer', 'Source', 'Delivery', 'Content version', 'Reported at'],
-    ...reports.map(report => [report.cardId, report.mode, report.issue, report.note, report.prompt, report.answer, report.source, report.deliveryStatus, report.contentVersion, report.reportedAt])
-  ];
-  const blob = new Blob([rows.map(row => row.map(quote).join(',')).join('\n')], {type: 'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'the-majlis-card-reports.csv';
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 500);
-  showToast('Report file ready');
 }
 
 function showToast(message) {
@@ -537,8 +475,6 @@ document.querySelectorAll('.categoryChoice').forEach(button => {
 $('categoryReturn').onclick = showCategoryChoices;
 
 function prepareGame() {
-  storage.remove(SESSION_KEY);
-  storage.remove(LEGACY_SESSION_KEY);
   deck = shuffle(deckFor(mode));
   cardIndex = 0;
   scores = {a: 0, b: 0};
@@ -669,6 +605,8 @@ function render() {
   const isDilemma = card.type === 'mizan';
   const isWord = card.type === 'say';
   const dense = !isAyah && !isReflection && (card.prompt.length > 105 || card.answer.length > 130);
+  const promptLong = !isAyah && card.prompt.length > 72;
+  const promptVeryLong = !isAyah && card.prompt.length > 125;
 
   updateGameContext();
 
@@ -678,6 +616,8 @@ function render() {
   $('gameCard').classList.toggle('reflectionCard', isReflection);
   $('gameCard').classList.toggle('wordCard', isWord);
   $('gameCard').classList.toggle('dense', dense);
+  $('gameCard').classList.toggle('promptLong', promptLong);
+  $('gameCard').classList.toggle('promptVeryLong', promptVeryLong);
   $('promptTransliteration').textContent = card.promptTransliteration || '';
   $('promptTranslation').textContent = card.promptTranslation || '';
   if (isWord) {
@@ -751,9 +691,8 @@ function awardAndAdvance() {
     scores[activeSide]++;
     pointEvents.push({side: activeSide, cardId: currentCard().id, undone: false});
   }
-  // The affirmative cue belongs to the action, not only to scored play.
-  // This keeps Correct, Next Card, and Next Prompt consistent in every mode.
-  playPointTone();
+  // Correct, Next Card, and Next Prompt share the same positive chime.
+  playSound('correct');
   advance();
 }
 
@@ -902,88 +841,8 @@ function beginNextRound() {
   } else startCountdown();
 }
 
-function sessionSnapshot() {
-  if (!mode || !playStyle || !deck.length) return null;
-  return {
-    version: APP_VERSION,
-    mode,
-    playStyle,
-    deckIds: deck.map(card => card.id),
-    cardIndex,
-    scores,
-    seconds,
-    timerRunning,
-    activeSide,
-    roundNumber,
-    roundStartScore,
-    roundLog,
-    pointEvents,
-    roundClosed,
-    matchComplete,
-    answerVisible: !$('answer').hidden,
-    savedAt: new Date().toISOString()
-  };
-}
-
-function persistSession() {
-  const snapshot = sessionSnapshot();
-  if (!snapshot) return;
-  storage.set(SESSION_KEY, JSON.stringify(snapshot));
-  storage.remove(LEGACY_SESSION_KEY);
-  updateResumeAvailability();
-}
-
-function getSavedSession() {
-  try {
-    const saved = JSON.parse(storage.get(SESSION_KEY) || storage.get(LEGACY_SESSION_KEY) || 'null');
-    if (!saved || ![37, 38, APP_VERSION].includes(saved.version) || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
-    return saved;
-  } catch { return null; }
-}
-
-function updateResumeAvailability() {
-  const available = Boolean(getSavedSession());
-  $('resumeSavedGame').hidden = !available;
-  $('discardSavedGame').hidden = !available;
-}
-
-function discardSavedSession() {
-  storage.remove(SESSION_KEY);
-  storage.remove(LEGACY_SESSION_KEY);
-  updateResumeAvailability();
-  showToast('Saved game removed');
-}
-
-function restoreGame() {
-  const saved = getSavedSession();
-  if (!saved) { updateResumeAvailability(); return; }
-  const byId = new Map(cards.map(card => [card.id, card]));
-  const restoredDeck = saved.deckIds.map(id => byId.get(id)).filter(Boolean);
-  if (restoredDeck.length !== saved.deckIds.length) { discardSavedSession(); return; }
-  mode = saved.mode;
-  playStyle = saved.playStyle;
-  deck = restoredDeck;
-  cardIndex = Math.min(Math.max(0, saved.cardIndex || 0), deck.length - 1);
-  scores = {a: Number(saved.scores?.a) || 0, b: Number(saved.scores?.b) || 0};
-  seconds = Math.max(0, Number(saved.seconds) || 0);
-  activeSide = saved.activeSide === 'b' ? 'b' : 'a';
-  roundNumber = Math.max(1, Number(saved.roundNumber) || 1);
-  roundStartScore = Number(saved.roundStartScore) || 0;
-  roundLog = Array.isArray(saved.roundLog) ? saved.roundLog : [];
-  pointEvents = Array.isArray(saved.pointEvents) ? saved.pointEvents : [];
-  roundClosed = Boolean(saved.roundClosed);
-  matchComplete = Boolean(saved.matchComplete);
-  restoredAnswerVisible = Boolean(saved.answerVisible);
-  configureControls();
-  render();
-  showScreen('gameShell');
-  $('countdownScreen').hidden = true;
-  $('roundScreen').hidden = true;
-  if (roundClosed) renderClosedRound();
-  else if (saved.timerRunning && seconds > 0 && !isConversationMode()) startTimer();
-  $('question').focus({preventScroll: true});
-  showToast('Game restored');
-}
+// Games intentionally end when the player returns home; no game state is stored.
+function persistSession() {}
 
 async function requestWakeLock() {
   if (!('wakeLock' in navigator) || document.visibilityState !== 'visible' || $('gameShell').hidden) return;
@@ -1007,14 +866,14 @@ function returnHome() {
   countdownTick = null;
   $('countdownScreen').hidden = true;
   $('roundScreen').hidden = true;
-  persistSession();
   showScreen('welcomeScreen');
-  updateResumeAvailability();
 }
 
 $('openSetup').onpointerdown = primeAudio;
 $('beginGame').onpointerdown = primeAudio;
 $('nextRound').onpointerdown = primeAudio;
+document.addEventListener('pointerdown', primeAudio, {capture: true});
+document.addEventListener('touchstart', primeAudio, {capture: true, passive: true});
 $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); resetSetup(); };
 $('setupBack').onclick = () => {
   if (currentSetupStep === 'playersStep') showSetupStep('styleStep');
@@ -1055,23 +914,21 @@ $('reportSheet').onclick = event => { if (event.target === $('reportSheet')) clo
 $('reportForm').onsubmit = async event => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
-  const report = {...currentCardReport(), issue: data.get('reportIssue'), note: $('reportNote').value.trim(), reportedAt: new Date().toISOString(), deliveryStatus: 'pending', attempts: 0};
-  const reports = getReports();
-  reports.push(report);
-  saveReports(reports);
-  const index = reports.length - 1;
+  const report = {...currentCardReport(), issue: data.get('reportIssue'), note: $('reportNote').value.trim(), reportedAt: new Date().toISOString()};
   lastReport = report;
   $('reportForm').hidden = true;
   $('reportThanks').hidden = false;
   $('reportThanksText').textContent = 'Sending your report…';
   $('reportShare').hidden = true;
   $('reportDone').focus();
-  const delivered = await deliverStoredReport(index, true);
-  if (delivered) $('reportThanksText').textContent = 'Your report was sent for review. The game is exactly where you left it.';
-  else {
-    $('reportThanksText').textContent = 'It is saved on this device and will retry automatically when the connection returns.';
+  try {
+    await sendReportByEmail(report);
+    $('reportThanksText').textContent = 'Your report was sent for review.';
+    showToast('Report sent');
+  } catch {
+    $('reportThanksText').textContent = 'The report could not send. You can share it another way.';
     $('reportShare').hidden = false;
-    showToast('Saved — waiting to send');
+    showToast('Report not sent');
   }
 };
 $('reportShare').onclick = async () => {
@@ -1082,24 +939,12 @@ $('reportShare').onclick = async () => {
     catch (error) { if (error.name === 'AbortError') return; }
   }
   try { await navigator.clipboard.writeText(text); showToast('Report copied to share'); }
-  catch { showToast('Report remains saved on this device'); }
+  catch { showToast('Could not copy report'); }
 };
 
 $('settingsOpen').onclick = () => openDialog('settingsSheet', 'settingsClose', {pauseGame: false});
 $('settingsClose').onclick = () => closeDialog('settingsSheet');
 $('settingsSheet').onclick = event => { if (event.target === $('settingsSheet')) closeDialog('settingsSheet'); };
-$('reportsOpen').onclick = () => {
-  closeDialog('settingsSheet', {resume: false, restoreFocus: false});
-  renderReportSummary();
-  openDialog('reportsSheet', 'reportsClose', {pauseGame: false});
-};
-$('reportsClose').onclick = () => closeDialog('reportsSheet');
-$('reportsSheet').onclick = event => { if (event.target === $('reportsSheet')) closeDialog('reportsSheet'); };
-$('reportExport').onclick = exportReports;
-$('resumeSavedGame').onpointerdown = primeAudio;
-$('resumeSavedGame').onclick = () => { closeDialog('settingsSheet', {resume: false}); restoreGame(); };
-$('discardSavedGame').onclick = () => { discardSavedSession(); closeDialog('settingsSheet'); };
-
 $('contentNotesOpen').onclick = () => openDialog('contentNotesSheet', 'contentNotesClose', {pauseGame: false});
 $('contentNotesClose').onclick = () => closeDialog('contentNotesSheet');
 $('contentNotesSheet').onclick = event => { if (event.target === $('contentNotesSheet')) closeDialog('contentNotesSheet'); };
@@ -1126,7 +971,6 @@ document.addEventListener('visibilitychange', () => {
     if (timerWasRunningBeforeHidden && !$('gameShell').hidden && !roundClosed && !activeDialog) startTimer();
     timerWasRunningBeforeHidden = false;
     if (!$('gameShell').hidden) requestWakeLock();
-    retryPendingReports();
   }
 });
 document.addEventListener('touchmove', event => {
@@ -1134,8 +978,7 @@ document.addEventListener('touchmove', event => {
   if (event.target.closest?.('.sheetPanel,.installPanel,.roundPanel')) return;
   event.preventDefault();
 }, {passive: false});
-window.addEventListener('pagehide', () => { pauseTimer(); persistSession(); });
-window.addEventListener('online', retryPendingReports);
+window.addEventListener('pagehide', pauseTimer);
 window.addEventListener('popstate', () => {
   if (!$('gameShell').hidden) {
     try { history.pushState({majlisGame: true}, '', location.href); } catch {}
@@ -1194,12 +1037,9 @@ updateSoundToggle();
 applyTheme(activeTheme);
 syncGameplayViewport();
 updateInstallVisibility();
-updateReportCount();
-updateResumeAvailability();
-retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=41', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=42', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

@@ -21,9 +21,9 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=41');
-assert.match(sw, /al-majlis-v41/);
-assert.ok(html.includes('./styles.css?v=41') && html.includes('./cards-data.js?v=41') && html.includes('./app.js?v=41'), 'core assets use release-specific URLs');
+assert.equal(manifest.start_url, './index.html?v=42');
+assert.match(sw, /al-majlis-v42/);
+assert.ok(html.includes('./styles.css?v=42') && html.includes('./cards-data.js?v=42') && html.includes('./app.js?v=42'), 'core assets use release-specific URLs');
 assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
 assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
 assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
@@ -35,7 +35,8 @@ assert.ok(!sw.includes('majlis-ready.mp3'), 'unused ready sound removed');
 assert.equal((html.match(/class="action(?:\s|\")/g) || []).length, 4, 'gameplay has four action controls');
 assert.ok(!html.includes('id="next"'), 'redundant Next Card control removed');
 assert.ok(html.includes('id="cardHome"') && html.includes('id="exitSheet"'), 'card has a confirmed home control');
-assert.ok(html.includes('id="resumeSavedGame"') && app.includes('SESSION_KEY'), 'game recovery remains available through Settings');
+assert.ok(!html.includes('Saved report queue') && !html.includes('resumeSavedGame') && !html.includes('discardSavedGame'), 'saved reports and saved-game controls are removed');
+assert.ok(!app.includes('SESSION_KEY') && !app.includes('REPORTS_KEY'), 'games and reports are not stored on the device');
 assert.ok(html.includes('id="sourceSheet"') && html.includes('aria-haspopup="dialog"'), 'full sources are expandable');
 assert.ok(!html.includes('id="num"') && !html.includes('id="progress"'), 'card IDs and deck counts are absent from gameplay');
 assert.ok(!html.includes('data-style="solo"'), 'Solo and Just for Fun are merged into one unscored option');
@@ -50,9 +51,8 @@ assert.ok(app.includes('Date.now() + seconds * 1000') && app.includes("document.
 assert.ok(app.includes("navigator.wakeLock.request('screen')"), 'active play requests a screen wake lock');
 assert.ok(app.includes('lockAdvanceControls') && app.includes('undoLastPoint'), 'rapid taps are locked and end-of-turn points can still be undone');
 assert.ok(!app.includes('undoRecentPoint') && !html.includes('id="pointToast"'), 'Next never opens the removed Undo point pop-up');
-assert.ok(app.includes('retryPendingReports') && app.includes("window.addEventListener('online'"), 'failed reports retry after reconnection');
 assert.match(html, /Reports are sent through FormSubmit/);
-assert.ok(html.includes('id="settingsOpen"') && !/<section class="screen welcomeScreen"[\s\S]*Reports <span/.test(html), 'reviewer queue is behind settings');
+assert.ok(html.includes('id="settingsOpen"') && !html.includes('id="reportsOpen"'), 'Settings contains no saved-report queue');
 assert.ok(html.includes('id="themeLight"') && html.includes('id="themeDark"') && app.includes('applyTheme'), 'Design A and B are selectable in Settings');
 assert.ok(css.includes("./assets/marble-light.webp") && css.includes("./assets/marble-dark.webp"), 'both approved marble systems are included');
 assert.match(css, /\[data-theme="light"\] \.modeGroup\{[^}]*var\(--marble\)/, 'light mode groups carry visible marble texture');
@@ -73,8 +73,8 @@ assert.ok(app.includes('trapDialogFocus') && app.includes('element.inert = inert
 assert.match(app, /contentVersion: String\(APP_VERSION\)/);
 assert.ok(app.includes('const storage = {') && app.includes('catch { return false; }'), 'blocked browser storage cannot abort game launch');
 assert.match(app, /seven forbidden clues, their opposites, or their translations in another language/);
-assert.ok(app.includes('playPointTone') && app.includes('playPassTone'), 'positive point and negative pass cues are both present');
-assert.match(app, /This keeps Correct, Next Card, and Next Prompt consistent in every mode\.[\s\S]*?playPointTone\(\);\s*advance\(\);/, 'Correct and Next share the affirmative cue even when no point is scored');
+assert.ok(app.includes("playSound('correct')") && app.includes('playPassTone'), 'positive point and negative pass cues are both present');
+assert.match(app, /Correct, Next Card, and Next Prompt share the same positive chime\.[\s\S]*?playSound\('correct'\);\s*advance\(\);/, 'Correct and Next share the affirmative cue even when no point is scored');
 assert.ok(css.includes('.forbiddenList') && css.includes('.forbiddenWord'), 'Guess the Word clues use the dedicated neat list layout');
 assert.match(app, /playRoundStartTone\(\)/);
 assert.match(app, /const modeTimes = \{all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity: 60, conversation: 0, mizan: 0, reflection: 0\}/, 'every timed mode is exactly 60 seconds');
@@ -102,4 +102,5 @@ assert.ok(!html.includes('class="screenBrand"'), 'Bismillah is removed from setu
 assert.ok(html.includes('id="confirmHome" type="button">Return Home</button>') && !html.includes('Save &amp; Return Home'), 'exit action uses the concise Return Home label');
 assert.match(css, /\.exitPanel #confirmHome\{[^}]*margin:24px auto 0/, 'Return Home is centered in the confirmation panel');
 
-console.log('static: lifecycle, recovery, reporting, controls, sources, and accessibility passed');
+assert.ok(css.includes('.card.promptLong .question') && css.includes('.card.promptVeryLong .question'), 'long card prompts use delicate responsive typography');
+console.log('static: lifecycle, reporting, controls, sources, typography, and accessibility passed');
