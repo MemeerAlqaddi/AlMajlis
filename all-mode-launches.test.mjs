@@ -43,6 +43,7 @@ for (const [mode, style] of modes) {
 
   const click = element => element.dispatchEvent(new window.MouseEvent('click', {bubbles: true}));
   click(window.document.getElementById('openSetup'));
+  click(window.document.querySelector(`[data-category="${['conversation', 'mizan', 'reflection'].includes(mode) ? 'conversation' : 'competitive'}"]`));
   click(window.document.querySelector(`[data-mode="${mode}"]`));
   if (style) {
     click(window.document.querySelector(`[data-style="${style}"]`));

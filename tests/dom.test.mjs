@@ -59,7 +59,18 @@ assert.equal(window.document.querySelectorAll('.modeGroup').length, 2);
 assert.equal(window.document.querySelectorAll('.modeGroup')[0].querySelectorAll('.setupMode').length, 6);
 assert.equal(window.document.querySelectorAll('.modeGroup')[1].querySelectorAll('.setupMode').length, 3);
 assert.ok([...window.document.querySelectorAll('.setupMode small')].every(element => !/\d+ cards/.test(element.textContent)));
+assert.equal($('categoryChoices').hidden, false, 'game categories appear before individual modes');
+assert.equal($('modeReveal').hidden, true, 'mode list waits for a category choice');
 
+click(window.document.querySelector('[data-category="competitive"]'));
+assert.equal(window.document.querySelector('[data-category="competitive"].modeGroup').hidden, false);
+click($('categoryReturn'));
+assert.equal($('categoryChoices').hidden, false, 'players can return to the two category panels');
+click(window.document.querySelector('[data-category="conversation"]'));
+assert.equal($('categoryChoices').hidden, true);
+assert.equal($('modeReveal').hidden, false);
+assert.equal(window.document.querySelector('[data-category="conversation"].modeGroup').hidden, false);
+assert.equal(window.document.querySelector('[data-category="competitive"].modeGroup').hidden, true);
 click(window.document.querySelector('[data-mode="mizan"]'));
 assert.equal($('gameShell').hidden, false, 'conversation begins directly');
 assert.equal(window.document.documentElement.classList.contains('roundActive'), true, 'root viewport locks during gameplay');
@@ -98,6 +109,7 @@ assert.equal($('question').textContent, conversationPrompt, 'resume returns to t
 click($('cardHome'));
 click($('confirmHome'));
 click($('openSetup'));
+click(window.document.querySelector('[data-category="competitive"]'));
 click(window.document.querySelector('[data-mode="all"]'));
 assert.equal($('styleStep').hidden, false);
 click(window.document.querySelector('[data-style="teams"]'));
@@ -109,15 +121,15 @@ assert.equal($('countdownScreen').hidden, true);
 if (!$('reveal').hidden) assert.equal($('answer').getAttribute('aria-hidden'), 'true');
 assert.ok(wakeLockRequests >= 1, 'active play requests a wake lock');
 assert.equal($('playTimer').textContent, '60', 'timed play begins at 60 seconds');
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, true);
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, true);
 
 visibilityState = 'hidden';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, false, 'backgrounding pauses the saved timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, false, 'backgrounding pauses the saved timer');
 visibilityState = 'visible';
 window.document.dispatchEvent(new window.Event('visibilitychange'));
 await wait(2);
-assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v38')).timerRunning, true, 'returning resumes the timer');
+assert.equal(JSON.parse(window.localStorage.getItem('al-majlis-active-game-v41')).timerRunning, true, 'returning resumes the timer');
 
 click($('correct'));
 click($('correct'));

@@ -21,9 +21,12 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=38');
-assert.match(sw, /al-majlis-v38/);
-assert.ok(html.includes('./styles.css?v=38') && html.includes('./cards-data.js?v=38') && html.includes('./app.js?v=38'), 'core assets use release-specific URLs');
+assert.equal(manifest.start_url, './index.html?v=41');
+assert.match(sw, /al-majlis-v41/);
+assert.ok(html.includes('./styles.css?v=41') && html.includes('./cards-data.js?v=41') && html.includes('./app.js?v=41'), 'core assets use release-specific URLs');
+assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
+assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
+assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
 assert.match(sw, /fetch\(request\)[\s\S]*catch\(\(\) => caches\.match\(request\)\)/, 'core assets update from the network before falling back offline');
 assert.match(sw, /request\.method !== 'GET'/);
 assert.match(sw, /url\.origin !== self\.location\.origin/);
@@ -38,7 +41,8 @@ assert.ok(!html.includes('id="num"') && !html.includes('id="progress"'), 'card I
 assert.ok(!html.includes('data-style="solo"'), 'Solo and Just for Fun are merged into one unscored option');
 assert.equal((html.match(/class="styleChoice"/g) || []).length, 3, 'three play-style choices remain');
 
-assert.ok(app.includes("title: 'Competitive Modes'") && app.includes("title: 'Conversational Modes'"), 'all modes share one grouped page');
+assert.ok(app.includes("title: 'Competitive Games'") && app.includes("title: 'Conversations'"), 'all modes share one grouped page');
+assert.ok(html.includes('data-category="competitive"') && html.includes('data-category="conversation"') && app.includes('selectModeCategory'), 'category choices reveal only their applicable modes');
 assert.ok(!app.includes('modeCount(') && !app.includes('cards</small>'), 'mode tiles do not expose deck counts');
 assert.match(app, /if \(isConversationMode\(\)\) \{\s*playStyle = 'conversation';\s*launchGame\(\)/);
 assert.match(app, /if \(isConversationMode\(\)\) \{\s*seconds = 0;/);
@@ -84,7 +88,8 @@ assert.match(css, /html\.roundActive,html\.roundActive body\{[^}]*height:var\(--
 assert.match(css, /#gameShell:not\(\[hidden\]\)\{[^}]*height:var\(--game-height,100dvh\)[^}]*overflow:hidden/);
 assert.ok(app.includes('window.visualViewport?.height') && app.includes("document.documentElement.classList.toggle('roundActive'"), 'gameplay follows and locks the actual visible phone viewport');
 assert.ok(app.includes("document.addEventListener('touchmove'") && app.includes("{passive: false}"), 'gameplay rubber-band scrolling is blocked');
-assert.ok(html.includes('id="install" type="button" hidden') && app.includes('isInstalledMode') && app.includes("window.addEventListener('appinstalled'"), 'Install App hides in installed mode and after installation');
+assert.ok(html.includes('id="install" type="button">Install App</button>') && app.includes('isInstalledMode') && app.includes("window.addEventListener('appinstalled'"), 'Install App is visible on the website and controlled by the current display mode');
+assert.ok(!app.includes('INSTALL_STATE_KEY') && !app.includes("storage.get('al-majlis-installed"), 'a past installation cannot permanently hide Install App on the website');
 assert.match(html, /class="welcomeMain"[\s\S]*class="welcomeUtilities"/, 'home utilities follow the main launch content');
 assert.match(css, /\.welcomeScreen\{[^}]*display:grid[^}]*grid-template-rows:minmax\(0,1fr\) auto/);
 assert.match(css, /\.welcomeUtilities\{[^}]*justify-self:center[^}]*margin-top:24px/, 'home utilities stay in a spaced bottom row');

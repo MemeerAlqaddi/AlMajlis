@@ -27,9 +27,9 @@ const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conv
 const REPORTS_KEY = 'al-majlis-card-reports-v3';
 const SOUND_KEY = 'al-majlis-sound-v1';
 const THEME_KEY = 'al-majlis-theme-v1';
-const APP_VERSION = 38;
-const SESSION_KEY = 'al-majlis-active-game-v38';
-const LEGACY_SESSION_KEY = 'al-majlis-active-game-v37';
+const APP_VERSION = 41;
+const SESSION_KEY = 'al-majlis-active-game-v41';
+const LEGACY_SESSION_KEY = 'al-majlis-active-game-v38';
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -55,6 +55,7 @@ let pointEvents = [];
 let roundClosed = false;
 let matchComplete = false;
 let currentSetupStep = 'modeStep';
+let selectedCategory = null;
 const storage = {
   get(key) {
     try { return window.localStorage.getItem(key); }
@@ -419,7 +420,7 @@ function showScreen(id) {
 function showSetupStep(step) {
   currentSetupStep = step;
   ['modeStep', 'styleStep', 'playersStep'].forEach(id => $(id).hidden = id !== step);
-  $('setupBack').textContent = step === 'modeStep' ? '← Home' : step === 'styleStep' ? '← Game modes' : '← Play styles';
+  $('setupBack').textContent = step === 'modeStep' ? (selectedCategory ? '← Game categories' : '← Home') : step === 'styleStep' ? '← Game modes' : '← Play styles';
   resetViewport();
   const heading = $(step).querySelector('h2');
   heading?.setAttribute('tabindex', '-1');
@@ -429,11 +430,41 @@ function showSetupStep(step) {
 function resetSetup() {
   mode = null;
   playStyle = null;
+  selectedCategory = null;
   document.querySelectorAll('.setupMode,.styleChoice').forEach(element => element.classList.remove('selected'));
   document.querySelectorAll('.styleChoice').forEach(element => element.disabled = false);
   $('matchField').hidden = true;
   $('beginGame').disabled = true;
+  showCategoryChoices();
   showSetupStep('modeStep');
+}
+
+function showCategoryChoices() {
+  selectedCategory = null;
+  $('categoryChoices').hidden = false;
+  $('modeReveal').hidden = true;
+  $('modeStepTitle').textContent = 'What are you in the mood for?';
+  $('modeStepIntro').textContent = 'Choose the kind of gathering first. The matching games will appear next.';
+  document.querySelectorAll('.categoryChoice').forEach(button => button.classList.remove('selected'));
+  $('setupBack').textContent = '← Home';
+  resetViewport();
+}
+
+function selectModeCategory(category) {
+  if (!['competitive', 'conversation'].includes(category)) return;
+  playSound('select');
+  selectedCategory = category;
+  $('categoryChoices').hidden = true;
+  $('modeReveal').hidden = false;
+  $('modeStepTitle').textContent = category === 'competitive' ? 'Choose a competitive game' : 'Choose a conversation';
+  $('modeStepIntro').textContent = category === 'competitive'
+    ? 'Knowledge, clues, and friendly competition. Choose the game for this round.'
+    : 'Untimed, unscored prompts for a thoughtful gathering.';
+  document.querySelectorAll('.modeGroup').forEach(group => { group.hidden = group.dataset.category !== category; });
+  document.querySelectorAll('.categoryChoice').forEach(button => button.classList.toggle('selected', button.dataset.category === category));
+  $('setupBack').textContent = '← Game categories';
+  resetViewport();
+  $('modeStepTitle').focus({preventScroll: true});
 }
 
 function selectSetupMode(selectedMode) {
@@ -473,13 +504,14 @@ function selectStyle(style) {
 }
 
 const modeGroups = [
-  {title: 'Competitive Modes', note: 'Answer-based games with optional scoring and timed rounds.', keys: ['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']},
-  {title: 'Conversational Modes', note: 'One simple format: untimed, unscored, and made for talking.', keys: ['conversation', 'mizan', 'reflection']}
+  {category: 'competitive', title: 'Competitive Games', note: 'Answer-based games with optional scoring and timed rounds.', keys: ['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']},
+  {category: 'conversation', title: 'Conversations', note: 'One simple format: untimed, unscored, and made for talking.', keys: ['conversation', 'mizan', 'reflection']}
 ];
 
 modeGroups.forEach(group => {
   const section = document.createElement('section');
   section.className = 'modeGroup';
+  section.dataset.category = group.category;
   const heading = document.createElement('h3');
   heading.textContent = group.title;
   const note = document.createElement('p');
@@ -498,6 +530,11 @@ modeGroups.forEach(group => {
   section.append(heading, note, list);
   $('setupModes').appendChild(section);
 });
+
+document.querySelectorAll('.categoryChoice').forEach(button => {
+  button.onclick = () => selectModeCategory(button.dataset.category);
+});
+$('categoryReturn').onclick = showCategoryChoices;
 
 function prepareGame() {
   storage.remove(SESSION_KEY);
@@ -554,6 +591,16 @@ function configureControls() {
   $('finishRound').textContent = conversation ? 'End Session' : isCompetitive() ? 'End Turn' : 'End Round';
 }
 
+function updateGameContext() {
+  const conversation = isConversationMode();
+  const side = conversation ? 'Conversation' : isCompetitive() ? sideLabel() : 'Just for Fun';
+  const round = conversation ? 'Untimed' : `Round ${roundNumber}`;
+  $('gameSide').textContent = side;
+  $('gameRound').textContent = round;
+  $('countdownSide').textContent = side;
+  $('countdownRound').textContent = round;
+}
+
 function startCountdown() {
   clearInterval(countdownTick);
   pauseTimer();
@@ -563,6 +610,7 @@ function startCountdown() {
   seconds = modeTimes[mode];
   lastTimerCueSecond = null;
   showTime();
+  updateGameContext();
   $('countdownScreen').hidden = false;
   let count = 3;
   const showCount = value => {
@@ -621,6 +669,8 @@ function render() {
   const isDilemma = card.type === 'mizan';
   const isWord = card.type === 'say';
   const dense = !isAyah && !isReflection && (card.prompt.length > 105 || card.answer.length > 130);
+
+  updateGameContext();
 
   $('type').textContent = modes[card.type][0].toUpperCase();
   $('question').textContent = isAyah ? arabicDisplay(card.prompt) : decodeDisplay(card);
@@ -886,7 +936,7 @@ function persistSession() {
 function getSavedSession() {
   try {
     const saved = JSON.parse(storage.get(SESSION_KEY) || storage.get(LEGACY_SESSION_KEY) || 'null');
-    if (!saved || ![37, APP_VERSION].includes(saved.version) || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
+    if (!saved || ![37, 38, APP_VERSION].includes(saved.version) || !modes[saved.mode] || !Array.isArray(saved.deckIds) || !saved.deckIds.length) return null;
     return saved;
   } catch { return null; }
 }
@@ -969,6 +1019,7 @@ $('openSetup').onclick = () => { playSound('open'); showScreen('setupScreen'); r
 $('setupBack').onclick = () => {
   if (currentSetupStep === 'playersStep') showSetupStep('styleStep');
   else if (currentSetupStep === 'styleStep') showSetupStep('modeStep');
+  else if (selectedCategory) showCategoryChoices();
   else showScreen('welcomeScreen');
 };
 document.querySelectorAll('.styleChoice').forEach(button => button.onclick = () => selectStyle(button.dataset.style));
@@ -1148,7 +1199,7 @@ updateResumeAvailability();
 retryPendingReports();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=40', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=41', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });
