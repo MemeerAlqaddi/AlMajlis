@@ -64,8 +64,11 @@ assert.equal($('modeReveal').hidden, true, 'mode list waits for a category choic
 
 click(window.document.querySelector('[data-category="competitive"]'));
 assert.equal(window.document.querySelector('[data-category="competitive"].modeGroup').hidden, false);
-click($('categoryReturn'));
+assert.equal($('modeStepTitle').hidden, true, 'the duplicate category-level title is removed after selection');
+assert.equal($('categoryReturn'), null, 'the duplicate bottom category-return control is removed');
+click($('setupBack'));
 assert.equal($('categoryChoices').hidden, false, 'players can return to the two category panels');
+assert.equal($('modeStepTitle').hidden, false, 'the category-choice title returns with the category panels');
 click(window.document.querySelector('[data-category="conversation"]'));
 assert.equal($('categoryChoices').hidden, true);
 assert.equal($('modeReveal').hidden, false);

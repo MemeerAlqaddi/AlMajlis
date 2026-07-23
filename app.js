@@ -381,8 +381,8 @@ function showCategoryChoices() {
   selectedCategory = null;
   $('categoryChoices').hidden = false;
   $('modeReveal').hidden = true;
+  $('modeStepTitle').hidden = false;
   $('modeStepTitle').textContent = 'What are you in the mood for?';
-  $('modeStepIntro').textContent = 'Choose the kind of gathering first. The matching games will appear next.';
   document.querySelectorAll('.categoryChoice').forEach(button => button.classList.remove('selected'));
   $('setupBack').textContent = '← Home';
   resetViewport();
@@ -394,15 +394,14 @@ function selectModeCategory(category) {
   selectedCategory = category;
   $('categoryChoices').hidden = true;
   $('modeReveal').hidden = false;
-  $('modeStepTitle').textContent = category === 'competitive' ? 'Choose a competitive game' : 'Choose a conversation';
-  $('modeStepIntro').textContent = category === 'competitive'
-    ? 'Knowledge, clues, and friendly competition. Choose the game for this round.'
-    : 'Untimed, unscored prompts for a thoughtful gathering.';
+  $('modeStepTitle').hidden = true;
   document.querySelectorAll('.modeGroup').forEach(group => { group.hidden = group.dataset.category !== category; });
   document.querySelectorAll('.categoryChoice').forEach(button => button.classList.toggle('selected', button.dataset.category === category));
   $('setupBack').textContent = '← Game categories';
   resetViewport();
-  $('modeStepTitle').focus({preventScroll: true});
+  const categoryHeading = document.querySelector(`.modeGroup[data-category="${category}"] h3`);
+  categoryHeading?.setAttribute('tabindex', '-1');
+  categoryHeading?.focus({preventScroll: true});
 }
 
 function selectSetupMode(selectedMode) {
@@ -472,7 +471,6 @@ modeGroups.forEach(group => {
 document.querySelectorAll('.categoryChoice').forEach(button => {
   button.onclick = () => selectModeCategory(button.dataset.category);
 });
-$('categoryReturn').onclick = showCategoryChoices;
 
 function prepareGame() {
   deck = shuffle(deckFor(mode));
@@ -1039,7 +1037,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=42', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=43', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });
