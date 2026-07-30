@@ -108,9 +108,9 @@ body.roundActive{margin:0}
   --display:"Bodoni 72","Bodoni MT",Didot,"Times New Roman",serif;--body:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
 }
 [data-theme="dark"]{
-  --bg:#090b0c;--panel:#111516e8;--panel2:#0c1011e8;--line:#6e8b8f70;--text:#eeeae4;--muted:#a8a7a2;
-  --aqua:#6eb9c0;--aqua-bright:#94dbe0;--good:#153b32;--bad:#3b2224;--surface:#101415dc;--surface-strong:#0c1011f2;
-  --soft-shadow:0 24px 76px #000b;--veil:#060809a6;--marble:url('./assets/marble-dark.webp');
+  --bg:#171a1c;--panel:#282c2ee8;--panel2:#202426dc;--line:#8da0a47a;--text:#f3f0eb;--muted:#bebcb7;
+  --aqua:#74c0c7;--aqua-bright:#9be0e5;--good:#21483f;--bad:#4a2e31;--surface:#292e30c9;--surface-strong:#34393bd9;
+  --soft-shadow:0 24px 76px #0009;--veil:#10131538;--marble:url('./assets/marble-dark.webp');
 }
 html{background:var(--bg);color-scheme:light;transition:background-color .22s ease}
 [data-theme="dark"]{color-scheme:dark}
@@ -227,7 +227,7 @@ body{min-height:100svh;background:linear-gradient(var(--veil),var(--veil)),var(-
   --ink:#172127;
 }
 [data-theme="dark"]{
-  --page-wash:linear-gradient(#07090a91,#07090ab0);
+  --page-wash:linear-gradient(#353a3c4f,#14171957);
   --hairline:#70b8bf;
   --ink:#f2eee8;
 }
@@ -284,12 +284,12 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 .countdownContext span{color:var(--aqua-bright);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
 .countdownContext strong{color:var(--text)!important;font-family:var(--display);font-size:20px!important;font-weight:400!important;letter-spacing:.02em}
 .countdownContext strong:after{content:"";display:block;width:42px;height:1px;margin:10px auto 0;background:var(--aqua)}
-.countdownBismillah{margin-top:20px;color:var(--text);font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:clamp(17px,4.5vw,22px);line-height:1.5;white-space:nowrap}
+.countdownBismillah{margin:0 0 20px;color:var(--text);font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:clamp(17px,4.5vw,22px);line-height:1.5;white-space:nowrap}
 .countdownCue{align-self:center;width:min(46vw,176px);height:min(46vw,176px);border:1px solid var(--aqua);background:var(--surface);box-shadow:var(--soft-shadow)}
 .countdownReady{margin:0;color:var(--muted);font-family:var(--display);font-size:20px}.countdownReady:after{content:"";display:block;width:28px;height:1px;margin:11px auto 0;background:var(--aqua)}
 
 /* Gameplay */
-#gameShell:not([hidden]){padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+#gameShell:not([hidden]){padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:linear-gradient(var(--veil),var(--veil)),var(--marble) center/cover fixed no-repeat}
 #gameShell .stage{grid-template-rows:48px minmax(0,1fr) auto;gap:10px;width:min(520px,100%)}
 .gameMeta{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 2px 4px 8px;color:var(--text);font-family:var(--display);font-size:14px}
 .gameContext{display:flex;align-items:center;gap:12px;min-width:0}
@@ -304,7 +304,7 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 .actions{gap:10px;padding:0 2px}.action{min-height:52px;padding:10px 8px;border-color:var(--aqua);border-radius:0;font-size:14px}.action.good,.action.bad{background:var(--surface)}#finishRound{display:none!important}
 
 /* End-turn confirmation and result hierarchy */
-.exitPanel{width:min(390px,100%);padding:32px 24px}.exitPanel:before{content:"";display:block;width:190px;height:9px;margin:0 auto 24px;background:linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat,radial-gradient(circle,var(--hairline) 0 2px,transparent 2.5px) center/9px 9px no-repeat}.exitPanel .welcomeEyebrow{display:none}.exitPanel h2{font-size:27px}.exitPanel #confirmHome,.exitPanel #keepPlaying{width:min(230px,100%);min-height:48px;border:1px solid var(--aqua);clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.exitPanel{width:min(390px,100%);padding:32px 24px}.exitPanel:before{content:"";display:block;width:190px;height:9px;margin:0 auto 24px;background:linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat,radial-gradient(circle,var(--hairline) 0 2px,transparent 2.5px) center/9px 9px no-repeat}.exitPanel .welcomeEyebrow{display:none}.exitPanel h2{font-size:27px}.exitPanel #returnGameModes,.exitPanel #confirmHome,.exitPanel #keepPlaying{display:flex;align-items:center;justify-content:center;width:min(250px,100%);min-height:48px;margin-left:auto;margin-right:auto;border:1px solid var(--aqua);clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}.exitPanel #returnGameModes{margin-top:24px}.exitPanel #confirmHome{margin-top:9px}.exitPanel #keepPlaying{margin-top:9px}
 .roundScreen{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 .roundPanel{width:min(430px,100%);padding:34px 25px;border:0;background:linear-gradient(145deg,var(--surface-strong),var(--surface));box-shadow:var(--soft-shadow)}
 .roundPanel:before{margin-bottom:22px}.roundHeader>span{font-size:10px}.roundHeader>strong{margin:12px auto 5px;font-size:clamp(36px,10vw,48px);font-weight:400}.roundScore{font-family:var(--display);font-size:15px}
@@ -322,7 +322,27 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 }
 @media(max-height:650px){
   .setupInner{padding-top:0}.setupStep:before{margin-bottom:12px}.categoryChoices{margin-top:16px;gap:10px}.categoryChoice{min-height:86px;padding:14px}.categoryChoice:after{top:45px}.categoryChoice strong{margin-bottom:14px}.categoryChoice small{font-size:12px}
-  .countdownBismillah{margin-top:10px}.countdownCue{width:min(39vw,148px);height:min(39vw,148px)}.countdownReady{font-size:18px}
+  .countdownBismillah{margin-bottom:10px}.countdownCue{width:min(39vw,148px);height:min(39vw,148px)}.countdownReady{font-size:18px}
+}
+
+/* V47: visible gray marble throughout dark mode. */
+[data-theme="dark"] body,
+[data-theme="dark"] .countdownScreen,
+[data-theme="dark"] .roundScreen,
+[data-theme="dark"] #gameShell:not([hidden]){
+  background-color:#1e2224;
+  background-image:linear-gradient(135deg,#59606324,#10131538),var(--marble);
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+[data-theme="dark"] .card,
+[data-theme="dark"] .roundPanel,
+[data-theme="dark"] .sheetPanel,
+[data-theme="dark"] .installPanel{
+  background-image:linear-gradient(145deg,#4a5052b8,#1b1f20d1),var(--marble);
+  background-position:center;
+  background-size:cover;
 }
 
 /* V42: quieter, more elegant card typography with graceful long-prompt fitting. */
