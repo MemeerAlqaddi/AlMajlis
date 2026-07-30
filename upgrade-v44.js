@@ -1,4 +1,4 @@
-/* Al Majlis v44: countdown/header fixes, external card utilities, scorecard, pass sound, Islam vs Culture. */
+/* Al Majlis v46: stable countdown/gameplay layout, scorecard, pass sound, Islam vs Culture. */
 {
   const cultureCards = [
     {type:"culture",id:"CULTURE-001",prompt:"Islam requires every married woman to replace her family name with her husband’s family name.",answer:"Culture",classification:"culture",evidence:"No Qur’anic verse or authentic hadith makes this a marriage requirement. The Qur’an emphasizes truthful attribution of known lineage.",source:"Qur’an 33:5"},
@@ -38,25 +38,11 @@
   currentCardReport = function(){
     if(!isCultureMode()) return baseCurrentCardReport();
     const card=currentCard();
-    return {cardId:card.id,mode:modes.culture[0],prompt:card.prompt,answer:`${card.answer} — ${card.evidence}`,source:card.source,contentVersion:"44"};
+    return {cardId:card.id,mode:modes.culture[0],prompt:card.prompt,answer:`${card.answer} — ${card.evidence}`,source:card.source,contentVersion:"46"};
   };
 
   const style=document.createElement("style");
   style.textContent=`
-  #countdownScreen{position:fixed!important;inset:0!important;z-index:1600!important;padding:0!important;background:var(--page,#ecebea)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-  #countdownScreen[hidden]{display:none!important}
-  .v44CountdownLayout{min-height:100%;display:grid;grid-template-rows:auto auto 1fr auto;align-items:center;text-align:center}
-  .v44CountdownHeader{width:100%;min-height:58px;padding:max(14px,env(safe-area-inset-top)) 22px 14px;background:#316f7b;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;letter-spacing:.16em;font-size:.75rem;font-weight:700}
-  .v44CountdownHeader strong{font:inherit;opacity:.82}
-  .v44CountdownBismillah{padding:24px 16px 4px;color:var(--ink,#172126);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1rem,4vw,1.35rem);direction:rtl}
-  .v44CountdownCenter{display:flex;align-items:center;justify-content:center;padding:20px}
-  .v44CountdownCircle{width:min(46vw,210px);aspect-ratio:1;border-radius:50%;border:2px solid #316f7b;display:grid;place-items:center;background:rgba(49,111,123,.06);box-shadow:0 20px 60px rgba(25,58,64,.12)}
-  #countdownNumber{font-family:Georgia,"Times New Roman",serif;font-size:clamp(4.8rem,21vw,8.4rem);line-height:1;color:#316f7b}
-  .v44CountdownReady{padding:0 20px max(44px,env(safe-area-inset-bottom));font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted,#697477)}
-  .gameUtilityBar{width:min(100%,760px);display:flex;justify-content:flex-end;align-items:center;gap:9px;flex:0 0 auto;padding:0 4px}
-  #gameShell .cardHomeButton,#gameShell .reportCardButton{position:static!important;inset:auto!important;transform:none!important;width:42px!important;height:42px!important;min-width:42px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:var(--card,#f8f7f2)!important;border:1px solid rgba(49,111,123,.32)!important;color:#316f7b!important;box-shadow:0 5px 16px rgba(18,37,42,.08)!important;font-size:1rem!important;z-index:auto!important}
-  #gameShell .stage{gap:9px!important}
-  #gameShell #gameCard{margin-top:0!important}
   .cultureCard .question{font-size:clamp(1.45rem,5.6vw,2.45rem)!important;line-height:1.12!important;margin-bottom:18px!important}
   .cultureChoices{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:auto}
   .cultureChoice{min-height:64px;border-radius:14px;border:1px solid rgba(49,111,123,.38);background:rgba(49,111,123,.055);color:var(--ink,#172126);font-size:1rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
@@ -65,17 +51,9 @@
   .cultureEvidence[hidden]{display:none!important}.cultureVerdict{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.cultureVerdict strong{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}.cultureVerdict span{font-family:Georgia,"Times New Roman",serif;font-size:1.2rem;color:#316f7b}
   .cultureEvidence p{margin:0;color:var(--ink,#172126);font-size:.88rem;line-height:1.45}.cultureEvidence small{display:block;margin-top:9px;color:#316f7b;font-weight:700;font-size:.76rem}.cultureNote{margin-top:8px!important;color:var(--muted,#697477)!important;font-size:.72rem!important}
   #roundScreen .roundPanel{width:min(92vw,560px)!important}#roundScreen .matchScoreboard{display:block!important;margin:18px 0!important}#roundScreen .matchScoreboard[hidden]{display:none!important}#roundScreen .finalScores{padding:18px!important;border:1px solid rgba(49,111,123,.25)!important;border-radius:16px!important;background:rgba(49,111,123,.055)!important}
-  @media(max-width:560px){.v44CountdownHeader{min-height:54px;padding-left:14px;padding-right:14px;font-size:.68rem}.gameUtilityBar{padding:0 2px}#gameShell .cardHomeButton,#gameShell .reportCardButton{width:38px!important;height:38px!important;min-width:38px!important}.cultureChoices{gap:9px}.cultureChoice{min-height:58px}.cultureEvidence{padding:12px}.cultureEvidence p{font-size:.8rem}}
+  @media(max-width:560px){.cultureChoices{gap:9px}.cultureChoice{min-height:58px}.cultureEvidence{padding:12px}.cultureEvidence p{font-size:.8rem}}
   `;
   document.head.appendChild(style);
-
-  $("countdownScreen").innerHTML=`<div class="v44CountdownLayout"><div class="v44CountdownHeader"><span id="countdownRound">Round 1</span><strong id="countdownSide">Team A</strong></div><div class="v44CountdownBismillah" lang="ar" dir="rtl">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</div><div class="v44CountdownCenter"><div class="v44CountdownCircle"><strong id="countdownNumber">3</strong></div></div><div class="v44CountdownReady">Get Ready</div></div>`;
-
-  const utilityBar=document.createElement("div");
-  utilityBar.className="gameUtilityBar";
-  utilityBar.setAttribute("aria-label","Game controls");
-  utilityBar.append($("cardHome"),$("reportCard"));
-  $("gameCard").before(utilityBar);
 
   const choices=document.createElement("div");
   choices.id="cultureChoices"; choices.className="cultureChoices"; choices.hidden=true;
@@ -112,7 +90,7 @@
       choices.hidden=false; evidence.hidden=true;
       $("skip").hidden=true; $("reveal").hidden=true; $("correct").hidden=true; $("finishRound").hidden=true; $("playTimer").hidden=false;
     }else{
-      choices.hidden=true; evidence.hidden=true; $("finishRound").hidden=false; $("correct").hidden=false;
+      choices.hidden=true; evidence.hidden=true; $("finishRound").hidden=true; $("correct").hidden=false;
     }
   };
 

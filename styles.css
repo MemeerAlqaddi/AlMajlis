@@ -276,23 +276,32 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 .setupBack{position:fixed;z-index:50;top:auto;left:50%;bottom:max(13px,env(safe-area-inset-bottom));min-width:110px;transform:translateX(-50%);border:0;border-top:1px solid var(--line);background:var(--surface-strong);box-shadow:0 -8px 26px #1111;text-align:center}
 
 /* Countdown */
-.countdownScreen{padding:85px 20px 34px}
-.countdownScreen:before{top:max(27px,calc(env(safe-area-inset-top) + 13px));font-size:15px}
-.countdownLayout{display:grid;justify-items:center;align-content:center;width:min(420px,100%)}
-.countdownLayout:before{margin-bottom:27px}
-.countdownContext{display:grid;gap:5px;margin-bottom:18px;font-family:var(--display);font-size:20px}.countdownContext strong{font-size:19px!important;font-weight:400!important}.countdownContext strong:after{content:"";display:block;width:32px;height:1px;margin:9px auto 0;background:var(--aqua)}
-.countdownCue{width:min(46vw,176px);height:min(46vw,176px);background:transparent;box-shadow:none}
-.countdownReady{margin-top:20px;font-family:var(--display);font-size:22px}.countdownReady:after{content:"";display:block;width:28px;height:1px;margin:11px auto 0;background:var(--aqua)}
+.countdownScreen{padding:max(28px,env(safe-area-inset-top)) 20px max(34px,env(safe-area-inset-bottom))}
+.countdownScreen:before{content:none}
+.countdownLayout{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;justify-items:center;align-items:center;width:min(420px,100%);height:100%;min-height:0}
+.countdownLayout:before{display:none}
+.countdownContext{display:grid;gap:7px;margin:0;text-align:center}
+.countdownContext span{color:var(--aqua-bright);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.countdownContext strong{color:var(--text)!important;font-family:var(--display);font-size:20px!important;font-weight:400!important;letter-spacing:.02em}
+.countdownContext strong:after{content:"";display:block;width:42px;height:1px;margin:10px auto 0;background:var(--aqua)}
+.countdownBismillah{margin-top:20px;color:var(--text);font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:clamp(17px,4.5vw,22px);line-height:1.5;white-space:nowrap}
+.countdownCue{align-self:center;width:min(46vw,176px);height:min(46vw,176px);border:1px solid var(--aqua);background:var(--surface);box-shadow:var(--soft-shadow)}
+.countdownReady{margin:0;color:var(--muted);font-family:var(--display);font-size:20px}.countdownReady:after{content:"";display:block;width:28px;height:1px;margin:11px auto 0;background:var(--aqua)}
 
 /* Gameplay */
 #gameShell:not([hidden]){padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
-#gameShell .stage{grid-template-rows:34px minmax(0,1fr) auto;gap:8px;width:min(520px,100%)}
-.gameMeta{position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 8px;color:var(--text);font-family:var(--display);font-size:14px}
+#gameShell .stage{grid-template-rows:48px minmax(0,1fr) auto;gap:10px;width:min(520px,100%)}
+.gameMeta{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 2px 4px 8px;color:var(--text);font-family:var(--display);font-size:14px}
+.gameContext{display:flex;align-items:center;gap:12px;min-width:0}
+.gameContext span+span:before{content:"";display:inline-block;width:1px;height:12px;margin-right:12px;background:var(--aqua);vertical-align:-1px}
+.gameUtilityBar{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.gameUtilityBar .reportCardButton,.gameUtilityBar .cardHomeButton{position:relative;inset:auto;width:42px;height:42px;min-width:42px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--aqua-bright);box-shadow:0 5px 14px #21323816}
+.gameUtilityBar .reportCardButton:before,.gameUtilityBar .cardHomeButton:before{content:none}
 .gameMeta:after{position:absolute;left:0;right:0;bottom:-4px;width:100%;height:8px;margin:0}
 .card{padding:62px 7% 46px;background:linear-gradient(150deg,var(--surface-strong),var(--surface))}
 .stripe{left:42%;right:42%;top:23px}.type{top:28px}.question{font-size:clamp(28px,6dvh,48px)}
-.playTimer{position:fixed;z-index:55;right:max(20px,calc((100vw - 520px)/2 + 20px));top:max(12px,env(safe-area-inset-top));height:30px;border:0;background:transparent;font-size:14px}
-.actions{gap:7px}.action{min-height:48px;padding:8px 4px;border-color:var(--aqua);border-radius:0;font-size:13px}.action.good,.action.bad,.finishAction{background:var(--surface)}
+.playTimer{position:absolute;z-index:5;right:14px;top:18px;height:30px;border:0;background:transparent;font-size:14px}
+.actions{gap:10px;padding:0 2px}.action{min-height:52px;padding:10px 8px;border-color:var(--aqua);border-radius:0;font-size:14px}.action.good,.action.bad{background:var(--surface)}#finishRound{display:none!important}
 
 /* End-turn confirmation and result hierarchy */
 .exitPanel{width:min(390px,100%);padding:32px 24px}.exitPanel:before{content:"";display:block;width:190px;height:9px;margin:0 auto 24px;background:linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat,radial-gradient(circle,var(--hairline) 0 2px,transparent 2.5px) center/9px 9px no-repeat}.exitPanel .welcomeEyebrow{display:none}.exitPanel h2{font-size:27px}.exitPanel #confirmHome,.exitPanel #keepPlaying{width:min(230px,100%);min-height:48px;border:1px solid var(--aqua);clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
@@ -309,11 +318,11 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 }
 @media(max-width:390px){
   .categoryChoice{min-height:100px}.categoryChoice:after{top:50px}.categoryChoice strong{font-size:20px}.setupInner h2{font-size:33px}.stepIntro{font-size:12px}.setupMode{min-height:70px}.setupMode strong{font-size:16px}
-  .action{font-size:11px}.playStyles{gap:8px}.styleChoice{padding-inline:8px}.roundPanel{padding:28px 18px}
+  .action{font-size:12px}.gameContext{gap:8px}.gameContext span+span:before{margin-right:8px}.gameUtilityBar{gap:5px}.gameUtilityBar .reportCardButton,.gameUtilityBar .cardHomeButton{width:40px;height:40px;min-width:40px}.playStyles{gap:8px}.styleChoice{padding-inline:8px}.roundPanel{padding:28px 18px}
 }
 @media(max-height:650px){
   .setupInner{padding-top:0}.setupStep:before{margin-bottom:12px}.categoryChoices{margin-top:16px;gap:10px}.categoryChoice{min-height:86px;padding:14px}.categoryChoice:after{top:45px}.categoryChoice strong{margin-bottom:14px}.categoryChoice small{font-size:12px}
-  .countdownLayout:before{margin-bottom:12px}.countdownContext{margin-bottom:10px}.countdownReady{margin-top:12px}
+  .countdownBismillah{margin-top:10px}.countdownCue{width:min(39vw,148px);height:min(39vw,148px)}.countdownReady{font-size:18px}
 }
 
 /* V42: quieter, more elegant card typography with graceful long-prompt fitting. */
