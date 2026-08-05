@@ -492,3 +492,56 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 .exitPanel #keepPlaying{
   border-radius:8px;
 }
+
+/* V49: direct-upload premium support and cleaner setup spacing. */
+.modeInstruction{
+  white-space:pre-line;
+}
+
+.matchField{
+  display:none!important;
+}
+
+.setupBack{
+  top:max(12px,env(safe-area-inset-top));
+  right:max(16px,env(safe-area-inset-right));
+  left:auto;
+  padding:7px 0;
+  border:0!important;
+  background:transparent;
+  box-shadow:none;
+  color:var(--muted);
+  font-size:13px;
+}
+.setupBack:hover,
+.setupBack:focus-visible{
+  border:0!important;
+  color:var(--aqua-bright);
+}
+
+[data-theme="light"] body,
+[data-theme="light"] .setupScreen,
+[data-theme="light"] .countdownScreen,
+[data-theme="light"] .roundScreen,
+[data-theme="light"] #gameShell:not([hidden]){
+  background-color:#d8dad5;
+  background-image:linear-gradient(135deg,#efede580,#aeb8b790 52%,#d7d8d0a8),var(--marble);
+  background-position:center;
+  background-size:cover;
+}
+
+[data-theme="light"] .modeGroup{
+  background-image:linear-gradient(138deg,#eceae1a8 0%,#aeb7b4a8 48%,#d8d8cfb0 100%),var(--marble)!important;
+  background-position:center,52% 48%;
+  background-size:cover,125% auto;
+}
+
+[data-theme="light"] .categoryChoice,
+[data-theme="light"] .setupMode,
+[data-theme="light"] .styleChoice,
+[data-theme="light"] .selectionSummary,
+[data-theme="light"] .modeInstruction{
+  background-image:linear-gradient(115deg,#f1eee5b0 0%,#b5bdb9b0 55%,#dcdcd2bf 100%),var(--marble)!important;
+  background-position:center,44% 48%;
+  background-size:cover,170% auto;
+}

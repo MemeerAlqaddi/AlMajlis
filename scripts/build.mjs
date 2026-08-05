@@ -9,9 +9,13 @@ await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 
 const excluded = new Set([
-  '.git', '.github', 'node_modules', 'dist', 'api', 'scripts',
+  '.git', '.github', '.vercel', 'node_modules', 'dist', 'api', 'scripts',
   'package-lock.json', 'package.json', 'vercel.json',
-  'AL-MAJLIS-VERCEL-STRIPE-SETUP.txt'
+  'AL-MAJLIS-VERCEL-STRIPE-SETUP.txt',
+  'AlMajlis-GitHub-Upload-v48',
+  'AlMajlis-GitHub-Upload-v48.zip',
+  'AlMajlis-GitHub-Upload-v49',
+  'AlMajlis-GitHub-Upload-v49.zip'
 ]);
 
 const { readdir } = await import('node:fs/promises');
@@ -25,8 +29,8 @@ if (!existsSync(indexPath)) throw new Error('index.html was not found.');
 
 let html = await readFile(indexPath, 'utf8');
 
-const styleTag = '<link rel="stylesheet" href="./monetization.css?v=1">';
-const scriptTag = '<script src="./monetization.js?v=1"></script>';
+const styleTag = '<link rel="stylesheet" href="./monetization.css?v=2">';
+const scriptTag = '<script src="./monetization.js?v=2"></script>';
 
 if (!html.includes('monetization.css')) {
   html = html.replace('</head>', `${styleTag}</head>`);

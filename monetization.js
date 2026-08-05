@@ -142,6 +142,17 @@
     }
   }
 
+  function ensureAccessBadge(button, text, modifier) {
+    let badge = button.querySelector('.majlisAccessBadge');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'majlisAccessBadge';
+      button.append(badge);
+    }
+    badge.className = `majlisAccessBadge ${modifier}`;
+    badge.textContent = text;
+  }
+
   function createBundleButton() {
     const button = document.createElement('button');
     button.type = 'button';
@@ -164,13 +175,17 @@
     const freeButtons = buttons.filter(button => FREE_MODES.has(button.dataset.mode));
     const premiumButtons = buttons.filter(button => PRODUCTS[button.dataset.mode]);
 
-    premiumButtons.forEach(ensureLock);
+    freeButtons.forEach(button => ensureAccessBadge(button, 'Free', 'isFree'));
+    premiumButtons.forEach(button => {
+      ensureLock(button);
+      ensureAccessBadge(button, PRODUCTS[button.dataset.mode].price, 'isPaid');
+    });
 
     list.textContent = '';
     list.dataset.majlisPremiumReady = 'true';
 
     if (freeButtons.length) {
-      list.append(tierHeading('Included for Free'));
+      list.append(tierHeading('Free Packs'));
       const freeList = document.createElement('div');
       freeList.className = 'majlisModeSection majlisFreeModes';
       freeButtons.forEach(button => freeList.append(button));
@@ -178,11 +193,11 @@
     }
 
     if (premiumButtons.length) {
-      list.append(tierHeading('More Ways to Play'));
+      list.append(tierHeading('Paid Packs'));
       const premiumList = document.createElement('div');
       premiumList.className = 'majlisModeSection majlisPaidModes';
       premiumButtons.forEach(button => premiumList.append(button));
-      list.append(premiumList, createBundleButton());
+      list.append(premiumList, tierHeading('Premium All Access'), createBundleButton());
     }
   }
 

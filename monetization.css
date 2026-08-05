@@ -28,9 +28,35 @@
   gap: 9px;
 }
 
+.majlisAccessBadge {
+  position: absolute;
+  z-index: 4;
+  right: 13px;
+  bottom: 10px;
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: var(--aqua-bright);
+  font-family: var(--body);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.majlisAccessBadge.isFree {
+  color: #4f8d78;
+}
+
+.majlisAccessBadge.isPaid {
+  color: var(--aqua-bright);
+}
+
 .majlisPremiumMode {
   border-color: var(--aqua) !important;
-  padding-right: 46px !important;
+  padding-right: 54px !important;
 }
 
 .majlisPremiumMode.isUnlocked {

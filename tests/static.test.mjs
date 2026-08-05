@@ -21,10 +21,11 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=48');
-assert.match(sw, /al-majlis-v48/);
-assert.ok(html.includes('./styles.css?v=48') && html.includes('./cards-data.js?v=48') && html.includes('./app.js?v=48'), 'core assets use release-specific URLs');
-assert.ok(app.includes("service-worker.js?v=48"), 'service-worker registration uses the current release URL');
+assert.equal(manifest.start_url, './index.html?v=49');
+assert.match(sw, /al-majlis-v49/);
+assert.ok(html.includes('./styles.css?v=49') && html.includes('./cards-data.js?v=49') && html.includes('./app.js?v=49'), 'core assets use release-specific URLs');
+assert.ok(html.includes('./monetization.css?v=2') && html.includes('./monetization.js?v=2'), 'source upload loads premium access controls directly');
+assert.ok(app.includes("service-worker.js?v=49"), 'service-worker registration uses the current release URL');
 assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
 assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
 assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
