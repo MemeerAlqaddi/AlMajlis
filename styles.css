@@ -102,9 +102,9 @@ body.roundActive{margin:0}
 
 /* V35 visual system: Design A by default, Design B through Settings. */
 :root,[data-theme="light"]{
-  --bg:#e7e5e2;--panel:#f4f3f0e8;--panel2:#eeece8e3;--line:#788b8f80;--text:#182126;--muted:#59666a;
-  --aqua:#3b8990;--aqua-bright:#177982;--good:#d9eee5;--bad:#eee2e0;--surface:#f7f6f3d9;--surface-strong:#f8f7f5f2;
-  --soft-shadow:0 22px 70px #31383b29;--veil:#f1f0ec42;--marble:url('./assets/marble-light.webp');
+  --bg:#bcc2c0;--panel:#cbd0cddd;--panel2:#b7bfbdde;--line:#62777c99;--text:#172126;--muted:#4e5d61;
+  --aqua:#357f87;--aqua-bright:#126f78;--good:#c7ddd4;--bad:#dacbc8;--surface:#c4cac7dc;--surface-strong:#d0d4d1e8;
+  --soft-shadow:0 22px 70px #31383b38;--veil:#77848630;--marble:url('./assets/marble-light.webp');
   --display:"Bodoni 72","Bodoni MT",Didot,"Times New Roman",serif;--body:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
 }
 [data-theme="dark"]{
@@ -524,14 +524,14 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 [data-theme="light"] .countdownScreen,
 [data-theme="light"] .roundScreen,
 [data-theme="light"] #gameShell:not([hidden]){
-  background-color:#d8dad5;
-  background-image:linear-gradient(135deg,#efede580,#aeb8b790 52%,#d7d8d0a8),var(--marble);
+  background-color:#aeb6b3;
+  background-image:linear-gradient(135deg,#c9ceca91,#8794938f 52%,#b9bfbaa0),var(--marble);
   background-position:center;
   background-size:cover;
 }
 
 [data-theme="light"] .modeGroup{
-  background-image:linear-gradient(138deg,#eceae1a8 0%,#aeb7b4a8 48%,#d8d8cfb0 100%),var(--marble)!important;
+  background-image:linear-gradient(138deg,#c7ccc7a3 0%,#899694a8 48%,#b8beb9aa 100%),var(--marble)!important;
   background-position:center,52% 48%;
   background-size:cover,125% auto;
 }
@@ -541,7 +541,44 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
 [data-theme="light"] .styleChoice,
 [data-theme="light"] .selectionSummary,
 [data-theme="light"] .modeInstruction{
-  background-image:linear-gradient(115deg,#f1eee5b0 0%,#b5bdb9b0 55%,#dcdcd2bf 100%),var(--marble)!important;
+  background-image:linear-gradient(115deg,#cdd1cca6 0%,#909b98ad 55%,#bec3bdae 100%),var(--marble)!important;
   background-position:center,44% 48%;
   background-size:cover,170% auto;
+}
+
+/* V50: dark-first installs and compact setup navigation. */
+.setupBack{
+  position:fixed;
+  z-index:50;
+  top:max(12px,env(safe-area-inset-top));
+  right:auto;
+  bottom:auto;
+  left:max(14px,env(safe-area-inset-left));
+  display:grid;
+  place-items:center;
+  width:44px;
+  min-width:44px;
+  height:44px;
+  min-height:44px;
+  padding:0;
+  transform:none;
+  border:0!important;
+  background:transparent;
+  box-shadow:none;
+  color:var(--aqua-bright);
+  font-family:Arial,sans-serif;
+  font-size:24px;
+  line-height:1;
+  text-align:center;
+}
+.setupBack span{
+  display:block;
+  transform:translateY(-1px);
+}
+.setupBack:hover,
+.setupBack:focus-visible{
+  border:0!important;
+  background:transparent;
+  color:var(--aqua-bright);
+  text-shadow:0 0 12px color-mix(in srgb,var(--aqua-bright) 45%,transparent);
 }

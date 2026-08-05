@@ -21,11 +21,15 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=49');
-assert.match(sw, /al-majlis-v49/);
-assert.ok(html.includes('./styles.css?v=49') && html.includes('./cards-data.js?v=49') && html.includes('./app.js?v=49'), 'core assets use release-specific URLs');
-assert.ok(html.includes('./monetization.css?v=2') && html.includes('./monetization.js?v=2'), 'source upload loads premium access controls directly');
-assert.ok(app.includes("service-worker.js?v=49"), 'service-worker registration uses the current release URL');
+assert.equal(manifest.start_url, './index.html?v=50');
+assert.equal(manifest.background_color, '#0a0c0d');
+assert.equal(manifest.theme_color, '#0a0c0d');
+assert.match(sw, /al-majlis-v50/);
+assert.ok(html.includes('./styles.css?v=50') && html.includes('./cards-data.js?v=50') && html.includes('./app.js?v=50'), 'core assets use release-specific URLs');
+assert.ok(html.includes('./monetization.css?v=3') && html.includes('./monetization.js?v=3'), 'source upload loads premium access controls directly');
+assert.ok(app.includes("service-worker.js?v=50"), 'service-worker registration uses the current release URL');
+assert.match(html, /<html lang="en" data-theme="dark">/, 'new installs render dark mode before JavaScript loads');
+assert.match(app, /storage\.get\(THEME_KEY\) === 'light' \? 'light' : 'dark'/, 'dark mode is the saved-theme fallback');
 assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
 assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
 assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
@@ -61,6 +65,7 @@ assert.ok(html.includes('id="themeLight"') && html.includes('id="themeDark"') &&
 assert.ok(css.includes("./assets/marble-light.webp") && css.includes("./assets/marble-dark.webp"), 'both approved marble systems are included');
 assert.match(css, /\[data-theme="light"\] \.modeGroup\{[^}]*var\(--marble\)/, 'light mode groups carry visible marble texture');
 assert.match(css, /\[data-theme="light"\] \.setupMode,[^}]*var\(--marble\)/, 'light mode choices are not solid white');
+assert.match(css, /\[data-theme="light"\] body,[\s\S]*background-color:#aeb6b3/, 'light mode uses a visibly grey marble base');
 assert.match(css, /\.modeGroupList\{counter-reset:mode-card\}/, 'mode cards use one deliberate numbered design system');
 assert.match(css, /\[data-theme="light"\] \.setupMode:before\{[^}]*background:/, 'light mode card numbering has a dimensional marble treatment');
 assert.ok(sw.includes('./assets/marble-light.webp') && sw.includes('./assets/marble-dark.webp'), 'both theme backgrounds work offline');
@@ -104,6 +109,8 @@ assert.equal((html.match(/بِسْمِ اللهِ الرَّحْمٰنِ الر�
 assert.match(css, /\.countdownScreen:before\{content:none\}/, 'countdown uses explicit Bismillah markup instead of pseudo-content');
 assert.ok(!html.includes('class="screenBrand"'), 'Bismillah is removed from setup and all other screens');
 assert.ok(html.includes('id="confirmHome" type="button">Return Home</button>') && !html.includes('Save &amp; Return Home'), 'exit action uses the concise Return Home label');
+assert.match(html, /id="setupBack"[^>]*><span aria-hidden="true">←<\/span><\/button>/, 'setup navigation is an icon-only arrow');
+assert.match(css, /\.setupBack\{[\s\S]*left:max\(14px,env\(safe-area-inset-left\)\)[\s\S]*color:var\(--aqua-bright\)/, 'setup arrow stays cyan at the top left');
 assert.match(css, /\.exitPanel #confirmHome\{[^}]*margin:24px auto 0/, 'Return Home is centered in the confirmation panel');
 
 assert.ok(css.includes('.card.promptLong .question') && css.includes('.card.promptVeryLong .question'), 'long card prompts use delicate responsive typography');

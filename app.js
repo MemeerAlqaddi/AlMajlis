@@ -26,7 +26,7 @@ const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const SOUND_KEY = 'al-majlis-sound-v42';
 const THEME_KEY = 'al-majlis-theme-v1';
-const APP_VERSION = 49;
+const APP_VERSION = 50;
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -69,7 +69,7 @@ const storage = {
 };
 
 let soundEnabled = storage.get(SOUND_KEY) !== 'off';
-let activeTheme = storage.get(THEME_KEY) === 'dark' ? 'dark' : 'light';
+let activeTheme = storage.get(THEME_KEY) === 'light' ? 'light' : 'dark';
 let countdownAudioContext = null;
 let lastReport = null;
 let toastTimer = null;
@@ -358,7 +358,9 @@ function showScreen(id) {
 function showSetupStep(step) {
   currentSetupStep = step;
   ['modeStep', 'styleStep', 'playersStep'].forEach(id => $(id).hidden = id !== step);
-  $('setupBack').textContent = step === 'modeStep' ? (selectedCategory ? '← Game categories' : '← Home') : step === 'styleStep' ? '← Game modes' : '← Play styles';
+  const backLabel = step === 'modeStep' ? (selectedCategory ? 'Back to game categories' : 'Return home') : step === 'styleStep' ? 'Back to game modes' : 'Back to play styles';
+  $('setupBack').setAttribute('aria-label', backLabel);
+  $('setupBack').title = backLabel;
   resetViewport();
   const heading = $(step).querySelector('h2');
   heading?.setAttribute('tabindex', '-1');
@@ -384,7 +386,8 @@ function showCategoryChoices() {
   $('modeStepTitle').hidden = false;
   $('modeStepTitle').textContent = 'What are you in the mood for?';
   document.querySelectorAll('.categoryChoice').forEach(button => button.classList.remove('selected'));
-  $('setupBack').textContent = '← Home';
+  $('setupBack').setAttribute('aria-label', 'Return home');
+  $('setupBack').title = 'Return home';
   resetViewport();
 }
 
@@ -397,7 +400,8 @@ function selectModeCategory(category) {
   $('modeStepTitle').hidden = true;
   document.querySelectorAll('.modeGroup').forEach(group => { group.hidden = group.dataset.category !== category; });
   document.querySelectorAll('.categoryChoice').forEach(button => button.classList.toggle('selected', button.dataset.category === category));
-  $('setupBack').textContent = '← Game categories';
+  $('setupBack').setAttribute('aria-label', 'Back to game categories');
+  $('setupBack').title = 'Back to game categories';
   resetViewport();
   const categoryHeading = document.querySelector(`.modeGroup[data-category="${category}"] h3`);
   categoryHeading?.setAttribute('tabindex', '-1');
@@ -1037,7 +1041,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=49', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=50', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

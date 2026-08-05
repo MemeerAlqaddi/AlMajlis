@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "verify:premium": "node scripts/verify-premium.mjs",
-    "test": "node --check app.js && node --check monetization.js && node --check api/create-checkout-session.js && node --check api/session-status.js && node scripts/verify-premium.mjs",
+    "test": "node --check app.js && node --check monetization.js && node --check api/create-checkout-session.js && node --check api/session-status.js && node --check api/owner-access.js && node --test tests/owner-access.test.mjs tests/payment-api.test.mjs && node scripts/verify-premium.mjs",
     "build": "npm test && node scripts/build.mjs"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-# Al Majlis v39
+# Al Majlis v50
 
 An installable, offline-capable Islamic and Arabic gathering game with 605 cards.
 
@@ -10,7 +10,17 @@ An installable, offline-capable Islamic and Arabic gathering game with 605 cards
 
 V39 keeps every prior content, phone-fit, gameplay, timing, and audio correction. It restores the Install App option on the regular website and hides it only while Al Majlis is running as an installed home-screen app. Every timed mode uses one consistent 60-second round. The quiet 3–2–1 notes remain intact, followed by a separate uplifting round-start chime. Round-complete controls share one centered layout in every play style and mode.
 
-Design A is the default light appearance, while Design B is available as dark mode in Settings. Light-mode setup panels and mode cards now use layered grey marble, editorial numbering, depth, and restrained aqua details instead of flat white boxes. The Bismillah appears only on the home and countdown screens. The saved theme choice applies throughout setup, countdowns, gameplay, dialogs, and score screens. Saved-game recovery also remains in Settings so the home screen stays uncluttered.
+Dark marble is the default appearance for new installs. Light mode remains available in Settings and now uses deeper layered grey marble instead of white-looking panels. The saved theme choice applies throughout setup, countdowns, gameplay, dialogs, and score screens.
+
+## Owner access
+
+Local previews on `localhost`, `127.0.0.1`, or a directly opened file automatically unlock every pack for editing and review. This does not unlock premium packs for customers on the published website.
+
+For private owner access on the published app, add a Vercel environment variable named `AL_MAJLIS_OWNER_KEY` with a unique code of at least 20 characters. Then open the published URL once with `?owner=1`, enter that code, and the verified owner cookie keeps that device unlocked. Do not share the code or put it in GitHub.
+
+## Stripe setup
+
+The Vercel project needs matching `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` values from the same Stripe test or live mode. Checkout is embedded in the existing popup. A completed payment is verified against Stripe before the selected pack or premium bundle unlocks.
 
 The app icon now matches both themes: charcoal marble, a narrow pale-marble inlay, a restrained aqua divider, and the Al Majlis Arabic/English wordmark.
 

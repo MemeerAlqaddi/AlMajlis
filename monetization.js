@@ -56,6 +56,7 @@
     </svg>`;
 
   let entitlements = new Set();
+  let ownerAccess = false;
   let activeProduct = null;
   let activeCheckoutSession = null;
   let checkout = null;
@@ -80,7 +81,102 @@
   }
 
   function owns(modeKey) {
-    return entitlements.has('bundle') || entitlements.has(modeKey);
+    return ownerAccess || entitlements.has('bundle') || entitlements.has(modeKey);
+  }
+
+  function isLocalOwnerPreview() {
+    return location.protocol === 'file:' ||
+      ['localhost', '127.0.0.1', '::1'].includes(location.hostname);
+  }
+
+  function notify(message) {
+    if (typeof showToast === 'function') showToast(message);
+    else console.info(message);
+  }
+
+  async function readApiResponse(response, fallbackMessage) {
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) return response.json();
+    throw new Error(fallbackMessage);
+  }
+
+  function setOwnerAccess(active) {
+    ownerAccess = Boolean(active);
+    document.documentElement.classList.toggle(
+      'majlisOwnerPreview',
+      ownerAccess
+    );
+    refreshAccessUi();
+  }
+
+  async function checkOwnerAccess() {
+    try {
+      const response = await fetch('/api/owner-access', {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+      const result = await readApiResponse(
+        response,
+        'Owner access is unavailable on this preview.'
+      );
+      setOwnerAccess(response.ok && result.owner === true);
+      return ownerAccess;
+    } catch {
+      return false;
+    }
+  }
+
+  function removeOwnerRequestFromUrl() {
+    const url = new URL(location.href);
+    url.searchParams.delete('owner');
+    history.replaceState(
+      {},
+      '',
+      `${url.pathname}${url.search}${url.hash}`
+    );
+  }
+
+  async function initializeOwnerAccess() {
+    if (isLocalOwnerPreview()) {
+      setOwnerAccess(true);
+      return true;
+    }
+
+    const requested = new URLSearchParams(location.search).get('owner') === '1';
+    if (!requested) return checkOwnerAccess();
+
+    removeOwnerRequestFromUrl();
+    if (await checkOwnerAccess()) {
+      notify('Owner access is active');
+      return true;
+    }
+
+    const code = String(
+      window.prompt('Enter your Al Majlis owner access code:') || ''
+    ).trim();
+    if (!code) return false;
+
+    try {
+      const response = await fetch('/api/owner-access', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code})
+      });
+      const result = await readApiResponse(
+        response,
+        'Owner access is not configured yet.'
+      );
+      if (!response.ok || result.owner !== true) {
+        throw new Error(result.error || 'That owner code was not accepted.');
+      }
+      setOwnerAccess(true);
+      notify('Owner access unlocked');
+      return true;
+    } catch (error) {
+      notify(error.message || 'Owner access could not be unlocked.');
+      return false;
+    }
   }
 
   function addVerifiedEntitlement(product) {
@@ -96,7 +192,10 @@
       body: JSON.stringify({sessionId})
     });
 
-    const result = await response.json();
+    const result = await readApiResponse(
+      response,
+      'Payment verification is unavailable on this preview.'
+    );
     if (!response.ok || !result.paid) {
       throw new Error(result.error || 'Payment is not complete.');
     }
@@ -161,7 +260,9 @@
       <strong>Unlock All Premium Modes</strong>
       <small>Every current premium mode · $7.99 one time</small>
       <span class="majlisBundleMark" aria-hidden="true">✦</span>`;
-    button.addEventListener('click', () => openPurchase('bundle'));
+    button.addEventListener('click', () => {
+      if (!owns('bundle')) openPurchase('bundle');
+    });
     return button;
   }
 
@@ -217,19 +318,21 @@
       const lock = button.querySelector('.majlisModeLock');
       if (lock) {
         lock.innerHTML = unlocked ? checkSvg : lockSvg;
-        lock.title = unlocked ? 'Purchased' : 'Premium mode';
+        lock.title = unlocked
+          ? (ownerAccess ? 'Owner access' : 'Purchased')
+          : 'Premium mode';
       }
 
       button.setAttribute(
         'aria-label',
         unlocked
-          ? `${PRODUCTS[key].title}, purchased`
+          ? `${PRODUCTS[key].title}, ${ownerAccess ? 'owner access' : 'purchased'}`
           : `${PRODUCTS[key].title}, premium mode`
       );
     });
 
     document.querySelectorAll('.majlisBundleCard').forEach(button => {
-      const unlocked = entitlements.has('bundle');
+      const unlocked = owns('bundle');
       button.classList.toggle('isUnlocked', unlocked);
       const detail = button.querySelector('small');
       if (detail) {
@@ -277,7 +380,9 @@
 
           <div id="premiumCheckoutView" hidden>
             <button class="backBtn majlisCheckoutBack"
-                    id="premiumCheckoutBack" type="button">← Back</button>
+                    id="premiumCheckoutBack" type="button"
+                    aria-label="Back to premium options"
+                    title="Back to premium options"><span aria-hidden="true">←</span></button>
             <div class="welcomeEyebrow">SECURE CHECKOUT</div>
             <h2>Complete your purchase</h2>
             <div class="majlisCheckoutLoading"
@@ -451,7 +556,12 @@
         })
       ]);
 
-      const result = await response.json();
+      const result = await readApiResponse(
+        response,
+        location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+          ? 'Payments run on the published Al Majlis website. Owner access is already unlocked here.'
+          : 'Secure payment is temporarily unavailable. Please try again shortly.'
+      );
       if (!response.ok) {
         throw new Error(result.error || 'Checkout could not open.');
       }
@@ -523,6 +633,7 @@
 
     document.addEventListener('click', interceptLockedMode, true);
 
+    initializeOwnerAccess();
     restorePurchases();
     processCheckoutReturn();
 

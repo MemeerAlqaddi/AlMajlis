@@ -15,6 +15,10 @@ const sessionStatus = await readFile(
   path.join(root, 'api/session-status.js'),
   'utf8'
 );
+const ownerAccess = await readFile(
+  path.join(root, 'api/owner-access.js'),
+  'utf8'
+);
 
 assert.match(
   js,
@@ -25,6 +29,8 @@ assert.match(js, /initEmbeddedCheckout/);
 assert.match(js, /verifySession\(sessionId/);
 assert.match(js, /document\.querySelectorAll\('\.modeGroup'\)/);
 assert.match(js, /setupMode\[data-mode\]/);
+assert.match(js, /initializeOwnerAccess\(\)/);
+assert.match(js, /isLocalOwnerPreview\(\)/);
 assert.doesNotMatch(js, /majlisModeIcon/);
 assert.doesNotMatch(js, /al-majlis-entitlements/);
 assert.doesNotMatch(js, /premium\s*=\s*true/i);
@@ -43,11 +49,14 @@ assert.match(createSession, /p\.set\('redirect_on_completion','if_required'\)/);
 assert.match(createSession, /STRIPE_SECRET_KEY/);
 assert.match(sessionStatus, /session\.status === 'complete'/);
 assert.match(sessionStatus, /session\.payment_status === 'paid'/);
+assert.match(ownerAccess, /AL_MAJLIS_OWNER_KEY/);
+assert.match(ownerAccess, /HttpOnly; Secure; SameSite=Strict/);
 
 for (const file of [
   'monetization.js',
   'api/create-checkout-session.js',
   'api/session-status.js',
+  'api/owner-access.js',
   'scripts/build.mjs'
 ]) {
   const check = spawnSync(process.execPath, [
@@ -70,7 +79,7 @@ try {
   const originalIndex = `<!doctype html>
     <html data-theme="light">
       <head>
-        <link rel="stylesheet" href="./styles.css?v=49">
+        <link rel="stylesheet" href="./styles.css?v=50">
       </head>
       <body>
         <section id="welcomeScreen"></section>
@@ -78,9 +87,9 @@ try {
           <div id="setupModes"></div>
         </section>
         <div id="softToast"></div>
-        <script src="./cards-data.js?v=49"></script>
-        <script src="./app.js?v=49"></script>
-        <script src="./upgrade-v44.js?v=49"></script>
+        <script src="./cards-data.js?v=50"></script>
+        <script src="./app.js?v=50"></script>
+        <script src="./upgrade-v44.js?v=50"></script>
       </body>
     </html>`;
 
@@ -118,10 +127,10 @@ try {
     'utf8'
   );
 
-  assert.match(builtIndex, /styles\.css\?v=49/);
-  assert.match(builtIndex, /cards-data\.js\?v=49/);
-  assert.match(builtIndex, /app\.js\?v=49/);
-  assert.match(builtIndex, /upgrade-v44\.js\?v=49/);
+  assert.match(builtIndex, /styles\.css\?v=50/);
+  assert.match(builtIndex, /cards-data\.js\?v=50/);
+  assert.match(builtIndex, /app\.js\?v=50/);
+  assert.match(builtIndex, /upgrade-v44\.js\?v=50/);
   assert.match(builtIndex, /monetization\.css/);
   assert.match(builtIndex, /monetization\.js/);
 

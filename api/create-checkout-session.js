@@ -14,7 +14,6 @@ function paramsFor(product, selected, origin){
   p.set('redirect_on_completion','if_required');
   p.set('mode','payment');
   p.set('payment_method_types[0]','card');
-  p.set('payment_method_types[1]','link');
   p.set('line_items[0][quantity]','1');
   p.set('line_items[0][price_data][currency]','usd');
   p.set('line_items[0][price_data][unit_amount]',String(product.amount));
@@ -28,13 +27,17 @@ function paramsFor(product, selected, origin){
 export default async function handler(request,response){
   if(request.method!=='POST'){response.setHeader('Allow','POST');return send(response,405,{error:'Method not allowed.'});}
   const secretKey=process.env.STRIPE_SECRET_KEY;
-  const publishableKey=process.env.STRIPE_PUBLISHABLE_KEY;
+  const publishableKey=process.env.STRIPE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if(!secretKey||!publishableKey)return send(response,503,{error:'Stripe is not configured yet. Add the Stripe environment variables in Vercel.'});
+  if(!/^sk_(test|live)_/.test(secretKey)||!/^pk_(test|live)_/.test(publishableKey))return send(response,503,{error:'The Stripe keys in Vercel are not valid API keys.'});
+  if(secretKey.split('_')[1]!==publishableKey.split('_')[1])return send(response,503,{error:'The Stripe keys in Vercel must both use the same test or live mode.'});
   const selected=String(request.body?.product||'');
   const product=PRODUCTS[selected];
   if(!product)return send(response,400,{error:'Unknown Al Majlis product.'});
-  const origin=String(request.headers.origin||`https://${request.headers.host}`);
-  if(!/^https?:\/\//.test(origin))return send(response,400,{error:'Invalid site origin.'});
+  const host=String(request.headers['x-forwarded-host']||request.headers.host||'').split(',')[0].trim();
+  const protocol=String(request.headers['x-forwarded-proto']||'https').split(',')[0].trim();
+  if(!/^[A-Za-z0-9.-]+(?::\d+)?$/.test(host)||!/^https?$/.test(protocol))return send(response,400,{error:'Invalid site origin.'});
+  const origin=`${protocol}://${host}`;
   try{
     const stripeResponse=await fetch('https://api.stripe.com/v1/checkout/sessions',{
       method:'POST',
