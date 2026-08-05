@@ -385,3 +385,110 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
   .card.promptLong .question,.card.dense .question{font-size:clamp(17px,3.45dvh,26px)}
   .card.promptVeryLong .question{font-size:clamp(14px,2.8dvh,21px)}
 }
+
+/* V48: cleaner selection cards and quieter back controls. */
+.categoryChoice,
+.styleChoice,
+.setupMode,
+.launchBtn,
+.action,
+.roundPanel,
+.exitPanel #returnGameModes,
+.exitPanel #confirmHome,
+.exitPanel #keepPlaying{
+  clip-path:none;
+}
+
+.categoryChoice{
+  border-color:var(--line);
+  border-radius:10px;
+  box-shadow:0 14px 30px #29353918;
+}
+.categoryChoice:before{display:none}
+.categoryChoice:after{
+  top:58px;
+  width:38px;
+  opacity:.72;
+}
+.categoryChoice:hover,
+.categoryChoice:focus-visible,
+.categoryChoice.selected{
+  box-shadow:0 16px 34px #27373b24;
+}
+
+.setupMode,
+.styleChoice,
+.selectionSummary,
+.modeInstruction,
+.matchField,
+.roundPanel,
+.launchBtn,
+.action{
+  border-radius:8px;
+}
+.setupMode,
+.styleChoice{
+  border-color:var(--line);
+  box-shadow:0 8px 18px #26383e14!important;
+}
+.setupMode:hover,
+.setupMode:focus-visible,
+.styleChoice:hover,
+.styleChoice:focus-visible{
+  border-color:var(--aqua);
+  box-shadow:0 12px 24px #26383e20!important;
+}
+.setupMode:before{
+  border-radius:999px;
+}
+
+.setupBack{
+  position:fixed;
+  top:max(14px,env(safe-area-inset-top));
+  bottom:auto;
+  left:max(18px,env(safe-area-inset-left));
+  min-width:0;
+  transform:none;
+  padding:8px 2px;
+  border:0;
+  border-bottom:1px solid transparent;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:var(--muted);
+  font-family:var(--display);
+  font-size:14px;
+  text-align:left;
+}
+.setupBack:hover,
+.setupBack:focus-visible{
+  color:var(--aqua-bright);
+  border-bottom-color:var(--aqua);
+}
+
+.roundActions .centerBack,
+.backBtn.centerBack{
+  width:auto;
+  min-height:40px;
+  padding:8px 2px;
+  border:0;
+  border-bottom:1px solid transparent;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:var(--muted);
+  font-family:var(--display);
+}
+.roundActions .centerBack:hover,
+.roundActions .centerBack:focus-visible,
+.backBtn.centerBack:hover,
+.backBtn.centerBack:focus-visible{
+  color:var(--aqua-bright);
+  border-bottom-color:var(--aqua);
+}
+
+.exitPanel #returnGameModes,
+.exitPanel #confirmHome,
+.exitPanel #keepPlaying{
+  border-radius:8px;
+}

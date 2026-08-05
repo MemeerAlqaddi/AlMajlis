@@ -22,9 +22,9 @@
       description: 'Unlock the complete Qur’anic verse challenge.'
     },
     conversation: {
-      title: 'Conversation Shuffle',
+      title: 'Conversation Starters',
       price: '$3.99',
-      description: 'Unlock the complete conversation shuffle.'
+      description: 'Unlock the complete conversation starter collection.'
     },
     mizan: {
       title: 'Dilemmas',

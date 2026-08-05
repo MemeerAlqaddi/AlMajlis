@@ -1,22 +1,22 @@
 const modes = {
-  all: ['Game Night Shuffle', 'A competitive mix of all five answer-based games.'],
-  say: ['Guess The Word', 'Describe the word without using any of the seven forbidden clues, their opposites, or their translations in another language.'],
-  arabish: ['Decode the Gibberish', 'Read the strange-looking sounds aloud until you discover the hidden Arabic phrase.'],
-  ayah: ['Complete the Ayah', 'Complete the missing words, then reveal the Arabic, transliteration, and English meaning.'],
-  trivia: ['Trivia', 'Answer challenging questions using your knowledge of the Qur’an, hadith, and Islamic concepts.'],
-  identity: ['Riddles', 'Identify the person, event, place, or Qur’anic parable from the clues.'],
-  conversation: ['Conversation Shuffle', 'A relaxed mix of Dilemmas and Under the Surface prompts.'],
-  mizan: ['Dilemmas', 'Discuss a complicated situation using principles, context, and care.'],
+  all: ['Game Night Shuffle', 'A mixed round of the answer-based games for groups who want variety.'],
+  say: ['Guess The Word', 'Give clues without saying the seven forbidden words. Your team guesses the hidden word.'],
+  arabish: ['Decode the Gibberish', 'Guess the Arabic phrase from the sound-spelling before the answer is revealed.'],
+  ayah: ['Complete the Ayah', 'Fill in the missing words, then reveal the ayah, meaning, and source.'],
+  trivia: ['Trivia', 'Clear questions from Quran, hadith, and Islamic knowledge.'],
+  identity: ['Riddles', 'Use the clues to name the person, place, event, or Quranic parable.'],
+  conversation: ['Conversation Starters', 'A thoughtful mix for learning together, not keeping score.'],
+  mizan: ['Dilemmas', 'Talk through real situations with principles, context, and Islamic evidence.'],
   reflection: ['Under The Surface', 'Explore deeper questions about intention, character, faith, and real life.']
 };
 
 const modeInstructions = {
-  all: 'Pass the phone to the person taking the turn. Follow the instruction shown on each card.',
-  say: 'Hand the phone to the clue-giver. Keep the word and forbidden clues hidden from the guessing side. You may not use a forbidden clue, its opposite, or translate it into another language.',
-  arabish: 'Hand the phone to the reader. Read the sound-spelling aloud; the other side guesses the Arabic phrase.',
-  ayah: 'Only the player taking the turn should see the screen before the answer is revealed.',
-  trivia: 'Only the player reading the question should see the answer before Reveal.',
-  identity: 'Read the clues aloud without showing the answer to the guessing side.'
+  all: 'Take turns. Follow the card type shown, then use Reveal, Pass, or Correct as needed.',
+  say: 'One player gives clues while avoiding every forbidden word, its opposite, and translations.',
+  arabish: 'Playing side: read the gibberish and lock in an answer before Reveal. Or the other side can reveal privately, show the gibberish, and verify the guess.',
+  ayah: 'Complete the missing words, then Reveal to check the ayah, meaning, and source.',
+  trivia: 'Read the question, answer from what you know, then Reveal to check.',
+  identity: 'Read the clues aloud. Guess the answer before using Reveal.'
 };
 
 const objectiveTypes = new Set(['say', 'arabish', 'ayah', 'trivia', 'identity']);
@@ -26,7 +26,7 @@ const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const SOUND_KEY = 'al-majlis-sound-v42';
 const THEME_KEY = 'al-majlis-theme-v1';
-const APP_VERSION = 42;
+const APP_VERSION = 48;
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -441,8 +441,8 @@ function selectStyle(style) {
 }
 
 const modeGroups = [
-  {category: 'competitive', title: 'Competitive Games', note: 'Answer-based games with optional scoring and timed rounds.', keys: ['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']},
-  {category: 'conversation', title: 'Conversations', note: 'One simple format: untimed, unscored, and made for talking.', keys: ['conversation', 'mizan', 'reflection']}
+  {category: 'competitive', title: 'Competitive Games', note: 'Friendly challenges with scoring when you want it. Compete well, remember Allah.', keys: ['all', 'say', 'arabish', 'ayah', 'trivia', 'identity']},
+  {category: 'conversation', title: 'Conversation Starters', note: 'Meaningful prompts for learning together. Listen first; let Islamic evidence guide the conversation.', keys: ['conversation', 'mizan', 'reflection']}
 ];
 
 modeGroups.forEach(group => {
@@ -1037,7 +1037,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=43', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=48', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

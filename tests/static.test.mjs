@@ -21,10 +21,10 @@ for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
 assert.match(manifest.description, /605-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
-assert.equal(manifest.start_url, './index.html?v=43');
-assert.match(sw, /al-majlis-v43/);
-assert.ok(html.includes('./styles.css?v=43') && html.includes('./cards-data.js?v=43') && html.includes('./app.js?v=43'), 'core assets use release-specific URLs');
-assert.ok(app.includes("service-worker.js?v=43"), 'service-worker registration uses the current release URL');
+assert.equal(manifest.start_url, './index.html?v=48');
+assert.match(sw, /al-majlis-v48/);
+assert.ok(html.includes('./styles.css?v=48') && html.includes('./cards-data.js?v=48') && html.includes('./app.js?v=48'), 'core assets use release-specific URLs');
+assert.ok(app.includes("service-worker.js?v=48"), 'service-worker registration uses the current release URL');
 assert.match(html, /id="install"[^>]*>Install App<\/button>/, 'browser install control is visible by default');
 assert.ok(!/id="install"[^>]*hidden/.test(html), 'browser install control does not depend on JavaScript to appear');
 assert.match(css, /@media\(display-mode:standalone\)\{\.welcomeInstall\{display:none!important\}\}/, 'installed app hides the browser-only install control');
@@ -43,7 +43,7 @@ assert.ok(!html.includes('id="num"') && !html.includes('id="progress"'), 'card I
 assert.ok(!html.includes('data-style="solo"'), 'Solo and Just for Fun are merged into one unscored option');
 assert.equal((html.match(/class="styleChoice"/g) || []).length, 3, 'three play-style choices remain');
 
-assert.ok(app.includes("title: 'Competitive Games'") && app.includes("title: 'Conversations'"), 'all modes share one grouped page');
+assert.ok(app.includes("title: 'Competitive Games'") && app.includes("title: 'Conversation Starters'"), 'all modes share one grouped page');
 assert.ok(html.includes('data-category="competitive"') && html.includes('data-category="conversation"') && app.includes('selectModeCategory'), 'category choices reveal only their applicable modes');
 assert.ok(!html.includes('Choose the kind of gathering') && !app.includes('Choose a competitive game') && !app.includes('Choose a conversation'), 'redundant category guidance and revealed-list titles are removed');
 assert.ok(!html.includes('id="categoryReturn"'), 'only the top arrow returns to game categories');
@@ -75,7 +75,7 @@ assert.match(css, /\.ref\{[^}]*font-size:11px/);
 assert.ok(app.includes('trapDialogFocus') && app.includes('element.inert = inert'), 'dialogs trap focus and make the background inert');
 assert.match(app, /contentVersion: String\(APP_VERSION\)/);
 assert.ok(app.includes('const storage = {') && app.includes('catch { return false; }'), 'blocked browser storage cannot abort game launch');
-assert.match(app, /seven forbidden clues, their opposites, or their translations in another language/);
+assert.match(app, /forbidden word, its opposite, and translations/);
 assert.ok(app.includes("playSound('correct')") && app.includes('playPassTone'), 'positive point and negative pass cues are both present');
 assert.match(app, /Correct, Next Card, and Next Prompt share the same positive chime\.[\s\S]*?playSound\('correct'\);\s*advance\(\);/, 'Correct and Next share the affirmative cue even when no point is scored');
 assert.ok(css.includes('.forbiddenList') && css.includes('.forbiddenWord'), 'Guess the Word clues use the dedicated neat list layout');
@@ -99,8 +99,8 @@ assert.match(css, /\.welcomeUtilities\{[^}]*justify-self:center[^}]*margin-top:2
 assert.ok(html.includes('id="decodeDialect"') && app.includes("card.type === 'arabish' ? card.source"), 'Decode dialect label is visible independently of Reveal');
 assert.doesNotMatch(css.match(/\.decodeDialect\{[^}]*\}/)?.[0] || '', /background\s*:/, 'Decode dialect label has no bar background');
 assert.match(app, /else roundNumber\+\+;\s*advance\(\);\s*if \(isConversationMode\(\)\)/, 'resuming after a round advances to a fresh card');
-assert.equal((html.match(/بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ/g) || []).length, 1, 'Bismillah markup appears only on the home screen');
-assert.match(css, /\.countdownScreen:before\{content:"بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ"/, 'Bismillah also appears on the countdown screen');
+assert.equal((html.match(/بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ/g) || []).length, 2, 'Bismillah markup appears on home and countdown screens');
+assert.match(css, /\.countdownScreen:before\{content:none\}/, 'countdown uses explicit Bismillah markup instead of pseudo-content');
 assert.ok(!html.includes('class="screenBrand"'), 'Bismillah is removed from setup and all other screens');
 assert.ok(html.includes('id="confirmHome" type="button">Return Home</button>') && !html.includes('Save &amp; Return Home'), 'exit action uses the concise Return Home label');
 assert.match(css, /\.exitPanel #confirmHome\{[^}]*margin:24px auto 0/, 'Return Home is centered in the confirmation panel');
