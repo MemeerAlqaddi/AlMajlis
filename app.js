@@ -26,7 +26,7 @@ const modeTimes = {all: 60, say: 60, arabish: 60, ayah: 60, trivia: 60, identity
 const styleNames = {teams: 'Teams', duel: '1 vs 1', casual: 'Just for Fun', conversation: 'Untimed conversation'};
 const SOUND_KEY = 'al-majlis-sound-v42';
 const THEME_KEY = 'al-majlis-theme-v1';
-const APP_VERSION = 50;
+const APP_VERSION = 51;
 const REPORT_EMAIL = ['m.alqaddi', 'outlook.com'].join('@');
 const REPORT_ENDPOINT = `https://formsubmit.co/ajax/${REPORT_EMAIL}`;
 const totalRounds = 3;
@@ -1041,7 +1041,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=50', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=51', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

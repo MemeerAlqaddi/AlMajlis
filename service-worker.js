@@ -1,9 +1,9 @@
-const CACHE = 'al-majlis-v50';
+const CACHE = 'al-majlis-v51';
 const ASSETS = [
-  './', './index.html', './styles.css?v=50', './monetization.css?v=3', './cards-data.js?v=50', './app.js?v=50', './upgrade-v44.js?v=50', './monetization.js?v=3',
+  './', './index.html', './styles.css?v=51', './monetization.css?v=3', './cards-data.js?v=51', './app.js?v=51', './upgrade-v44.js?v=51', './monetization.js?v=3',
   './manifest.webmanifest', './al-majlis-icon.svg', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
-  './assets/marble-light.webp', './assets/marble-dark.webp',
+  './assets/marble-light-v51.webp', './assets/marble-dark.webp',
   './majlis-open.mp3', './majlis-select.mp3', './majlis-correct.mp3', './majlis-complete.mp3'
 ];
 self.addEventListener('install', event => {

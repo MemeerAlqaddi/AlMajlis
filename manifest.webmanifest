@@ -1,10 +1,12 @@
 {
   "name": "Al Majlis",
   "short_name": "Al Majlis",
+  "id": "./",
   "description": "A 605-card Islamic and Arabic game night with competitive and conversational modes.",
-  "start_url": "./index.html?v=50",
+  "start_url": "./index.html?v=51",
   "scope": "./",
   "display": "standalone",
+  "prefer_related_applications": false,
   "orientation": "any",
   "background_color": "#0a0c0d",
   "theme_color": "#0a0c0d",

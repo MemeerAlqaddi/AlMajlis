@@ -1,4 +1,4 @@
-AL MAJLIS V50 - GITHUB, VERCEL, STRIPE, AND OWNER ACCESS
+AL MAJLIS V51 - GITHUB, VERCEL, STRIPE, AND OWNER ACCESS
 
 UPLOAD
 Upload every item from this package into the ROOT of:
@@ -7,14 +7,16 @@ MemeerAlqaddi/AlMajlis
 Choose Replace when GitHub asks. Keep the api, assets, scripts, and tests folders.
 Vercel will redeploy automatically from the main branch.
 
-WHAT V50 CHANGES
+WHAT V51 CHANGES
 - Dark marble is the default for new visitors and new installs.
 - A saved Light choice still remains Light.
-- Light mode uses deeper grey marble instead of white-looking panels.
+- Light mode uses a continuous cool-grey stone wash with no tile or floor look.
 - Setup navigation is a small cyan arrow at the top left with no visible words.
+- Android installation supports Microsoft Edge and Samsung Internet; Chrome is not required.
 - Local previews automatically unlock every pack for the owner.
 - Live owner access is verified on the server and stored in a private cookie.
 - Stripe checkout gives clear configuration errors and rejects mixed test/live keys.
+- /api/create-checkout-session safely reports whether Stripe and owner access are configured without exposing any keys.
 - Card logic, decks, gameplay, scoring, timers, and sounds are unchanged.
 
 FREE MODES

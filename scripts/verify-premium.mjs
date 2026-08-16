@@ -79,7 +79,7 @@ try {
   const originalIndex = `<!doctype html>
     <html data-theme="light">
       <head>
-        <link rel="stylesheet" href="./styles.css?v=50">
+        <link rel="stylesheet" href="./styles.css?v=51">
       </head>
       <body>
         <section id="welcomeScreen"></section>
@@ -87,9 +87,9 @@ try {
           <div id="setupModes"></div>
         </section>
         <div id="softToast"></div>
-        <script src="./cards-data.js?v=50"></script>
-        <script src="./app.js?v=50"></script>
-        <script src="./upgrade-v44.js?v=50"></script>
+        <script src="./cards-data.js?v=51"></script>
+        <script src="./app.js?v=51"></script>
+        <script src="./upgrade-v44.js?v=51"></script>
       </body>
     </html>`;
 
@@ -127,10 +127,10 @@ try {
     'utf8'
   );
 
-  assert.match(builtIndex, /styles\.css\?v=50/);
-  assert.match(builtIndex, /cards-data\.js\?v=50/);
-  assert.match(builtIndex, /app\.js\?v=50/);
-  assert.match(builtIndex, /upgrade-v44\.js\?v=50/);
+  assert.match(builtIndex, /styles\.css\?v=51/);
+  assert.match(builtIndex, /cards-data\.js\?v=51/);
+  assert.match(builtIndex, /app\.js\?v=51/);
+  assert.match(builtIndex, /upgrade-v44\.js\?v=51/);
   assert.match(builtIndex, /monetization\.css/);
   assert.match(builtIndex, /monetization\.js/);
 

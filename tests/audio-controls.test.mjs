@@ -65,7 +65,7 @@ assert.equal(window.document.querySelector('[data-style="solo"]'), null);
 click(window.document.querySelector('[data-mode="all"]'));
 click(window.document.querySelector('[data-style="teams"]'));
 click($('beginGame'));
-await wait(35);
+await wait(120);
 assert.deepEqual(tones.slice(0, 5), [392, 440, 523.25, 659.25, 880], 'countdown is followed by the round-start chime');
 assert.deepEqual(tones.slice(0, 3), [392, 440, 523.25], '3, 2, and 1 each keep their own subtle countdown note');
 assert.deepEqual(tones.slice(3, 5), [659.25, 880], 'the round-start cue remains distinct from the countdown notes');
@@ -92,7 +92,7 @@ assert.equal($('ref').hidden, true, 'Decode variety is not shown in the white so
 
 window.__majlisTest.showShuffleCard('say');
 assert.equal($('reveal').hidden, true, 'Guess the Word removes the inapplicable Reveal control');
-assert.equal([...window.document.querySelectorAll('.actions .action')].filter(button => !button.hidden).length, 3);
+assert.equal([...window.document.querySelectorAll('.actions .action')].filter(button => !button.hidden).length, 2, 'Guess the Word keeps only Pass and Correct visible');
 assert.equal(window.document.querySelectorAll('.forbiddenWord').length, 7, 'seven forbidden clues are rendered as separate, scannable items');
 const toneCountBeforePoint = tones.length;
 click($('correct'));

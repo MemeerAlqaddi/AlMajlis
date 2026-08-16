@@ -17,7 +17,9 @@ const excluded = new Set([
   'AlMajlis-GitHub-Upload-v49',
   'AlMajlis-GitHub-Upload-v49.zip',
   'AlMajlis-GitHub-Upload-v50',
-  'AlMajlis-GitHub-Upload-v50.zip'
+  'AlMajlis-GitHub-Upload-v50.zip',
+  'AlMajlis-GitHub-Upload-v51',
+  'AlMajlis-GitHub-Upload-v51.zip'
 ]);
 
 const { readdir } = await import('node:fs/promises');

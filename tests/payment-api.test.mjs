@@ -61,6 +61,35 @@ test('checkout creates an embedded Stripe session with matching keys', async () 
   }
 });
 
+test('checkout health reports only safe configuration status', async () => {
+  const previousSecret = process.env.STRIPE_SECRET_KEY;
+  const previousPublic = process.env.STRIPE_PUBLISHABLE_KEY;
+  const previousOwner = process.env.AL_MAJLIS_OWNER_KEY;
+  process.env.STRIPE_SECRET_KEY = 'sk_test_example';
+  process.env.STRIPE_PUBLISHABLE_KEY = 'pk_test_example';
+  process.env.AL_MAJLIS_OWNER_KEY = 'a-private-owner-code-over-20-characters';
+
+  try {
+    const response = responseMock();
+    await handler({method: 'GET', headers: {}}, response);
+    assert.equal(response.statusCode, 200);
+    assert.deepEqual(response.body, {
+      stripeConfigured: true,
+      stripeMode: 'test',
+      ownerConfigured: true
+    });
+    assert.equal(response.headers['cache-control'], 'no-store');
+    assert.doesNotMatch(JSON.stringify(response.body), /sk_|pk_|private-owner-code/);
+  } finally {
+    if (previousSecret === undefined) delete process.env.STRIPE_SECRET_KEY;
+    else process.env.STRIPE_SECRET_KEY = previousSecret;
+    if (previousPublic === undefined) delete process.env.STRIPE_PUBLISHABLE_KEY;
+    else process.env.STRIPE_PUBLISHABLE_KEY = previousPublic;
+    if (previousOwner === undefined) delete process.env.AL_MAJLIS_OWNER_KEY;
+    else process.env.AL_MAJLIS_OWNER_KEY = previousOwner;
+  }
+});
+
 test('checkout refuses mixed Stripe test and live keys', async () => {
   const previousSecret = process.env.STRIPE_SECRET_KEY;
   const previousPublic = process.env.STRIPE_PUBLISHABLE_KEY;

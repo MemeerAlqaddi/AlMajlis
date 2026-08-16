@@ -8,6 +8,18 @@ const PRODUCTS = Object.freeze({
   bundle:{name:'Al Majlis Premium Collection',description:'Unlock every current premium game mode.',amount:799}
 });
 const send=(response,status,body)=>response.status(status).json(body);
+function configurationStatus(){
+  const secretKey=process.env.STRIPE_SECRET_KEY||'';
+  const publishableKey=process.env.STRIPE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY||'';
+  const secretMatch=secretKey.match(/^sk_(test|live)_/);
+  const publishableMatch=publishableKey.match(/^pk_(test|live)_/);
+  const keysMatch=Boolean(secretMatch&&publishableMatch&&secretMatch[1]===publishableMatch[1]);
+  return {
+    stripeConfigured:keysMatch,
+    stripeMode:keysMatch?secretMatch[1]:null,
+    ownerConfigured:String(process.env.AL_MAJLIS_OWNER_KEY||'').length>=20
+  };
+}
 function paramsFor(product, selected, origin){
   const p=new URLSearchParams();
   p.set('ui_mode','embedded');
@@ -25,7 +37,11 @@ function paramsFor(product, selected, origin){
   return p;
 }
 export default async function handler(request,response){
-  if(request.method!=='POST'){response.setHeader('Allow','POST');return send(response,405,{error:'Method not allowed.'});}
+  if(request.method==='GET'){
+    response.setHeader('Cache-Control','no-store');
+    return send(response,200,configurationStatus());
+  }
+  if(request.method!=='POST'){response.setHeader('Allow','GET, POST');return send(response,405,{error:'Method not allowed.'});}
   const secretKey=process.env.STRIPE_SECRET_KEY;
   const publishableKey=process.env.STRIPE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if(!secretKey||!publishableKey)return send(response,503,{error:'Stripe is not configured yet. Add the Stripe environment variables in Vercel.'});

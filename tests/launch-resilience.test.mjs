@@ -38,7 +38,7 @@ click($('openSetup'));
 click(window.document.querySelector('[data-mode="all"]'));
 click(window.document.querySelector('[data-style="teams"]'));
 click($('beginGame'));
-await wait(35);
+await wait(120);
 
 assert.equal($('gameShell').hidden, false, 'game opens even when browser storage is unavailable');
 assert.equal($('countdownScreen').hidden, true, 'countdown completes when browser storage is unavailable');

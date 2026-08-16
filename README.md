@@ -1,4 +1,4 @@
-# Al Majlis v50
+# Al Majlis v51
 
 An installable, offline-capable Islamic and Arabic gathering game with 605 cards.
 
@@ -10,7 +10,7 @@ An installable, offline-capable Islamic and Arabic gathering game with 605 cards
 
 V39 keeps every prior content, phone-fit, gameplay, timing, and audio correction. It restores the Install App option on the regular website and hides it only while Al Majlis is running as an installed home-screen app. Every timed mode uses one consistent 60-second round. The quiet 3–2–1 notes remain intact, followed by a separate uplifting round-start chime. Round-complete controls share one centered layout in every play style and mode.
 
-Dark marble is the default appearance for new installs. Light mode remains available in Settings and now uses deeper layered grey marble instead of white-looking panels. The saved theme choice applies throughout setup, countdowns, gameplay, dialogs, and score screens.
+Dark marble is the default appearance for new installs. Light mode remains available in Settings and now uses a continuous cool-grey stone wash with visible mineral movement instead of white-looking panels. The saved theme choice applies throughout setup, countdowns, gameplay, dialogs, and score screens.
 
 ## Owner access
 
@@ -21,6 +21,8 @@ For private owner access on the published app, add a Vercel environment variable
 ## Stripe setup
 
 The Vercel project needs matching `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` values from the same Stripe test or live mode. Checkout is embedded in the existing popup. A completed payment is verified against Stripe before the selected pack or premium bundle unlocks.
+
+The safe status URL `/api/create-checkout-session` reports only whether Stripe and private owner access are configured; it never returns either key. Android installation instructions support Microsoft Edge and Samsung Internet without requiring Chrome.
 
 The app icon now matches both themes: charcoal marble, a narrow pale-marble inlay, a restrained aqua divider, and the Al Majlis Arabic/English wordmark.
 

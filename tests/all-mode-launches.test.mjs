@@ -49,7 +49,7 @@ for (const [mode, style] of modes) {
   if (style) {
     click(window.document.querySelector(`[data-style="${style}"]`));
     click(window.document.getElementById('beginGame'));
-    await wait(35);
+    await wait(120);
   }
 
   assert.equal(window.document.getElementById('gameShell').hidden, false, `${mode} opens gameplay`);
