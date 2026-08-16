@@ -46,6 +46,24 @@ window.visualViewport.height = 568;
 viewportListeners.resize();
 assert.equal(window.document.documentElement.style.getPropertyValue('--game-height'), '568px', 'visible phone height is followed automatically');
 assert.equal($('install').hidden, false, 'Install App is available in a normal browser');
+const originalUserAgent = window.navigator.userAgent;
+Object.defineProperty(window.navigator, 'userAgent', {
+  configurable: true,
+  value: 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 EdgA/140.0.0.0'
+});
+let nativeInstallPromptCalls = 0;
+const edgeInstallEvent = new window.Event('beforeinstallprompt', {cancelable: true});
+Object.defineProperties(edgeInstallEvent, {
+  prompt: {value: () => { nativeInstallPromptCalls++; }},
+  userChoice: {value: Promise.resolve({outcome: 'dismissed'})}
+});
+window.dispatchEvent(edgeInstallEvent);
+click($('install'));
+assert.equal($('installSheet').hidden, false, 'Android Edge opens reliable browser-menu instructions');
+assert.equal($('installNative').hidden, true, 'Android Edge does not show the stalling native prompt control');
+assert.equal(nativeInstallPromptCalls, 0, 'Android Edge does not launch the stalling native prompt');
+click($('installClose'));
+Object.defineProperty(window.navigator, 'userAgent', {configurable: true, value: originalUserAgent});
 window.dispatchEvent(new window.Event('appinstalled'));
 assert.equal($('install').hidden, false, 'Install App remains available on the regular website after installation');
 Object.defineProperty(window.navigator, 'standalone', {configurable: true, value: true});

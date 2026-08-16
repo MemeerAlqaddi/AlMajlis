@@ -33,8 +33,8 @@ if (!existsSync(indexPath)) throw new Error('index.html was not found.');
 
 let html = await readFile(indexPath, 'utf8');
 
-const styleTag = '<link rel="stylesheet" href="./monetization.css?v=3">';
-const scriptTag = '<script src="./monetization.js?v=3"></script>';
+const styleTag = '<link rel="stylesheet" href="./monetization.css?v=5">';
+const scriptTag = '<script src="./monetization.js?v=5"></script>';
 
 if (!html.includes('monetization.css')) {
   html = html.replace('</head>', `${styleTag}</head>`);
@@ -44,4 +44,15 @@ if (!html.includes('monetization.js')) {
 }
 
 await writeFile(path.join(out, 'index.html'), html);
+let ownerHtml = html.replace(
+  'href="manifest.webmanifest"',
+  'href="owner-manifest.webmanifest"'
+);
+if (!ownerHtml.includes('owner-manifest.webmanifest')) {
+  ownerHtml = ownerHtml.replace(
+    '</head>',
+    '<link rel="manifest" href="owner-manifest.webmanifest"></head>'
+  );
+}
+await writeFile(path.join(out, 'owner.html'), ownerHtml);
 console.log('Built Al Majlis without changing the original app files.');

@@ -1,7 +1,7 @@
-const CACHE = 'al-majlis-v51';
+const CACHE = 'al-majlis-v51-owner-runtime';
 const ASSETS = [
-  './', './index.html', './styles.css?v=51', './monetization.css?v=3', './cards-data.js?v=51', './app.js?v=51', './upgrade-v44.js?v=51', './monetization.js?v=3',
-  './manifest.webmanifest', './al-majlis-icon.svg', './apple-touch-icon.png',
+  './', './index.html', './styles.css?v=51', './monetization.css?v=5', './cards-data.js?v=51', './app.js?v=51', './upgrade-v44.js?v=51', './monetization.js?v=5',
+  './manifest.webmanifest', './owner-manifest.webmanifest', './owner?owner=1', './al-majlis-icon.svg', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './assets/marble-light-v51.webp', './assets/marble-dark.webp',
   './majlis-open.mp3', './majlis-select.mp3', './majlis-correct.mp3', './majlis-complete.mp3'

@@ -6,6 +6,7 @@ const app = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 const css = fs.readFileSync(new URL('../styles.css', import.meta.url), 'utf8');
 const sw = fs.readFileSync(new URL('../service-worker.js', import.meta.url), 'utf8');
 const manifest = JSON.parse(fs.readFileSync(new URL('../manifest.webmanifest', import.meta.url), 'utf8'));
+const ownerManifest = JSON.parse(fs.readFileSync(new URL('../owner-manifest.webmanifest', import.meta.url), 'utf8'));
 const iconSvg = fs.readFileSync(new URL('../al-majlis-icon.svg', import.meta.url), 'utf8');
 
 function pngDimensions(path) {
@@ -26,9 +27,14 @@ assert.equal(manifest.start_url, './index.html?v=51');
 assert.equal(manifest.prefer_related_applications, false);
 assert.equal(manifest.background_color, '#0a0c0d');
 assert.equal(manifest.theme_color, '#0a0c0d');
-assert.match(sw, /al-majlis-v51/);
+assert.equal(ownerManifest.name, 'Al Majlis Owner');
+assert.equal(ownerManifest.id, '/al-majlis-owner');
+assert.equal(ownerManifest.start_url, './owner?owner=1');
+assert.notEqual(ownerManifest.id, manifest.id, 'owner install has a distinct app identity');
+assert.match(sw, /al-majlis-v51-owner-runtime/);
+assert.ok(sw.includes('./owner?owner=1') && sw.includes('./owner-manifest.webmanifest'), 'owner install caches the non-redirecting launch URL');
 assert.ok(html.includes('./styles.css?v=51') && html.includes('./cards-data.js?v=51') && html.includes('./app.js?v=51'), 'core assets use release-specific URLs');
-assert.ok(html.includes('./monetization.css?v=3') && html.includes('./monetization.js?v=3'), 'source upload loads premium access controls directly');
+assert.ok(html.includes('./monetization.css?v=5') && html.includes('./monetization.js?v=5'), 'source upload loads cache-busted premium access controls directly');
 assert.ok(app.includes("service-worker.js?v=51"), 'service-worker registration uses the current release URL');
 assert.ok(html.includes('Microsoft Edge') && html.includes('Samsung Internet') && !html.includes('Open this page in <em>Chrome</em>'), 'Android installation is browser-neutral and does not require Chrome');
 assert.match(html, /<html lang="en" data-theme="dark">/, 'new installs render dark mode before JavaScript loads');

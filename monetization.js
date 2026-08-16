@@ -136,17 +136,8 @@
     );
   }
 
-  async function initializeOwnerAccess() {
-    if (isLocalOwnerPreview()) {
-      setOwnerAccess(true);
-      return true;
-    }
-
-    const requested = new URLSearchParams(location.search).get('owner') === '1';
-    if (!requested) return checkOwnerAccess();
-
-    removeOwnerRequestFromUrl();
-    if (await checkOwnerAccess()) {
+  async function requestOwnerAccess() {
+    if (ownerAccess || await checkOwnerAccess()) {
       notify('Owner access is active');
       return true;
     }
@@ -177,6 +168,36 @@
       notify(error.message || 'Owner access could not be unlocked.');
       return false;
     }
+  }
+
+  async function initializeOwnerAccess() {
+    if (isLocalOwnerPreview()) {
+      setOwnerAccess(true);
+      return true;
+    }
+
+    const requested = new URLSearchParams(location.search).get('owner') === '1';
+    if (!requested) return checkOwnerAccess();
+
+    removeOwnerRequestFromUrl();
+    return requestOwnerAccess();
+  }
+
+  function bindOwnerShortcut() {
+    const title = document.querySelector('.welcomeMain h1');
+    if (!title) return;
+
+    let ownerTapCount = 0;
+    let lastOwnerTap = 0;
+    title.addEventListener('click', () => {
+      const now = Date.now();
+      if (now - lastOwnerTap > 2500) ownerTapCount = 0;
+      lastOwnerTap = now;
+      ownerTapCount += 1;
+      if (ownerTapCount < 5) return;
+      ownerTapCount = 0;
+      requestOwnerAccess();
+    });
   }
 
   function addVerifiedEntitlement(product) {
@@ -633,14 +654,24 @@
 
     document.addEventListener('click', interceptLockedMode, true);
 
+    bindOwnerShortcut();
     initializeOwnerAccess();
     restorePurchases();
     processCheckoutReturn();
 
     const setupModes = document.getElementById('setupModes');
     if (setupModes) {
-      const observer = new MutationObserver(() => arrangeAllGroups());
-      observer.observe(setupModes, {childList: true, subtree: true});
+      const observer = new MutationObserver(mutations => {
+        const modesChanged = mutations.some(mutation =>
+          [...mutation.addedNodes].some(node =>
+            node.nodeType === 1 &&
+            (node.matches?.('.modeGroup') || node.querySelector?.('.modeGroup'))
+          )
+        );
+
+        if (modesChanged) arrangeAllGroups();
+      });
+      observer.observe(setupModes, {childList: true});
     }
   }
 

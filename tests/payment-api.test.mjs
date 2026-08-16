@@ -48,7 +48,7 @@ test('checkout creates an embedded Stripe session with matching keys', async () 
     assert.equal(response.statusCode, 200);
     assert.equal(response.body.sessionId, 'cs_test_example');
     assert.equal(response.body.publishableKey, 'pk_test_example');
-    assert.match(requestBody, /ui_mode=embedded/);
+    assert.match(requestBody, /ui_mode=embedded_page/);
     assert.match(requestBody, /metadata%5Bal_majlis_product%5D=bundle/);
     assert.match(requestBody, /unit_amount%5D=799/);
     assert.doesNotMatch(requestBody, /payment_method_types%5B1%5D/);

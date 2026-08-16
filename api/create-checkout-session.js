@@ -22,7 +22,7 @@ function configurationStatus(){
 }
 function paramsFor(product, selected, origin){
   const p=new URLSearchParams();
-  p.set('ui_mode','embedded');
+  p.set('ui_mode','embedded_page');
   p.set('redirect_on_completion','if_required');
   p.set('mode','payment');
   p.set('payment_method_types[0]','card');

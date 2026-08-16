@@ -30,7 +30,17 @@ assert.match(js, /verifySession\(sessionId/);
 assert.match(js, /document\.querySelectorAll\('\.modeGroup'\)/);
 assert.match(js, /setupMode\[data-mode\]/);
 assert.match(js, /initializeOwnerAccess\(\)/);
+assert.match(js, /function requestOwnerAccess\(\)/);
+assert.match(js, /function bindOwnerShortcut\(\)/);
+assert.match(js, /ownerTapCount < 5/);
+assert.match(js, /bindOwnerShortcut\(\);\s*initializeOwnerAccess\(\)/);
 assert.match(js, /isLocalOwnerPreview\(\)/);
+assert.match(js, /mutation\.addedNodes/);
+assert.match(js, /observer\.observe\(setupModes, \{childList: true\}\)/);
+assert.doesNotMatch(
+  js,
+  /observer\.observe\(setupModes, \{childList: true, subtree: true\}\)/
+);
 assert.doesNotMatch(js, /majlisModeIcon/);
 assert.doesNotMatch(js, /al-majlis-entitlements/);
 assert.doesNotMatch(js, /premium\s*=\s*true/i);
@@ -44,7 +54,7 @@ assert.doesNotMatch(css, /background-image\s*:/);
 assert.doesNotMatch(css, /--marble/);
 assert.doesNotMatch(css, /data-theme/);
 
-assert.match(createSession, /p\.set\('ui_mode','embedded'\)/);
+assert.match(createSession, /p\.set\('ui_mode','embedded_page'\)/);
 assert.match(createSession, /p\.set\('redirect_on_completion','if_required'\)/);
 assert.match(createSession, /STRIPE_SECRET_KEY/);
 assert.match(sessionStatus, /session\.status === 'complete'/);
@@ -126,6 +136,10 @@ try {
     path.join(sandbox, 'dist/index.html'),
     'utf8'
   );
+  const builtOwner = await readFile(
+    path.join(sandbox, 'dist/owner.html'),
+    'utf8'
+  );
 
   assert.match(builtIndex, /styles\.css\?v=51/);
   assert.match(builtIndex, /cards-data\.js\?v=51/);
@@ -133,6 +147,8 @@ try {
   assert.match(builtIndex, /upgrade-v44\.js\?v=51/);
   assert.match(builtIndex, /monetization\.css/);
   assert.match(builtIndex, /monetization\.js/);
+  assert.match(builtOwner, /owner-manifest\.webmanifest/);
+  assert.doesNotMatch(builtIndex, /owner-manifest\.webmanifest/);
 
   assert.ok(
     builtIndex.indexOf('upgrade-v44.js') <
