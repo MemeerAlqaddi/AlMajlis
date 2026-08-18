@@ -59,10 +59,8 @@ Object.defineProperties(edgeInstallEvent, {
 });
 window.dispatchEvent(edgeInstallEvent);
 click($('install'));
-assert.equal($('installSheet').hidden, false, 'Android Edge opens reliable browser-menu instructions');
-assert.equal($('installNative').hidden, true, 'Android Edge does not show the stalling native prompt control');
-assert.equal(nativeInstallPromptCalls, 0, 'Android Edge does not launch the stalling native prompt');
-click($('installClose'));
+assert.equal($('installSheet').hidden, true, 'Android Edge uses its native install prompt when available');
+assert.equal(nativeInstallPromptCalls, 1, 'Android Edge launches the native install prompt');
 Object.defineProperty(window.navigator, 'userAgent', {configurable: true, value: originalUserAgent});
 window.dispatchEvent(new window.Event('appinstalled'));
 assert.equal($('install').hidden, false, 'Install App remains available on the regular website after installation');

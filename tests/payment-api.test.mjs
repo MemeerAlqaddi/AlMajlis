@@ -51,7 +51,7 @@ test('checkout creates an embedded Stripe session with matching keys', async () 
     assert.match(requestBody, /ui_mode=embedded_page/);
     assert.match(requestBody, /metadata%5Bal_majlis_product%5D=bundle/);
     assert.match(requestBody, /unit_amount%5D=799/);
-    assert.doesNotMatch(requestBody, /payment_method_types%5B1%5D/);
+    assert.doesNotMatch(requestBody, /payment_method_types/);
   } finally {
     global.fetch = previousFetch;
     if (previousSecret === undefined) delete process.env.STRIPE_SECRET_KEY;

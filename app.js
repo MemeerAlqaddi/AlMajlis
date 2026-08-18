@@ -994,9 +994,6 @@ function isInstalledMode() {
     || window.navigator.standalone === true
     || document.referrer.startsWith('android-app://');
 }
-function usesBrowserInstallMenu() {
-  return /Android/i.test(navigator.userAgent) && /EdgA\//i.test(navigator.userAgent);
-}
 function updateInstallVisibility() {
   const installed = isInstalledMode();
   $('install').hidden = installed;
@@ -1007,7 +1004,7 @@ function updateInstallVisibility() {
   }
 }
 function openInstallSheet() {
-  $('installNative').hidden = !installPrompt || usesBrowserInstallMenu();
+  $('installNative').hidden = !installPrompt;
   openDialog('installSheet', 'installClose', {pauseGame: false});
 }
 function closeInstallSheet() { closeDialog('installSheet'); }
@@ -1033,7 +1030,7 @@ window.addEventListener('resize', syncGameplayViewport);
 window.addEventListener('orientationchange', syncGameplayViewport);
 window.visualViewport?.addEventListener('resize', syncGameplayViewport);
 window.visualViewport?.addEventListener('scroll', syncGameplayViewport);
-$('install').onclick = () => installPrompt && !usesBrowserInstallMenu()
+$('install').onclick = () => installPrompt
   ? runNativeInstall()
   : openInstallSheet();
 $('installNative').onclick = runNativeInstall;
@@ -1046,7 +1043,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=51', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=51-install', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

@@ -102,9 +102,9 @@ body.roundActive{margin:0}
 
 /* V35 visual system: Design A by default, Design B through Settings. */
 :root,[data-theme="light"]{
-  --bg:#bcc2c0;--panel:#cbd0cddd;--panel2:#b7bfbdde;--line:#62777c99;--text:#172126;--muted:#4e5d61;
-  --aqua:#357f87;--aqua-bright:#126f78;--good:#c7ddd4;--bad:#dacbc8;--surface:#c4cac7dc;--surface-strong:#d0d4d1e8;
-  --soft-shadow:0 22px 70px #31383b38;--veil:#77848624;--marble:url('./assets/marble-light-v51.webp');
+  --bg:#e7e5e2;--panel:#f4f3f0e8;--panel2:#eeece8e3;--line:#788b8f80;--text:#182126;--muted:#59666a;
+  --aqua:#3b8990;--aqua-bright:#177982;--good:#d9eee5;--bad:#eee2e0;--surface:#f7f6f3d9;--surface-strong:#f8f7f5f2;
+  --soft-shadow:0 22px 70px #31383b29;--veil:#f1f0ec42;--marble:url('./assets/marble-light.webp');
   --display:"Bodoni 72","Bodoni MT",Didot,"Times New Roman",serif;--body:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
 }
 [data-theme="dark"]{
@@ -214,6 +214,24 @@ body{min-height:100svh;background:linear-gradient(var(--veil),var(--veil)),var(-
   .settingsThemeGroup{align-items:flex-start;flex-direction:column}.themeChoices{width:100%}.themeChoices button{min-width:0}
 }
 @media(max-width:390px){.utilityBtn{padding-inline:8px;font-size:10px}.welcomeScreen h1{font-size:58px}.welcomeMain>p{font-size:15px}.bismillahMark{font-size:17px}}
+
+.welcomeUtilities a.utilityBtn{display:inline-flex;align-items:center;text-decoration:none}
+.policyPage{min-height:100svh;background:linear-gradient(var(--veil),var(--veil)),var(--marble) center/cover fixed no-repeat;color:var(--text)}
+.policyShell{width:min(760px,calc(100% - 28px));margin:0 auto;padding:max(24px,env(safe-area-inset-top)) 0 max(48px,env(safe-area-inset-bottom))}
+.policyBack{display:inline-flex;align-items:center;gap:9px;min-height:44px;color:var(--aqua-bright);font-family:var(--body);font-size:13px;text-decoration:none}
+.policyBack span{font-size:20px;line-height:1}
+.policyHeader{padding:42px 0 28px}
+.policyHeader h1{margin:10px 0 14px;font:700 42px/1.08 var(--display);letter-spacing:0}
+.policyHeader p{max-width:650px;margin:0;color:var(--muted);font-size:15px;line-height:1.65}
+.policyNav{display:flex;flex-wrap:wrap;gap:10px 22px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.policyNav a,.policySection a{color:var(--aqua-bright);text-underline-offset:3px}
+.policySection{padding:28px 0;border-bottom:1px solid var(--line)}
+.policySection h2{margin:0 0 13px;font:700 24px/1.2 var(--display);letter-spacing:0}
+.policySection p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.policySection p+p{margin-top:12px}
+.policySection strong{color:var(--text)}
+.policyFooter{padding-top:22px;color:var(--muted);font-size:12px}
+@media(max-width:520px){.policyShell{width:min(100% - 24px,760px)}.policyHeader{padding:28px 0 22px}.policyHeader h1{font-size:34px}.policyNav{gap:9px 16px}.policySection{padding:23px 0}}
 @media(max-width:430px){.forbiddenList{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.forbiddenWord:last-child:nth-child(3n+1){grid-column:1/-1}.forbiddenWord{min-height:34px;padding:6px 7px;font-size:11px}.forbiddenHeading{margin-bottom:9px}}
 @media(max-height:650px){.forbiddenList{gap:5px}.forbiddenWord{min-height:29px;padding:4px 7px;font-size:10px}.forbiddenHeading{margin-bottom:6px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
@@ -519,34 +537,7 @@ body:after{content:"";position:fixed;z-index:-1;left:0;right:0;bottom:0;height:3
   color:var(--aqua-bright);
 }
 
-[data-theme="light"] body,
-[data-theme="light"] .setupScreen,
-[data-theme="light"] .countdownScreen,
-[data-theme="light"] .roundScreen,
-[data-theme="light"] #gameShell:not([hidden]){
-  background-color:#aeb6b3;
-  background-image:linear-gradient(135deg,#d1d5d152,#87928f4f 52%,#c2c8c354),var(--marble);
-  background-position:center;
-  background-size:cover;
-}
-
-[data-theme="light"] .modeGroup{
-  background-image:linear-gradient(138deg,#d5d8d46b 0%,#8f99966b 48%,#c5cac66e 100%),var(--marble)!important;
-  background-position:center,52% 48%;
-  background-size:cover,125% auto;
-}
-
-[data-theme="light"] .categoryChoice,
-[data-theme="light"] .setupMode,
-[data-theme="light"] .styleChoice,
-[data-theme="light"] .selectionSummary,
-[data-theme="light"] .modeInstruction{
-  background-image:linear-gradient(115deg,#d8dbd670 0%,#969f9c70 55%,#c9cec975 100%),var(--marble)!important;
-  background-position:center,44% 48%;
-  background-size:cover,170% auto;
-}
-
-/* V51: dark-first installs, stone-wash light mode, and compact setup navigation. */
+/* V51: dark-first installs and compact setup navigation. */
 .setupBack{
   position:fixed;
   z-index:50;

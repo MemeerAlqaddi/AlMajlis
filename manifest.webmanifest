@@ -3,7 +3,7 @@
   "short_name": "Al Majlis",
   "id": "./",
   "description": "A 605-card Islamic and Arabic game night with competitive and conversational modes.",
-  "start_url": "./index.html?v=51",
+  "start_url": "./?v=51-install",
   "scope": "./",
   "display": "standalone",
   "prefer_related_applications": false,
