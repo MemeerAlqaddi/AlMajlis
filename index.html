@@ -18,24 +18,26 @@ window.addEventListener('beforeinstallprompt',function(e){
   border-radius:0;
   background:transparent;
   box-shadow:none;
-  font:inherit;
-  font-size:.9rem;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  font-size:11px;
   font-weight:400;
-  letter-spacing:normal;
-  color:var(--accent, #7fcfc8);
+  letter-spacing:.08em;
+  color:var(--aqua);
   cursor:pointer;
 }
 #welcomeScreen #openSetup::after{
-  content:"  →";
-  color:currentColor;
+  content:"→";
+  display:inline-block;
+  margin-left:9px;
+  color:var(--aqua);
 }
 #welcomeScreen #openSetup:hover,
 #welcomeScreen #openSetup:focus-visible{
   background:transparent;
   box-shadow:none;
   transform:none;
-  text-decoration:underline;
-  text-underline-offset:4px;
+  color:var(--aqua);
+  text-decoration:none;
 }
 </style></head><body>
 <section class="screen welcomeScreen" id="welcomeScreen"><div class="welcomeMain"><div class="bismillahMark" lang="ar" dir="rtl" aria-label="Bismillah ir-Rahman ir-Rahim">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</div><h1>Al Majlis</h1><p>Gather. Learn. Connect.</p><button class="launchBtn" id="openSetup">Start Game</button><button class="install welcomeInstall" id="install" type="button">Install App</button></div><div class="welcomeUtilities"><button class="utilityBtn" id="soundToggle" type="button" aria-pressed="true">Sound · On</button><button class="utilityBtn" id="contentNotesOpen" type="button">Content notes</button><a class="utilityBtn" href="./policies.html">Policies &amp; support</a><button class="utilityBtn" id="settingsOpen" type="button">Settings</button></div></section>
