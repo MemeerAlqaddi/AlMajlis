@@ -1,0 +1,52 @@
+AL MAJLIS V52 - CONTENT REVIEW PACKAGE
+
+STATUS
+This is a review build. V51 remains the live Vercel release.
+Do not upload or deploy v52 until the content review is approved.
+
+WHAT V52 CHANGES
+- Expands each of the eight base decks to exactly 300 cards.
+- Provides 2,400 unique card records total.
+- Keeps the approved v51 interface, marble themes, sounds, gameplay, scoring,
+  owner access, pricing, Stripe checkout, and Vercel API behavior unchanged.
+- Adds release-specific caching so all v52 deck files work offline.
+- Preserves every existing card ID while recording editorial corrections.
+
+AUTOMATED REVIEW
+Run these from the package root:
+
+  npm install
+  npm run audit:content:strict
+  npm test
+  npm run build
+
+The strict audit checks deck counts, IDs, exact and near duplicates, Riddle
+answer uniqueness, wording heuristics, source format, Qur'anic reference bounds,
+Guess the Word clue counts, and Complete the Ayah continuation length.
+
+HUMAN REVIEW STILL REQUIRED
+- A qualified Islamic reviewer must confirm that answers, explanations, source
+  use, and context are accurate and not misleading.
+- Native Arabic reviewers must confirm Decode spelling, sound-spelling, and
+  usage labels.
+- See HUMAN-REVIEW-CHECKLIST.md and CONTENT-REVIEW-v52.md.
+
+PAYMENTS AND OWNER ACCESS
+V52 does not change pricing or payment logic. The v51 setup remains:
+
+FREE
+- Guess The Word
+- Trivia
+- Riddles
+- Under The Surface
+
+PAID
+- Game Night Shuffle - $3.99
+- Decode the Gibberish - $2.99
+- Complete the Ayah - $2.99
+- Conversation Starters - $3.99
+- Dilemmas - $2.99
+- Islam vs Culture - $2.99
+- Premium All Access - $7.99
+
+Never place live Stripe keys or the owner key in this package or GitHub.

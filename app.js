@@ -1043,7 +1043,7 @@ syncGameplayViewport();
 updateInstallVisibility();
 if ('serviceWorker' in navigator) window.addEventListener('load', async () => {
   try {
-    const registration = await navigator.serviceWorker.register('./service-worker.js?v=51-install', {updateViaCache: 'none'});
+    const registration = await navigator.serviceWorker.register('./service-worker.js?v=52-content', {updateViaCache: 'none'});
     registration.update().catch(() => {});
   } catch {}
 });

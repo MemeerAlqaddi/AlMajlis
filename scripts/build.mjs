@@ -45,7 +45,7 @@ if (!html.includes('monetization.js')) {
 
 await writeFile(path.join(out, 'index.html'), html);
 let ownerHtml = html.replace(
-  'href="manifest.webmanifest?v=51-install"',
+  /href="manifest\.webmanifest\?v=[^"]+"/,
   'href="owner-manifest.webmanifest"'
 );
 if (!ownerHtml.includes('owner-manifest.webmanifest')) {

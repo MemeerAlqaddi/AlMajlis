@@ -16,15 +16,27 @@ function pngDimensions(path) {
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 }
 
-for (const asset of ['./styles.css','./cards-data.js','./app.js']) {
+const contentAssets = [
+  './content/v52-words.js',
+  './content/v52-decode.js',
+  './content/v52-ayah.js',
+  './content/v52-trivia.js',
+  './content/v52-riddles.js',
+  './content/v52-dilemmas.js',
+  './content/v52-reflection.js',
+  './content/v52-culture-evidence.js',
+  './content/v52-culture.js'
+];
+
+for (const asset of ['./styles.css','./cards-data.js', ...contentAssets, './app.js']) {
   assert.ok(html.includes(asset), `index loads ${asset}`);
   assert.ok(sw.includes(asset), `offline cache includes ${asset}`);
 }
-assert.match(manifest.description, /605-card/);
+assert.match(manifest.description, /2,400-card/);
 assert.equal(manifest.name, 'Al Majlis');
 assert.equal(manifest.short_name, 'Al Majlis');
 assert.equal(manifest.id, './');
-assert.equal(manifest.start_url, './?v=51-install');
+assert.equal(manifest.start_url, './?v=52-content');
 assert.equal(manifest.prefer_related_applications, false);
 assert.equal(manifest.background_color, '#0a0c0d');
 assert.equal(manifest.theme_color, '#0a0c0d');
@@ -32,12 +44,13 @@ assert.equal(ownerManifest.name, 'Al Majlis Owner');
 assert.equal(ownerManifest.id, '/al-majlis-owner');
 assert.equal(ownerManifest.start_url, './owner?owner=1');
 assert.notEqual(ownerManifest.id, manifest.id, 'owner install has a distinct app identity');
-assert.match(sw, /al-majlis-v51-install-ready/);
+assert.match(sw, /al-majlis-v52-content-review/);
 assert.ok(sw.includes('./owner?owner=1') && sw.includes('./owner-manifest.webmanifest'), 'owner install caches the non-redirecting launch URL');
-assert.ok(html.includes('./styles.css?v=51-launch') && html.includes('./cards-data.js?v=51') && html.includes('./app.js?v=51'), 'core assets use release-specific URLs');
+assert.ok(html.includes('./styles.css?v=51-launch') && html.includes('./cards-data.js?v=52') && html.includes('./app.js?v=52'), 'core assets use release-specific URLs while preserving the approved v51 design');
+assert.ok(contentAssets.every(asset => html.includes(`${asset}?v=52`) && sw.includes(`${asset}?v=52`)), 'all v52 deck expansions are cache-busted and available offline');
 assert.ok(html.includes('./monetization.css?v=5') && html.includes('./monetization.js?v=5'), 'source upload loads cache-busted premium access controls directly');
-assert.ok(app.includes("service-worker.js?v=51-install"), 'service-worker registration uses the current release URL');
-assert.ok(html.includes('manifest.webmanifest?v=51-install') && sw.includes('./manifest.webmanifest?v=51-install'), 'the install manifest uses a fresh non-redirecting launch definition');
+assert.ok(app.includes("service-worker.js?v=52-content"), 'service-worker registration uses the current review release URL');
+assert.ok(html.includes('manifest.webmanifest?v=52-content') && sw.includes('./manifest.webmanifest?v=52-content'), 'the install manifest uses the current review launch definition');
 assert.ok(html.includes('href="./policies.html"') && sw.includes('./policies.html'), 'launch policies are public and available offline');
 assert.match(policies, /Products and fulfillment/);
 assert.match(policies, /Refund and cancellation policy/);

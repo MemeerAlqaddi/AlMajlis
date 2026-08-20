@@ -4476,3 +4476,315 @@ const cards = [
     "id": "SURFACE-090"
   }
 ];
+
+/* v52 editorial corrections keep stable IDs while replacing weak or repetitive wording. */
+const v52EditorialRevisions = {
+  "WORD-003": {
+    source: "Sahih Muslim 1054"
+  },
+  "WORD-025": {
+    source: "Qur'an 2:183; juristic term"
+  },
+  "WORD-026": {
+    source: "Qur'an 17:38; juristic term"
+  },
+  "WORD-027": {
+    source: "Qur'an 2:29; 7:32; juristic term"
+  },
+  "WORD-033": {
+    source: "Qur'an 9:25; 53:32"
+  },
+  "WORD-053": {
+    source: "Sunan Abi Dawud 2085; Jami' al-Tirmidhi 1101"
+  },
+  "WORD-063": {
+    source: "Qur'an 3:134; Sahih Muslim 17"
+  },
+  "WORD-069": {
+    source: "Qur'an 59:18"
+  },
+  "WORD-074": {
+    source: "Sahih Muslim 34"
+  },
+  "WORD-087": {
+    source: "Qur'an 17:79"
+  },
+  "WORD-095": {
+    source: "Sahih Muslim 2691"
+  },
+  "TRIVIA-011": {
+    source: "Standard mushaf arrangement; Qur'an 9:1"
+  },
+  "AYAH-003": {
+    answer: "أَذۡكُرۡكُمۡ وَٱشۡكُرُواْ لِي وَلَا تَكۡفُرُونِ",
+    answerTransliteration: "adhkurkum wa-ushkuru li wa-la takfurun",
+    answerTranslation: "I will remember you. Be grateful to Me, and do not be ungrateful.",
+    source: "Qur'an 2:152"
+  },
+  "AYAH-060": {
+    prompt: "فَإِنَّ …",
+    promptTransliteration: "Fa-inna...",
+    promptTranslation: "For indeed...",
+    answer: "مَعَ ٱلۡعُسۡرِ يُسۡرًا",
+    answerTransliteration: "ma'a al-'usri yusran",
+    answerTranslation: "with hardship comes ease.",
+    source: "Qur'an 94:5"
+  },
+  "DILEMMA-002": {
+    source: "Qur'an 3:7; 16:43"
+  },
+  "DILEMMA-007": {
+    source: "Qur'an 4:135; 5:2"
+  },
+  "DILEMMA-009": {
+    source: "Qur'an 4:103; 64:16"
+  },
+  "DILEMMA-010": {
+    source: "Qur'an 2:262-264; 49:11"
+  },
+  "DILEMMA-012": {
+    source: "Qur'an 4:19; 17:23; 31:15"
+  },
+  "DILEMMA-014": {
+    source: "Qur'an 4:29; Sahih Muslim 102"
+  },
+  "DILEMMA-018": {
+    source: "Qur'an 7:31; 17:26-27"
+  },
+  "DILEMMA-020": {
+    source: "Qur'an 42:40-43"
+  },
+  "DILEMMA-021": {
+    source: "Qur'an 4:135; 4:148"
+  },
+  "DILEMMA-022": {
+    source: "Qur'an 4:58; 4:135"
+  },
+  "DILEMMA-023": {
+    source: "Qur'an 17:36; 49:6"
+  },
+  "DILEMMA-025": {
+    source: "Qur'an 16:43; 17:36"
+  },
+  "DILEMMA-026": {
+    source: "Qur'an 5:8; 49:6"
+  },
+  "DILEMMA-027": {
+    source: "Qur'an 5:8; 16:90"
+  },
+  "DILEMMA-028": {
+    source: "Qur'an 9:60; Sahih al-Bukhari 1466"
+  },
+  "DILEMMA-030": {
+    source: "Qur'an 24:19; 49:12"
+  },
+  "DILEMMA-031": {
+    source: "Qur'an 4:148; 42:40-43"
+  },
+  "DILEMMA-032": {
+    source: "Qur'an 2:286; 5:2"
+  },
+  "DILEMMA-034": {
+    source: "Sahih al-Bukhari 7174"
+  },
+  "DILEMMA-035": {
+    source: "Qur'an 4:29; 107:4-6"
+  },
+  "DILEMMA-041": {
+    source: "Qur'an 4:58; 5:32"
+  },
+  "AYAH-033": {
+    prompt: "وَإِذۡ تَأَذَّنَ رَبُّكُمۡ لَئِن شَكَرۡتُمۡ …",
+    promptTransliteration: "Wa idh ta’adhdhana rabbukum la’in shakartum…",
+    promptTranslation: "And remember when your Lord proclaimed: If you are grateful…",
+    answer: "لَأَزِيدَنَّكُمۡۖ وَلَئِن كَفَرۡتُمۡ إِنَّ عَذَابِي لَشَدِيدٞ",
+    answerTransliteration: "la’azīdannakum; wa la’in kafartum inna ʿadhābī lashadīd",
+    answerTranslation: "I will certainly give you more. But if you are ungrateful, surely My punishment is severe.",
+    source: "Qur’an 14:7"
+  },
+  "SURFACE-002": {
+    prompt: "Which assumption about another person would be most costly if you discovered it was wrong?",
+    source: "Reflection on suspicion and fairness"
+  },
+  "SURFACE-004": {
+    prompt: "When has loyalty to a person made it harder to name something they did wrong?",
+    source: "Reflection on loyalty and justice"
+  },
+  "SURFACE-006": {
+    prompt: "Whom do you treat most generously when they have nothing useful to offer you in return?",
+    source: "Reflection on sincerity and reciprocity"
+  },
+  "SURFACE-008": {
+    prompt: "Which convenience do you defend even though it repeatedly pulls you away from a value you claim matters?",
+    source: "Reflection on priorities and discipline"
+  },
+  "SURFACE-010": {
+    prompt: "Whose private struggle have you been tempted to treat as interesting information rather than a trust?",
+    source: "Reflection on privacy and dignity"
+  },
+  "SURFACE-012": {
+    prompt: "What does your attention repeatedly return to when a screen, audience, and deadline are all absent?",
+    source: "Private reflection on attention"
+  },
+  "SURFACE-014": {
+    prompt: "What repair would be required if a joke you enjoyed depended on someone else feeling small?",
+    source: "Reflection on humor and dignity"
+  },
+  "SURFACE-016": {
+    prompt: "Which useful advice becomes difficult to hear when it comes from someone you dislike?",
+    source: "Reflection on humility and discernment"
+  },
+  "SURFACE-018": {
+    prompt: "Which purchase would lose its appeal if nobody else could see, praise, or envy it?",
+    source: "Reflection on consumption and image"
+  },
+  "SURFACE-020": {
+    prompt: "Whose needs become inconvenient to you because they move, communicate, or decide more slowly than you do?",
+    source: "Reflection on patience and accessibility"
+  },
+  "SURFACE-022": {
+    prompt: "What truth is harder to accept when it comes from someone younger, less educated, or lower in status?",
+    source: "Reflection on status and humility"
+  },
+  "SURFACE-024": {
+    prompt: "Which inherited practice do you defend most strongly despite knowing the least about its religious basis?",
+    source: "Reflection on inheritance and evidence"
+  },
+  "SURFACE-026": {
+    prompt: "Which relationship receives your leftover time while less important demands receive your best attention?",
+    source: "Reflection on time and relational rights"
+  },
+  "SURFACE-028": {
+    prompt: "What financial choice would you reconsider if its hidden human cost were visible at the moment of purchase?",
+    source: "Reflection on consumption and responsibility"
+  },
+  "SURFACE-030": {
+    prompt: "Which friendship do you maintain mainly because loneliness feels more frightening than honesty?",
+    source: "Reflection on belonging and integrity"
+  },
+  "SURFACE-032": {
+    prompt: "What harmful community pattern survives partly because reasonable people discuss it privately but stay silent publicly?",
+    source: "Reflection on collective responsibility"
+  },
+  "SURFACE-034": {
+    prompt: "How much does your current mood influence the motives you assign to other people?",
+    source: "Reflection on interpretation and self-awareness"
+  },
+  "SURFACE-036": {
+    prompt: "What kind of help do you need but avoid requesting because competence has become part of your identity?",
+    source: "Reflection on vulnerability and support"
+  },
+  "SURFACE-038": {
+    prompt: "Which delayed responsibility have you renamed patience, caution, or waiting for the right time?",
+    source: "Reflection on procrastination and honesty"
+  },
+  "SURFACE-040": {
+    prompt: "When you give, how do you keep the recipient’s freedom and dignity from becoming part of the price?",
+    source: "Reflection on charity and power"
+  },
+  "SURFACE-042": {
+    prompt: "When have you used religious language to end a difficult conversation before truly hearing the other person?",
+    source: "Reflection on listening and religious language"
+  },
+  "SURFACE-044": {
+    prompt: "Which promise have you quietly allowed to expire because the person owed it stopped asking?",
+    source: "Reflection on promises and accountability"
+  },
+  "SURFACE-046": {
+    prompt: "Which strong religious opinion do you repeat confidently even though you have never checked its evidence or context?",
+    source: "Reflection on knowledge and borrowed certainty"
+  },
+  "SURFACE-048": {
+    prompt: "What feeling does constant busyness prevent you from grieving, naming, or bringing to Allah?",
+    source: "Reflection on busyness and emotional honesty"
+  },
+  "SURFACE-050": {
+    prompt: "Which ambition would need to change if you counted the rights of everyone affected by its pursuit?",
+    source: "Reflection on ambition and responsibility"
+  },
+  "SURFACE-052": {
+    prompt: "Where is the line between protecting your privacy and hiding information another person reasonably needs?",
+    source: "Reflection on privacy and accountability"
+  },
+  "SURFACE-054": {
+    prompt: "When does asking for forgiveness become pressure on the harmed person to comfort or absolve you?",
+    source: "Reflection on apology and repair"
+  },
+  "SURFACE-056": {
+    prompt: "Whose concerns do you take less seriously because their delivery is imperfect or their status is low?",
+    source: "Reflection on listening and status"
+  },
+  "SURFACE-058": {
+    prompt: "What truth are you withholding in the name of kindness even though a careful version could prevent greater harm?",
+    source: "Reflection on compassion and candor"
+  },
+  "SURFACE-060": {
+    prompt: "What does your generosity become when you feel financially uncertain, overlooked, or afraid there will not be enough?",
+    source: "Reflection on scarcity and generosity"
+  },
+  "SURFACE-062": {
+    prompt: "What do you try to control in conversation when another person’s disagreement makes you feel unsafe?",
+    source: "Reflection on control and disagreement"
+  },
+  "SURFACE-064": {
+    prompt: "Whose unseen labor makes your daily life easier, and how accurately do your gratitude and behavior reflect that?",
+    source: "Reflection on gratitude and unseen labor"
+  },
+  "SURFACE-066": {
+    prompt: "Which comfort in your life depends on someone else remaining silent about what it costs them?",
+    source: "Reflection on comfort and hidden cost"
+  },
+  "SURFACE-068": {
+    prompt: "When did you last revise a confident opinion because the facts changed rather than merely defend your first position?",
+    source: "Reflection on evidence and intellectual honesty"
+  },
+  "SURFACE-070": {
+    prompt: "What does financial uncertainty reveal about the difference between your stated values and your practiced priorities?",
+    source: "Reflection on money and uncertainty"
+  },
+  "SURFACE-072": {
+    prompt: "From whom have you delayed seeking forgiveness because their pain complicates the story you tell about yourself?",
+    source: "Reflection on repentance and repair"
+  },
+  "SURFACE-074": {
+    prompt: "Which piece of true information are you carrying that still may not be yours to share?",
+    source: "Reflection on truth and confidentiality"
+  },
+  "SURFACE-076": {
+    prompt: "In which religious disagreement are you most invested in winning, and what would sincere learning require instead?",
+    source: "Reflection on disagreement and ego"
+  },
+  "SURFACE-078": {
+    prompt: "Who served you in an ordinary way that you appreciated privately but never acknowledged directly?",
+    source: "Reflection on gratitude and people"
+  },
+  "SURFACE-080": {
+    prompt: "Which advantage in your life creates a responsibility you prefer to describe only as a blessing?",
+    source: "Reflection on privilege and responsibility"
+  },
+  "SURFACE-082": {
+    prompt: "Which honest disagreement would have protected a relationship better than the false peace you maintained?",
+    source: "Reflection on conflict and honest intimacy"
+  },
+  "SURFACE-084": {
+    prompt: "What weakness in others do you mock because admitting a similar weakness in yourself would be uncomfortable?",
+    source: "Reflection on mockery and self-knowledge"
+  },
+  "SURFACE-086": {
+    prompt: "What would you change about your private speech if every message were read by the person being discussed?",
+    source: "Reflection on speech and accountability"
+  },
+  "SURFACE-088": {
+    prompt: "Which decision deserves a slower response because urgency is currently serving someone else’s interests more than truth?",
+    source: "Reflection on pressure and discernment"
+  },
+  "SURFACE-090": {
+    prompt: "Which responsibility do you neglect because its benefit is difficult to measure, praise, or display?",
+    source: "Reflection on invisible responsibility"
+  }
+};
+
+for (const card of cards) {
+  const revision = v52EditorialRevisions[card.id];
+  if (revision) Object.assign(card, revision);
+}

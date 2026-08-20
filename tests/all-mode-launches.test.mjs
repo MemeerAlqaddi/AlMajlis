@@ -3,7 +3,21 @@ import fs from 'node:fs';
 import {JSDOM} from 'jsdom';
 
 const html = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const cardsSource = fs.readFileSync(new URL('../cards-data.js', import.meta.url), 'utf8');
+const contentFiles = [
+  '../cards-data.js',
+  '../content/v52-words.js',
+  '../content/v52-decode.js',
+  '../content/v52-ayah.js',
+  '../content/v52-trivia.js',
+  '../content/v52-riddles.js',
+  '../content/v52-dilemmas.js',
+  '../content/v52-reflection.js',
+  '../content/v52-culture-evidence.js',
+  '../content/v52-culture.js'
+];
+const cardsSource = contentFiles
+  .map(relativePath => fs.readFileSync(new URL(relativePath, import.meta.url), 'utf8'))
+  .join('\n');
 const appSource = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 const modes = [
   ['all', 'teams'],
@@ -18,6 +32,11 @@ const modes = [
 ];
 
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+const waitFor = async (predicate, timeout = 1000) => {
+  const started = Date.now();
+  while (!predicate() && Date.now() - started < timeout) await wait(10);
+  return predicate();
+};
 
 for (const [mode, style] of modes) {
   const dom = new JSDOM(html, {runScripts: 'outside-only', url: 'https://example.test/'});
@@ -49,7 +68,11 @@ for (const [mode, style] of modes) {
   if (style) {
     click(window.document.querySelector(`[data-style="${style}"]`));
     click(window.document.getElementById('beginGame'));
-    await wait(120);
+    assert.equal(
+      await waitFor(() => window.document.getElementById('countdownScreen').hidden),
+      true,
+      `${mode} completes its countdown`
+    );
   }
 
   assert.equal(window.document.getElementById('gameShell').hidden, false, `${mode} opens gameplay`);

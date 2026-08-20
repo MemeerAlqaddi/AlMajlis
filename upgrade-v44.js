@@ -17,6 +17,7 @@
     {type:"culture",id:"CULTURE-014",prompt:"Girls are less valuable to a family than boys.",answer:"Culture",classification:"culture",arabic:"يَهَبُ لِمَن يَشَآءُ إِنَـٰثًا وَيَهَبُ لِمَن يَشَآءُ ٱلذُّكُورَ",english:"He grants daughters to whom He wills and grants sons to whom He wills.",evidence:"Both daughters and sons are gifts Allah chooses to give. The Qur’an also condemns the pre-Islamic shame and grief attached to the birth of a girl.",source:"Qur’an 42:49–50; 16:58–59"},
     {type:"culture",id:"CULTURE-015",prompt:"A Muslim should stand for justice even when doing so goes against personal or family interests.",answer:"Islam",classification:"islam",arabic:"كُونُوا۟ قَوَّٰمِينَ بِٱلْقِسْطِ شُهَدَآءَ لِلَّهِ وَلَوْ عَلَىٰٓ أَنفُسِكُمْ أَوِ ٱلْوَٰلِدَيْنِ وَٱلْأَقْرَبِينَ",english:"Stand firmly for justice as witnesses for Allah, even against yourselves, parents, or close relatives.",evidence:"Justice is not suspended when truth is personally costly. The verse explicitly includes oneself, parents, and close family.",source:"Qur’an 4:135"}
   ];
+  cultureCards.push(...(globalThis.alMajlisV52CultureCards || []));
 
   modes.culture = ["Islam vs Culture","Read a statement, choose Islam or Culture, then see the evidence before continuing."];
   modeInstructions.culture = "Choose Islam when the statement is an Islamic teaching. Choose Culture when it is a custom or claim that is not an Islamic requirement. Culture does not automatically mean forbidden.";
