@@ -41,12 +41,12 @@ FREE
 - Under The Surface
 
 PAID
-- Game Night Shuffle - $3.99
-- Decode the Gibberish - $2.99
-- Complete the Ayah - $2.99
-- Conversation Starters - $3.99
-- Dilemmas - $2.99
-- Islam vs Culture - $2.99
+- Game Night Shuffle - $1.99
+- Decode the Gibberish - $1.99
+- Complete the Ayah - $1.99
+- Conversation Starters - $1.99
+- Dilemmas - $1.99
+- Islam vs Culture - $1.99
 - Premium All Access - $7.99
 
 Never place live Stripe keys or the owner key in this package or GitHub.

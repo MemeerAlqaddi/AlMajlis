@@ -8,32 +8,32 @@
   const PRODUCTS = Object.freeze({
     all: {
       title: 'Game Night Shuffle',
-      price: '$3.99',
+      price: '$1.99',
       description: 'Unlock the complete competitive shuffle.'
     },
     arabish: {
       title: 'Decode the Gibberish',
-      price: '$2.99',
+      price: '$1.99',
       description: 'Unlock the complete Arabic phrase challenge.'
     },
     ayah: {
       title: 'Complete the Ayah',
-      price: '$2.99',
+      price: '$1.99',
       description: 'Unlock the complete Qur’anic verse challenge.'
     },
     conversation: {
       title: 'Conversation Starters',
-      price: '$3.99',
+      price: '$1.99',
       description: 'Unlock the complete conversation starter collection.'
     },
     mizan: {
       title: 'Dilemmas',
-      price: '$2.99',
+      price: '$1.99',
       description: 'Unlock the complete Dilemmas collection.'
     },
     culture: {
       title: 'Islam vs Culture',
-      price: '$2.99',
+      price: '$1.99',
       description: 'Unlock the complete Islam vs Culture collection.'
     },
     bundle: {

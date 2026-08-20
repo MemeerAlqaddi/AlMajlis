@@ -1,10 +1,10 @@
 const PRODUCTS = Object.freeze({
-  all:{name:'Game Night Shuffle',description:'Unlock the complete competitive shuffle.',amount:399},
-  arabish:{name:'Decode the Gibberish',description:'Unlock the complete Arabic phrase challenge.',amount:299},
-  ayah:{name:'Complete the Ayah',description:'Unlock the complete Quranic verse challenge.',amount:299},
-  conversation:{name:'Conversation Starters',description:'Unlock the complete conversation starter collection.',amount:399},
-  mizan:{name:'Dilemmas',description:'Unlock the complete Dilemmas collection.',amount:299},
-  culture:{name:'Islam vs Culture',description:'Unlock the complete Islam vs Culture collection.',amount:299},
+  all:{name:'Game Night Shuffle',description:'Unlock the complete competitive shuffle.',amount:199},
+  arabish:{name:'Decode the Gibberish',description:'Unlock the complete Arabic phrase challenge.',amount:199},
+  ayah:{name:'Complete the Ayah',description:'Unlock the complete Quranic verse challenge.',amount:199},
+  conversation:{name:'Conversation Starters',description:'Unlock the complete conversation starter collection.',amount:199},
+  mizan:{name:'Dilemmas',description:'Unlock the complete Dilemmas collection.',amount:199},
+  culture:{name:'Islam vs Culture',description:'Unlock the complete Islam vs Culture collection.',amount:199},
   bundle:{name:'Al Majlis Premium Collection',description:'Unlock every current premium game mode.',amount:799}
 });
 const send=(response,status,body)=>response.status(status).json(body);

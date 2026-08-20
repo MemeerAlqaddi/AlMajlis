@@ -1,9 +1,9 @@
-const CACHE = 'al-majlis-v52-content-review';
+const CACHE = 'al-majlis-v52-pricing';
 const ASSETS = [
   './', './index.html', './policies.html', './styles.css?v=51-launch', './monetization.css?v=5', './cards-data.js?v=52',
   './content/v52-words.js?v=52', './content/v52-decode.js?v=52', './content/v52-ayah.js?v=52', './content/v52-trivia.js?v=52', './content/v52-riddles.js?v=52',
   './content/v52-dilemmas.js?v=52', './content/v52-reflection.js?v=52', './content/v52-culture-evidence.js?v=52', './content/v52-culture.js?v=52',
-  './app.js?v=52', './upgrade-v44.js?v=52', './monetization.js?v=5',
+  './app.js?v=52', './upgrade-v44.js?v=52', './monetization.js?v=6',
   './manifest.webmanifest?v=52-content', './owner-manifest.webmanifest', './owner?owner=1', './al-majlis-icon.svg', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './assets/marble-light.webp', './assets/marble-dark.webp',
