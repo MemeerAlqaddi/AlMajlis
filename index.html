@@ -206,16 +206,19 @@
       }
     }
 
-    /* Safe card-shell refinement only — no gameplay/layout logic changes */
+    /* Consistent gameplay card shell — same footprint for every mode */
     #gameCard.card {
       align-self: center !important;
-      height: calc(100% - 88px) !important;
-      margin-block: 44px !important;
+      height: min(64dvh, 560px) !important;
+      min-height: min(64dvh, 560px) !important;
+      max-height: min(64dvh, 560px) !important;
+      margin-block: 0 !important;
       border: 1px solid color-mix(in srgb, var(--aqua) 34%, var(--line)) !important;
       border-radius: 18px !important;
       box-shadow:
         0 16px 42px rgba(16, 25, 28, .12),
         inset 0 1px 0 rgba(255,255,255,.10) !important;
+      overflow: hidden !important;
     }
 
     #gameCard .stripe {
@@ -223,19 +226,63 @@
       opacity: .82 !important;
     }
 
-    /* Preserve breathing room on shorter phones so dense cards never get clipped. */
+    /* Short screens keep one consistent card size across all modes too. */
     @media (max-height: 700px) {
       #gameCard.card {
-        height: calc(100% - 56px) !important;
-        margin-block: 28px !important;
+        height: 60dvh !important;
+        min-height: 60dvh !important;
+        max-height: 60dvh !important;
       }
     }
 
-    @media (max-height: 600px) {
-      #gameCard.card {
-        height: calc(100% - 32px) !important;
-        margin-block: 16px !important;
+    /* Adaptive typography inside the fixed card footprint */
+    #gameCard .question {
+      font-size: clamp(18px, 3.5dvh, 30px) !important;
+      line-height: 1.2 !important;
+    }
+
+    #gameCard.promptLong .question,
+    #gameCard.dense .question {
+      font-size: clamp(16px, 3dvh, 25px) !important;
+      line-height: 1.22 !important;
+    }
+
+    #gameCard.promptVeryLong .question {
+      font-size: clamp(14px, 2.6dvh, 21px) !important;
+      line-height: 1.24 !important;
+    }
+
+    #gameCard.dense .answer,
+    #gameCard.promptLong .answer,
+    #gameCard.promptVeryLong .answer {
+      font-size: clamp(11px, 1.8dvh, 14px) !important;
+      line-height: 1.38 !important;
+    }
+
+    @media (max-height: 650px) {
+      #gameCard .question {
+        font-size: clamp(16px, 3.2dvh, 26px) !important;
       }
+
+      #gameCard.promptLong .question,
+      #gameCard.dense .question {
+        font-size: clamp(14px, 2.7dvh, 22px) !important;
+      }
+
+      #gameCard.promptVeryLong .question {
+        font-size: clamp(13px, 2.4dvh, 19px) !important;
+      }
+    }
+
+    /* Remove decorative card corner ornaments; keep the single card outline */
+    #gameCard.card::before,
+    #gameCard.card::after,
+    #gameCard.card:before,
+    #gameCard.card:after {
+      display: none !important;
+      content: none !important;
+      border: 0 !important;
+      background: none !important;
     }
 </style>
 </head>
@@ -481,7 +528,7 @@
         <button class="action bad" id="skip" type="button">Pass</button>
         <button class="action finishAction" id="finishRound" type="button" hidden>End Turn</button>
         <button class="action" id="reveal" type="button">Reveal</button>
-        <button class="action good" id="correct" type="button">Correct +1</button>
+        <button class="action good" id="correct" type="button">Correct</button>
       </div>
     </section>
   </main>
