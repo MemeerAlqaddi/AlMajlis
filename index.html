@@ -195,11 +195,11 @@
         <div class="categoryChoices" id="categoryChoices">
           <button class="categoryChoice" type="button" data-category="competitive">
             <strong>Competitive Games</strong>
-            <small>Friendly challenges.<br>Remember Allah.</small>
+            <small>Play for points. Compete with friends.</small>
           </button>
           <button class="categoryChoice" type="button" data-category="conversation">
             <strong>Conversation Starters</strong>
-            <small>Listen to understand.<br>Learn with evidence.</small>
+            <small>Thoughtful prompts. Meaningful conversations.</small>
           </button>
         </div>
         <div class="modeReveal" id="modeReveal" hidden>
@@ -314,7 +314,11 @@
   <script src="./content/v52-culture.js?v=52"></script>
   <script src="./app.js?v=52"></script>
   <script src="./upgrade-v44.js?v=52"></script>
-  <script src="./monetization.js?v=6"></script>
+  <script src="./monetization.js?v=6"></script><script>
+try {
+  modes.say[1] = 'Give clues without saying the seven forbidden words. Your team guesses the Arabic word.';
+} catch {}
+</script>
 
   <script>
     (() => {
