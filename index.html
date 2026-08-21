@@ -10,8 +10,8 @@
 
   <!-- Cache-busted manifest + icons so the new icon replaces older cached versions -->
   <link rel="manifest" href="manifest.webmanifest?v=52-content">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=54-polish">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=54-polish">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=53">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=53">
 
   <title>Al Majlis — The Islamic Game Night</title>
 
@@ -53,27 +53,6 @@
       cursor:pointer;
     }
     #welcomeScreen #openSetup::after { content:none; }
-
-    /* v54 polish: footer utilities must remain legible over the dark marble in light mode */
-    [data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn {
-      color:#fff !important;
-      opacity:1 !important;
-      text-shadow:0 1px 5px rgba(0,0,0,.55);
-    }
-    [data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn:hover,
-    [data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn:focus-visible {
-      color:#fff !important;
-    }
-
-    /* v54 polish: remove decorative teal strokes that compete with the headings */
-    .categoryChoice::after {
-      display:none !important;
-      content:none !important;
-    }
-    .modeGroup::before {
-      display:none !important;
-      content:none !important;
-    }
   </style>
 </head>
 
@@ -216,11 +195,11 @@
         <div class="categoryChoices" id="categoryChoices">
           <button class="categoryChoice" type="button" data-category="competitive">
             <strong>Competitive Games</strong>
-            <small>Play for points. Compete with friends.</small>
+            <small>Friendly challenges.<br>Remember Allah.</small>
           </button>
           <button class="categoryChoice" type="button" data-category="conversation">
             <strong>Conversation Starters</strong>
-            <small>Thoughtful prompts. Meaningful conversations.</small>
+            <small>Listen to understand.<br>Learn with evidence.</small>
           </button>
         </div>
         <div class="modeReveal" id="modeReveal" hidden>
@@ -336,28 +315,6 @@
   <script src="./app.js?v=52"></script>
   <script src="./upgrade-v44.js?v=52"></script>
   <script src="./monetization.js?v=6"></script>
-
-  <!-- v54 polish: update the Guess The Word description without touching app.js/game logic -->
-  <script>
-    try {
-      if (typeof modes !== 'undefined' && modes.say) {
-        modes.say[1] = 'Give clues without saying the seven forbidden words. Your team guesses the Arabic word.';
-      }
-    } catch {}
-
-    /* Also update an already-rendered card if monetization/setup rendered before this override. */
-    const applyArabicGuessCopy = () => {
-      document.querySelectorAll('.setupMode').forEach(button => {
-        const title = button.querySelector('strong')?.textContent?.trim();
-        if (title === 'Guess The Word') {
-          const copy = button.querySelector('small');
-          if (copy) copy.textContent = 'Give clues without saying the seven forbidden words. Your team guesses the Arabic word.';
-        }
-      });
-    };
-    applyArabicGuessCopy();
-    new MutationObserver(applyArabicGuessCopy).observe(document.getElementById('setupModes'), {childList:true, subtree:true});
-  </script>
 
   <script>
     (() => {
