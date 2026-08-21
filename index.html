@@ -57,7 +57,7 @@
     /* Requested visual polish */
     html[data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn,
     html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn {
-      color: #ffffff !important;
+      color: #111111 !important;
       opacity: 1 !important;
     }
 
@@ -65,7 +65,7 @@
     html[data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn:focus-visible,
     html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn:hover,
     html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn:focus-visible {
-      color: #ffffff !important;
+      color: #111111 !important;
     }
 
     .categoryChoice:after,
@@ -78,6 +78,17 @@
       width: 0 !important;
       height: 0 !important;
       border: 0 !important;
+    }
+
+    .categoryChoice strong {
+      margin-bottom: 8px !important;
+    }
+
+    .categoryChoice small {
+      max-width: 270px;
+      margin: 0 auto;
+      line-height: 1.4 !important;
+      letter-spacing: 0;
     }
 </style>
 </head>
@@ -221,11 +232,11 @@
         <div class="categoryChoices" id="categoryChoices">
           <button class="categoryChoice" type="button" data-category="competitive">
             <strong>Competitive Games</strong>
-            <small>Play for points. Compete with friends.</small>
+            <small>A little friendly competition never hurt anyone.</small>
           </button>
           <button class="categoryChoice" type="button" data-category="conversation">
             <strong>Conversation Starters</strong>
-            <small>Thoughtful prompts. Meaningful conversations.</small>
+            <small>Thoughtful prompts for meaningful conversation.</small>
           </button>
         </div>
         <div class="modeReveal" id="modeReveal" hidden>
@@ -340,7 +351,9 @@
   <script src="./content/v52-culture.js?v=52"></script>
   <script src="./app.js?v=52"></script><script>
 try {
-  modes.say[1] = 'Give clues without saying the seven forbidden words. Your team guesses the Arabic word.';
+  modes.say[1] = 'Give clues without using the seven forbidden words while your team tries to guess the Arabic word.';
+  modes.ayah[1] = 'Continue the ayah from where it leaves off, then reveal the full ayah, meaning, and source.';
+  modeInstructions.ayah = 'Continue the ayah from where it leaves off, then Reveal to check the full ayah, meaning, and source.';
 } catch {}
 </script>
   <script src="./upgrade-v44.js?v=52"></script>
