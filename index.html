@@ -362,6 +362,170 @@
     #gameShell #correct {
       font-weight: 700 !important;
     }
+
+    /* Scorecard polish — compact, simple, professional */
+    .roundPanel {
+      width: min(520px, calc(100% - 28px)) !important;
+      padding: 24px 22px !important;
+      border-radius: 16px !important;
+      box-shadow: 0 18px 50px rgba(0,0,0,.16) !important;
+    }
+
+    .roundPanel::before,
+    .roundPanel:before {
+      display: none !important;
+      content: none !important;
+    }
+
+    .roundHeader > span {
+      font-family: var(--body) !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      letter-spacing: .14em !important;
+      color: var(--aqua-bright) !important;
+    }
+
+    .roundHeader > strong {
+      margin: 8px auto 4px !important;
+      font-family: var(--display) !important;
+      font-size: clamp(24px, 6vw, 34px) !important;
+      font-weight: 400 !important;
+      line-height: 1.1 !important;
+      color: var(--text) !important;
+    }
+
+    .roundScore {
+      margin: 0 auto !important;
+      font-family: var(--body) !important;
+      font-size: 12px !important;
+      line-height: 1.4 !important;
+      color: var(--muted) !important;
+    }
+
+    .matchScoreboard {
+      margin-top: 16px !important;
+    }
+
+    .finalScores {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      align-items: stretch !important;
+    }
+
+    .scoreDivider {
+      display: none !important;
+    }
+
+    .finalScore {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      padding: 12px 14px !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 10px !important;
+      background: var(--surface) !important;
+      box-shadow: none !important;
+    }
+
+    .finalScore span {
+      margin: 0 !important;
+      font-family: var(--body) !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: .08em !important;
+      color: var(--muted) !important;
+    }
+
+    .finalScore b {
+      margin: 0 !important;
+      font-family: var(--display) !important;
+      font-size: 26px !important;
+      font-weight: 400 !important;
+      line-height: 1 !important;
+      color: var(--text) !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+
+    .historyHeading {
+      margin: 16px 0 6px !important;
+      font-family: var(--body) !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      letter-spacing: .12em !important;
+      text-align: left !important;
+      text-transform: uppercase !important;
+      color: var(--muted) !important;
+    }
+
+    .roundHistory {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 5px !important;
+      max-height: 150px !important;
+      margin: 0 !important;
+    }
+
+    .historyRow {
+      min-height: 36px !important;
+      padding: 8px 10px !important;
+      border-radius: 8px !important;
+      background: color-mix(in srgb, var(--surface) 84%, transparent) !important;
+      font-family: var(--body) !important;
+      font-size: 11px !important;
+      color: var(--muted) !important;
+    }
+
+    .historyRow small {
+      font-size: 8px !important;
+      letter-spacing: .06em !important;
+    }
+
+    .historyRow b {
+      font-family: var(--body) !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: var(--aqua-bright) !important;
+    }
+
+    .roundActions {
+      width: min(280px, 100%) !important;
+      margin-top: 16px !important;
+      gap: 6px !important;
+    }
+
+    .roundActions .launchBtn {
+      width: 100% !important;
+      min-height: 44px !important;
+      margin: 0 !important;
+      font-size: 15px !important;
+    }
+
+    .roundActions .centerBack,
+    .roundActions .undoPoint {
+      font-size: 12px !important;
+    }
+
+    @media (max-width: 520px) {
+      .roundPanel {
+        width: min(100% - 20px, 500px) !important;
+        padding: 20px 16px !important;
+      }
+
+      .finalScores {
+        grid-template-columns: 1fr !important;
+        gap: 7px !important;
+      }
+
+      .finalScore {
+        min-height: 44px !important;
+      }
+
+      .finalScore b {
+        font-size: 24px !important;
+      }
+    }
 </style>
 </head>
 
