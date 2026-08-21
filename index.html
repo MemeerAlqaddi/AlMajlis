@@ -349,13 +349,7 @@
   <script src="./content/v52-reflection.js?v=52"></script>
   <script src="./content/v52-culture-evidence.js?v=52"></script>
   <script src="./content/v52-culture.js?v=52"></script>
-  <script src="./app.js?v=52"></script><script>
-try {
-  modes.say[1] = 'Give clues without using the seven forbidden words while your team tries to guess the Arabic word.';
-  modes.ayah[1] = 'Continue the ayah from where it leaves off, then reveal the full ayah, meaning, and source.';
-  modeInstructions.ayah = 'Continue the ayah from where it leaves off, then Reveal to check the full ayah, meaning, and source.';
-} catch {}
-</script>
+  <script src="./app.js?v=52"></script>
   <script src="./upgrade-v44.js?v=52"></script>
   <script src="./monetization.js?v=6"></script>
 
@@ -404,5 +398,47 @@ try {
       }, true);
     })();
   </script>
+
+<script>
+(() => {
+  const SAY_DESCRIPTION =
+    'Give clues without using the seven forbidden words while your team tries to guess the Arabic word.';
+  const SAY_INSTRUCTION =
+    'One player gives clues without using any of the seven forbidden words, their opposites, or translations. The team must guess the Arabic word.';
+  const AYAH_DESCRIPTION =
+    'Continue the ayah from where it leaves off, then reveal the full ayah, meaning, and source.';
+  const AYAH_INSTRUCTION =
+    'Continue the ayah from where it leaves off, then Reveal to check the full ayah, meaning, and source.';
+
+  try {
+    modes.say[1] = SAY_DESCRIPTION;
+    modes.ayah[1] = AYAH_DESCRIPTION;
+    modeInstructions.say = SAY_INSTRUCTION;
+    modeInstructions.ayah = AYAH_INSTRUCTION;
+  } catch {}
+
+  function patchVisibleModeCopy() {
+    document.querySelectorAll('.setupMode').forEach(button => {
+      const title = button.querySelector('strong')?.textContent?.trim();
+      const copy = button.querySelector('small');
+      if (!copy) return;
+
+      if (title === 'Guess The Word') copy.textContent = SAY_DESCRIPTION;
+      if (title === 'Complete the Ayah') copy.textContent = AYAH_DESCRIPTION;
+    });
+  }
+
+  patchVisibleModeCopy();
+
+  // The pack list is rendered when a category is opened, so patch once it exists.
+  document.addEventListener('click', event => {
+    if (event.target.closest('#openSetup, .categoryChoice, #setupBack')) {
+      setTimeout(patchVisibleModeCopy, 0);
+      setTimeout(patchVisibleModeCopy, 80);
+    }
+  }, true);
+})();
+</script>
+
 </body>
 </html>
