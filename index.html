@@ -209,8 +209,8 @@
     /* Safe card-shell refinement only — no gameplay/layout logic changes */
     #gameCard.card {
       align-self: center !important;
-      height: calc(100% - 28px) !important;
-      margin-block: 14px !important;
+      height: calc(100% - 88px) !important;
+      margin-block: 44px !important;
       border: 1px solid color-mix(in srgb, var(--aqua) 34%, var(--line)) !important;
       border-radius: 18px !important;
       box-shadow:
@@ -226,15 +226,15 @@
     /* Preserve breathing room on shorter phones so dense cards never get clipped. */
     @media (max-height: 700px) {
       #gameCard.card {
-        height: calc(100% - 16px) !important;
-        margin-block: 8px !important;
+        height: calc(100% - 56px) !important;
+        margin-block: 28px !important;
       }
     }
 
     @media (max-height: 600px) {
       #gameCard.card {
-        height: calc(100% - 8px) !important;
-        margin-block: 4px !important;
+        height: calc(100% - 32px) !important;
+        margin-block: 16px !important;
       }
     }
 </style>
