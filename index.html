@@ -53,7 +53,33 @@
       cursor:pointer;
     }
     #welcomeScreen #openSetup::after { content:none; }
-  </style>
+  
+    /* Requested visual polish */
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn,
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn {
+      color: #ffffff !important;
+      opacity: 1 !important;
+    }
+
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn:hover,
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities .utilityBtn:focus-visible,
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn:hover,
+    html[data-theme="light"] #welcomeScreen .welcomeUtilities a.utilityBtn:focus-visible {
+      color: #ffffff !important;
+    }
+
+    .categoryChoice:after,
+    .categoryChoice::after,
+    .modeGroup:before,
+    .modeGroup::before {
+      display: none !important;
+      content: none !important;
+      background: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      border: 0 !important;
+    }
+</style>
 </head>
 
 <body>
@@ -312,13 +338,13 @@
   <script src="./content/v52-reflection.js?v=52"></script>
   <script src="./content/v52-culture-evidence.js?v=52"></script>
   <script src="./content/v52-culture.js?v=52"></script>
-  <script src="./app.js?v=52"></script>
-  <script src="./upgrade-v44.js?v=52"></script>
-  <script src="./monetization.js?v=6"></script><script>
+  <script src="./app.js?v=52"></script><script>
 try {
   modes.say[1] = 'Give clues without saying the seven forbidden words. Your team guesses the Arabic word.';
 } catch {}
 </script>
+  <script src="./upgrade-v44.js?v=52"></script>
+  <script src="./monetization.js?v=6"></script>
 
   <script>
     (() => {
