@@ -285,18 +285,6 @@
       background: none !important;
     }
 
-    /* Keep scoring logic intact while showing a cleaner button label */
-    #correct {
-      font-size: 0 !important;
-    }
-
-    #correct::after {
-      content: "Correct";
-      font-size: 12px;
-      line-height: 1;
-      font-weight: 700;
-    }
-
     /* Cross-mode visual consistency — cosmetic only */
     #gameCard .type {
       font-family: var(--body) !important;
@@ -361,6 +349,10 @@
     #gameShell #reveal,
     #gameShell #correct {
       font-weight: 700 !important;
+    }
+
+    html[data-theme="dark"] #gameShell #correct {
+      color: #ffffff !important;
     }
 
     /* Scorecard polish — compact, simple, professional */
@@ -873,6 +865,38 @@
       setTimeout(patchVisibleModeCopy, 80);
     }
   }, true);
+})();
+</script>
+
+<script>
+(() => {
+  const configureExistingControls = configureControls;
+  configureControls = function() {
+    configureExistingControls();
+    if (!isConversationMode()) return;
+    $('skip').hidden = false;
+    $('skip').textContent = 'Previous Card';
+    $('correct').textContent = 'Next Card';
+  };
+
+  const renderExistingCard = render;
+  render = function() {
+    renderExistingCard();
+    if (isConversationMode()) $('reveal').hidden = true;
+  };
+
+  $('skip').onclick = function() {
+    if (!isConversationMode()) {
+      passAndAdvance();
+      return;
+    }
+    if (!lockAdvanceControls()) return;
+    cardIndex = cardIndex > 0 ? cardIndex - 1 : deck.length - 1;
+    restoredAnswerVisible = false;
+    playSound('select');
+    render();
+    $('question').focus({preventScroll: true});
+  };
 })();
 </script>
 
