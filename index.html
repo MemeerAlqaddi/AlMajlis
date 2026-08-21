@@ -90,6 +90,121 @@
       line-height: 1.4 !important;
       letter-spacing: 0;
     }
+
+    /* Countdown polish */
+    .countdownScreen::before {
+      display: none !important;
+      content: none !important;
+    }
+
+    .countdownLayout {
+      position: relative !important;
+      width: min(420px, calc(100% - 32px)) !important;
+      min-height: min(680px, 100svh) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: max(82px, env(safe-area-inset-top)) 0 max(42px, env(safe-area-inset-bottom)) !important;
+      text-align: center !important;
+    }
+
+    .countdownBismillah {
+      position: absolute !important;
+      top: max(28px, calc(env(safe-area-inset-top) + 16px)) !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 100% !important;
+      margin: 0 !important;
+      color: var(--text) !important;
+      opacity: .86 !important;
+      font-family: "Noto Naskh Arabic","Amiri","Traditional Arabic",serif !important;
+      font-size: clamp(17px, 4.5vw, 21px) !important;
+      line-height: 1.6 !important;
+      white-space: nowrap !important;
+    }
+
+    .countdownContext {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 5px !important;
+      margin: 0 0 20px !important;
+    }
+
+    .countdownContext span {
+      color: var(--aqua-bright) !important;
+      font-family: var(--body) !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      letter-spacing: .18em !important;
+      text-transform: uppercase !important;
+    }
+
+    .countdownContext strong {
+      margin: 0 !important;
+      color: var(--text) !important;
+      font-family: var(--display) !important;
+      font-size: clamp(22px, 6vw, 28px) !important;
+      font-weight: 400 !important;
+      line-height: 1.1 !important;
+    }
+
+    .countdownCue {
+      flex: 0 0 auto !important;
+      width: min(42vw, 164px) !important;
+      height: min(42vw, 164px) !important;
+      margin: 0 !important;
+      border: 1px solid var(--aqua) !important;
+      background: var(--surface) !important;
+      box-shadow: var(--soft-shadow) !important;
+    }
+
+    .countdownCue strong,
+    #countdownNumber {
+      margin: 0 !important;
+      color: var(--text) !important;
+      font-family: var(--display) !important;
+      font-size: clamp(58px, 17vw, 76px) !important;
+      font-weight: 400 !important;
+      line-height: 1 !important;
+    }
+
+    .countdownReady {
+      margin: 14px 0 0 !important;
+      color: var(--text) !important;
+      font-family: var(--body) !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      letter-spacing: .16em !important;
+      text-transform: uppercase !important;
+    }
+
+    @media (max-height: 650px) {
+      .countdownLayout {
+        min-height: 100svh !important;
+        padding-top: 62px !important;
+        padding-bottom: 24px !important;
+      }
+
+      .countdownBismillah {
+        top: max(14px, calc(env(safe-area-inset-top) + 8px)) !important;
+        font-size: 16px !important;
+      }
+
+      .countdownContext {
+        margin-bottom: 13px !important;
+      }
+
+      .countdownCue {
+        width: min(34vw, 132px) !important;
+        height: min(34vw, 132px) !important;
+      }
+
+      .countdownReady {
+        margin-top: 10px !important;
+      }
+    }
 </style>
 </head>
 
