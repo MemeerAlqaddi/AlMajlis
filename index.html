@@ -284,6 +284,84 @@
       border: 0 !important;
       background: none !important;
     }
+
+    /* Keep scoring logic intact while showing a cleaner button label */
+    #correct {
+      font-size: 0 !important;
+    }
+
+    #correct::after {
+      content: "Correct";
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    /* Cross-mode visual consistency — cosmetic only */
+    #gameCard .type {
+      font-family: var(--body) !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      letter-spacing: .14em !important;
+      text-transform: uppercase !important;
+      color: var(--aqua-bright) !important;
+    }
+
+    #gameCard .question {
+      font-family: var(--display) !important;
+      font-weight: 400 !important;
+      color: var(--text) !important;
+    }
+
+    #gameCard .answer,
+    #gameCard .ayahPromptMeta,
+    #gameCard .ayahAnswerMeta,
+    #gameCard .decodeDialect {
+      color: var(--muted) !important;
+      font-family: var(--body) !important;
+    }
+
+    #gameCard .answerMain {
+      color: var(--text) !important;
+      font-family: var(--display) !important;
+      font-weight: 400 !important;
+    }
+
+    #gameCard .forbiddenHeading {
+      color: var(--aqua-bright) !important;
+      font-family: var(--body) !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      letter-spacing: .12em !important;
+      text-transform: uppercase !important;
+    }
+
+    #gameCard .forbiddenWord {
+      font-family: var(--body) !important;
+      font-weight: 600 !important;
+      color: var(--text) !important;
+    }
+
+    #gameCard .ref {
+      font-family: var(--body) !important;
+      font-size: 10px !important;
+      color: var(--muted) !important;
+    }
+
+    #gameShell .action {
+      font-family: var(--body) !important;
+      font-weight: 700 !important;
+      letter-spacing: 0 !important;
+    }
+
+    #gameShell #skip {
+      color: var(--muted) !important;
+    }
+
+    #gameShell #reveal,
+    #gameShell #correct {
+      font-weight: 700 !important;
+    }
 </style>
 </head>
 
